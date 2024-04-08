@@ -5,6 +5,7 @@
 
 #include "CollisionDebugDrawingPublic.h"
 #include "KismetTraceUtils.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UCaster::UCaster()
@@ -27,6 +28,7 @@ void UCaster::BeginPlay()
 	if(Input)
 	{
 		Input->BindAction(TEXT("Shoot"), IE_Pressed, this, &UCaster::Cast);
+		Input->BindAction(TEXT("Debug"), IE_Pressed, this, &UCaster::SetDebug);
 	}
 
 	
@@ -47,14 +49,29 @@ void UCaster::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponen
 //Casts aa spell
 void UCaster::Cast() 
 {
+	
 	FHitResult Hit;
 	const FVector EndLocation = GetComponentLocation() + GetForwardVector()*EndDistance;
 	bool HitResult = GetWorld()->LineTraceSingleByChannel(Hit, GetComponentLocation(), EndLocation, ECC_GameTraceChannel2); 
 	if(HitResult)
 	{
-		DrawDebugLine(GetWorld(), GetComponentLocation(), EndLocation,FColor::Red, true);
-		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Green, true);
+		if(DebugMode)
+		{
+			DrawDebugLine(GetWorld(), GetComponentLocation(), EndLocation,FColor::Red, false, 5);
+			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Green, false, 5);
+		}
+
+
+		AActor* Owner = GetOwner();
+		UGameplayStatics::ApplyDamage(Hit.GetActor(),Damage, Owner->GetInstigatorController(), Owner, DamageType);
+
 	}
 }
+
+void UCaster::SetDebug()
+{
+	DebugMode = !DebugMode;
+}
+
 
 

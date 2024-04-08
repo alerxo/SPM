@@ -31,6 +31,9 @@ private:
 	//Parent InputController
 	UPROPERTY()
 	UInputComponent* Input;
+	
+	UPROPERTY()
+	bool DebugMode = false;
 
 public:
 	//spell casting cooldown
@@ -45,8 +48,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	float EndDistance = 2000;
 
+	UPROPERTY(EditAnywhere)
+	//TO-DO make more Damage Types like fire damage and Electricity Damage
+	TSubclassOf<UDamageType> DamageType;
+
 	//Spell class
 	//TO-DO Create a classes for the spells 
 	
-		
+	
+	void SetDebug();
 };
