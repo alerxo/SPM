@@ -3,6 +3,9 @@
 
 #include "Caster.h"
 
+#include "CollisionDebugDrawingPublic.h"
+#include "KismetTraceUtils.h"
+
 // Sets default values for this component's properties
 UCaster::UCaster()
 {
@@ -36,18 +39,25 @@ void UCaster::BeginPlay()
 void UCaster::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	
+	
 	// ...
 }
 
 void UCaster::Cast() 
 {
 	FHitResult Hit;
-	FVector EndLocation = GetComponentLocation();
-	EndLocation.X += EndDistance;
-	if(GetWorld()->LineTraceSingleByChannel(Hit, GetComponentLocation(), EndLocation, ECC_EngineTraceChannel2))
+	FVector EndLocation = GetComponentLocation() + GetForwardVector()*EndDistance;
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetForwardVector().ToString());
+	
+	
+	if(GetWorld()->LineTraceSingleByChannel(Hit, GetComponentLocation(), EndLocation, ECC_GameTraceChannel2))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit"));
+		DrawDebugLine(GetWorld(), GetComponentLocation(), EndLocation,FColor::Red, true);
+		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Green, true);
+		//DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Red, true);
 	}
 }
 

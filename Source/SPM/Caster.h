@@ -43,7 +43,7 @@ public:
 
 	//end distance for the ray
 	UPROPERTY(EditAnywhere)
-	float EndDistance = 100;
+	float EndDistance = 2000;
 
 	//Spell class
 	//TO-DO Create a classes for the spells 
