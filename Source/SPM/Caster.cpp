@@ -44,20 +44,16 @@ void UCaster::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponen
 	// ...
 }
 
+//Casts aa spell
 void UCaster::Cast() 
 {
 	FHitResult Hit;
-	FVector EndLocation = GetComponentLocation() + GetForwardVector()*EndDistance;
-
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetForwardVector().ToString());
-	
-	
-	if(GetWorld()->LineTraceSingleByChannel(Hit, GetComponentLocation(), EndLocation, ECC_GameTraceChannel2))
+	const FVector EndLocation = GetComponentLocation() + GetForwardVector()*EndDistance;
+	bool HitResult = GetWorld()->LineTraceSingleByChannel(Hit, GetComponentLocation(), EndLocation, ECC_GameTraceChannel2); 
+	if(HitResult)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit"));
 		DrawDebugLine(GetWorld(), GetComponentLocation(), EndLocation,FColor::Red, true);
 		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Green, true);
-		//DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Red, true);
 	}
 }
 
