@@ -10,6 +10,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Math/UnitConversion.h"
+#include "Tasks/Task.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -68,6 +72,9 @@ void ASPMCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
+		// Dashing
+		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &ASPMCharacter::Dash);
+
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASPMCharacter::Move);
 
@@ -77,6 +84,24 @@ void ASPMCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	else
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+	}
+}
+
+void ASPMCharacter::Dash(const FInputActionValue& Value)
+{
+	if(Controller == nullptr)return;
+	// Get the MoveDirection as a FVector3d
+	FVector3d MoveDirection = Value.Get<FVector3d>();
+
+	// Set the MoveSpeed
+	FVector MoveSpeed = this->GetCharacterMovement()->Velocity;
+	MoveSpeed.Set(MoveSpeed.X, MoveSpeed.Y, 0);
+	MoveSpeed *= DashSpeed;
+
+	if(DashCount < DashMaxCount && Controller->GetCharacter()->GetCharacterMovement()->IsFalling())
+	{
+		LaunchCharacter(MoveSpeed, false, false);
+		DashCount++;
 	}
 }
 
@@ -91,6 +116,10 @@ void ASPMCharacter::Move(const FInputActionValue& Value)
 		// add movement 
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
+		if(DashCount >= DashMaxCount && !Controller->GetCharacter()->GetCharacterMovement()->IsFalling())
+		{
+			DashCount = 0;
+		}
 	}
 }
 
