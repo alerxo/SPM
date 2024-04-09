@@ -19,6 +19,7 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+	DefaultHealth = Health;
 	// ...
 	
 }
@@ -27,6 +28,14 @@ void UHealthComponent::BeginPlay()
 // Called every frame
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Take Damage"));
+	UE_LOG(LogTemp, Warning, TEXT("%f"), DefaultHealth);
+	if(Damage <= 0)
+	{
+		return;
+	}
+	if((DefaultHealth -= Damage) == 0)
+	{
+		
+	}
 }
 

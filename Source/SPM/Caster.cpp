@@ -14,6 +14,7 @@ UCaster::UCaster()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	DamageComponent = CreateDefaultSubobject<UDamageComponent>(TEXT("DamageComp"));
 	// ...
 }
 
@@ -63,7 +64,7 @@ void UCaster::Cast()
 
 		//
 		AActor* Owner = GetOwner();
-		UGameplayStatics::ApplyDamage(Hit.GetActor(),Damage, Owner->GetInstigatorController(), Owner, DamageType);
+		UGameplayStatics::ApplyDamage(Hit.GetActor(),DamageComponent->GetDamage(), Owner->GetInstigatorController(), Owner, DamageComponent->GetDamageType());
 
 	}
 }

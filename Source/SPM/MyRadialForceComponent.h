@@ -27,5 +27,6 @@ protected:
 	virtual void FireImpulse() override;
 public:
 	UPROPERTY(interp, EditAnywhere, BlueprintReadWrite, Category=RadialForceComponent)
-	float Height;
+	float Height = 100;
+
 };

@@ -8,7 +8,7 @@ UDamageComponent::UDamageComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -24,11 +24,16 @@ void UDamageComponent::BeginPlay()
 }
 
 
-// Called every frame
-void UDamageComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+float UDamageComponent::GetDamage() const
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	return Damage;
 }
+
+TSubclassOf<UDamageType> UDamageComponent::GetDamageType() const
+{
+	return  DamageType;
+}
+/*
+*/
+
 

@@ -8,14 +8,13 @@
 
 UMyRadialForceComponent::UMyRadialForceComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	Height = 100;
 	UpdateCollisionObjectQueryParams();
 }
 
 
 void UMyRadialForceComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	//Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if(IsActive())
 	{
 		const FVector Origin = GetComponentLocation() - FVector(0,0,Radius);
@@ -31,9 +30,9 @@ void UMyRadialForceComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 			Params.AddIgnoredActor(GetOwner());
 		}
 
-		GetWorld()->OverlapMultiByObjectType(Overlaps, Origin, FQuat::Identity, CollisionObjectQueryParams,FCollisionShape::MakeCapsule(Radius,Height), Params);
+		GetWorld()->OverlapMultiByObjectType(Overlaps, Origin, FQuat::Identity, CollisionObjectQueryParams,FCollisionShape::MakeCapsule(Radius,Height/2), Params);
 		
-		DrawDebugCapsule(GetWorld(),Origin, Height, Radius, FQuat::Identity, FColor::Red, true);
+		DrawDebugCapsule(GetWorld(),Origin, Height, Radius, FQuat::Identity, FColor::Red, false);
 		// A component can have multiple physics presences (e.g. destructible mesh components).
 		// The component should handle the radial force for all of the physics objects it contains
 		// so here we grab all of the unique components to avoid applying impulses more than once.

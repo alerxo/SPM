@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DamageComponent.h"
 #include "Components/SceneComponent.h"
 #include "Caster.generated.h"
 
@@ -53,8 +54,9 @@ public:
 	TSubclassOf<UDamageType> DamageType;
 
 	//Spell class
-	//TO-DO Create a classes for the spells 
-	
+	//TO-DO Create a classes for the spells
+	UPROPERTY(EditAnywhere)
+	UDamageComponent* DamageComponent;
 	
 	void SetDebug();
 };
