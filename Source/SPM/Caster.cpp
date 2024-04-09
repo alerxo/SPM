@@ -28,11 +28,9 @@ void UCaster::BeginPlay()
 	Input = GetOwner()->InputComponent;
 	if(Input)
 	{
-		Input->BindAction(TEXT("Shoot"), IE_Pressed, this, &UCaster::Cast);
+		Input->BindAction(TEXT("DebugShoot"), IE_Pressed, this, &UCaster::Cast);
 		Input->BindAction(TEXT("Debug"), IE_Pressed, this, &UCaster::SetDebug);
 	}
-
-	
 	// ...
 	
 }
@@ -42,8 +40,6 @@ void UCaster::BeginPlay()
 void UCaster::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
-	
 	// ...
 }
 

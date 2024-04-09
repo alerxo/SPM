@@ -30,7 +30,7 @@ void UMyRadialForceComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 			Params.AddIgnoredActor(GetOwner());
 		}
 
-		GetWorld()->OverlapMultiByObjectType(Overlaps, Origin, FQuat::Identity, CollisionObjectQueryParams,FCollisionShape::MakeCapsule(Radius,Height/2), Params);
+		GetWorld()->OverlapMultiByObjectType(Overlaps, Origin, FQuat::Identity, CollisionObjectQueryParams,FCollisionShape::MakeCapsule(Radius,Height), Params);
 		
 		DrawDebugCapsule(GetWorld(),Origin, Height, Radius, FQuat::Identity, FColor::Red, false);
 		// A component can have multiple physics presences (e.g. destructible mesh components).
