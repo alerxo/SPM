@@ -58,7 +58,10 @@ void UCaster::Cast()
 			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Green, false, 5);
 		}
 
-		//
+		if(Event)
+		{
+			Event->OnDecreaseMana.Broadcast(10);
+		}
 		AActor* Owner = GetOwner();
 		UGameplayStatics::ApplyDamage(Hit.GetActor(),DamageComponent->GetDamage(), Owner->GetInstigatorController(), Owner, DamageComponent->GetDamageType());
 
