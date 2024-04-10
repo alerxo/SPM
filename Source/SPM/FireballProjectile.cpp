@@ -50,7 +50,7 @@ void AFireballProjectile::Explode()
 		
 	FCollisionShape CollisionSphere = FCollisionShape::MakeSphere(ExplosiveRadius);
 	DrawDebugSphere(GetWorld(), HitLocation, CollisionSphere.GetSphereRadius(),
-		30, FColor::Red, true);
+		25, FColor::Red, true);
 	bool isHit = GetWorld()->SweepMultiByChannel(OutHits, HitLocation, HitLocation,
 		FQuat::Identity, ECC_WorldStatic, CollisionSphere);
 
@@ -68,21 +68,25 @@ void AFireballProjectile::Explode()
 	}
 		
 		
-	UE_LOG(LogTemp, Warning, TEXT("FireHit"));
+	//UE_LOG(LogTemp, Warning, TEXT("FireHit"));
 }
 
 
 void AFireballProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("FireHit"));
+	
+	
+	//UE_LOG(LogTemp, Warning, TEXT("FireHit"));
+	Explode();
+	Destroy();
 	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	/*if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
 		Explode();
 		Destroy();
-	}
+	}*/
 }
 
