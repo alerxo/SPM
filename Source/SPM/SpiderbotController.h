@@ -15,14 +15,20 @@ class SPM_API ASpiderbotController : public AAIController
 	GENERATED_BODY()
 	
 public:
-	void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaSeconds) override;
+
+	float GetVisionRange() const;
+
+	bool IsDead() const;
 
 protected:
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly)
 	UBehaviorTree* SpiderbotBehavior;
+	UPROPERTY(EditDefaultsOnly)
+	float VisionRange;
 
 
 };
