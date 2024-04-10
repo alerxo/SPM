@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DamageComponent.h"
+#include "Field/FieldSystemActor.h"
 #include "GameFramework/Actor.h"
 #include "FireballProjectile.generated.h"
 
@@ -42,7 +43,7 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditAnywhere, Category="Projectile")
+	UPROPERTY(EditAnywhere, Category="Projectile", BlueprintReadOnly, meta=(DisplayName = "ExplosiveRadius", AllowPrivateAccess = "true"))
 	float ExplosiveRadius = 300.f;
 
 	UPROPERTY(EditAnywhere, Category="Projectile")
@@ -50,4 +51,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Projectile")
 	UDamageComponent* DamageComponent;
+
+	//UPROPERTY(EditAnywhere, Category="Projectile", BlueprintReadWrite, meta=(DisplayName = "ExplosiveRadius", AllowPrivateAccess = "true"))
+	//UFieldSystemComponent* DestructiveExplosion;
 };
