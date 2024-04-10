@@ -31,6 +31,11 @@ public:
 	void SetDecreaseAmount(float Amount) { DecreaseAmount = Amount; }
 	float GetDecreaseAmount(){return  DecreaseAmount;}
 
+	UPROPERTY(EditAnywhere)
+	
+	
+	
+	class USPMGameInstanceSubsystem* Subsystem;
 	
 	UPROPERTY(EditAnywhere)
 	class APlayerStateListener* GameplayEvent;

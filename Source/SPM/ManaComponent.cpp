@@ -3,6 +3,7 @@
 
 #include "ManaComponent.h"
 #include "PlayerStateListener.h"
+#include "SPMGameInstanceSubsystem.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -24,16 +25,26 @@ void UManaComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/*
 	if(ACharacter* Owner = Cast<ACharacter>(GetOwner()))
 	{
 		GameplayEvent =  Cast<APlayerStateListener>(Owner->GetPlayerState());
 		UE_LOG(LogTemp,Warning, TEXT("BINDED"))
 	}
+	*/
 
+	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
 
+	Subsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
+	if(Subsystem)
+	{
+		Subsystem->OnLocalTest.AddDynamic(this, &UManaComponent::DecreaseMana);
+	}
 	Mana = DefaultMana;
 
-	GameplayEvent->OnDecreaseMana.AddDynamic(this, &UManaComponent::DecreaseMana);
+
+	
+	//GameplayEvent->OnDecreaseMana.AddDynamic(this, &UManaComponent::DecreaseMana);
 	/*
 	if(Event)
 	{
@@ -49,6 +60,11 @@ void UManaComponent::BeginPlay()
 void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if(Subsystem)
+	{
+		Subsystem->OnLocalTest.Broadcast(1);
+	}
+
 	// ...
 }
 
