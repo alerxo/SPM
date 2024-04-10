@@ -18,3 +18,7 @@ void ASpiderbotController::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 }
 
+float ASpiderbotController::GetVisionRange() const
+{
+	return VisionRange;
+}

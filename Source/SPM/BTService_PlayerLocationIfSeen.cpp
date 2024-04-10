@@ -4,6 +4,7 @@
 #include "BTService_PlayerLocationIfSeen.h"
 
 #include "AIController.h"
+#include "SpiderbotController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -27,11 +28,17 @@ void UBTService_PlayerLocationIfSeen::TickNode(UBehaviorTreeComponent& OwnerComp
 	{
 		return;
 	}
-	
+
+	ASpiderbotController* SpiderbotController = Cast<ASpiderbotController>(OwnerComp.GetOwner());
+	if (SpiderbotController == nullptr)
+	{
+		return;
+	}
 	
 	const float DistanceToPlayer = FVector::Dist(PlayerPawn->GetActorLocation(), OwnerComp.GetAIOwner()->GetPawn()->GetActorLocation());
 
-	if (OwnerComp.GetAIOwner()->LineOfSightTo(PlayerPawn) && DistanceToPlayer <= 1000)
+	
+	if (OwnerComp.GetAIOwner()->LineOfSightTo(PlayerPawn) && DistanceToPlayer <= SpiderbotController->GetVisionRange())
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsObject(GetSelectedBlackboardKey(), PlayerPawn);
 	}
