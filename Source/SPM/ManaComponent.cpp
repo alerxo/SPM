@@ -2,7 +2,8 @@
 
 
 #include "ManaComponent.h"
-#include "GameplayEvent.h"
+#include "PlayerStateListener.h"
+#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -23,8 +24,16 @@ void UManaComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if(ACharacter* Owner = Cast<ACharacter>(GetOwner()))
+	{
+		GameplayEvent =  Cast<APlayerStateListener>(Owner->GetPlayerState());
+		UE_LOG(LogTemp,Warning, TEXT("BINDED"))
+	}
+
+
 	Mana = DefaultMana;
 
+	GameplayEvent->OnDecreaseMana.AddDynamic(this, &UManaComponent::DecreaseMana);
 	/*
 	if(Event)
 	{
@@ -40,7 +49,6 @@ void UManaComponent::BeginPlay()
 void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	// ...
 }
 
@@ -54,7 +62,7 @@ void UManaComponent::DecreaseMana(float Amount)
 	UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
 	if( ( Mana -= DecreaseAmount ) <= 0)
 	{
-		
+		//
 	}
 }
 

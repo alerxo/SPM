@@ -3,11 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayEvent.h"
 #include "Components/ActorComponent.h"
 #include "ManaComponent.generated.h"
 
-class AGameplayEvent;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API UManaComponent : public UActorComponent
 {
@@ -33,13 +31,16 @@ public:
 	void SetDecreaseAmount(float Amount) { DecreaseAmount = Amount; }
 	float GetDecreaseAmount(){return  DecreaseAmount;}
 
-	//TSharedRef<AGameplayEvent> GameplayEvent(new AGameplayEvent());
-
+	
+	UPROPERTY(EditAnywhere)
+	class APlayerStateListener* GameplayEvent;
 	//Decrease the amount of Mana
 	//DECLARE_DELEGATE_OneParam(DelegateName, Param1Type)
 
-	UFUNCTION()
+	
+	UFUNCTION(BlueprintCallable)
 	void DecreaseMana(float Amount);
+	
 private: 
 
 	float Mana;
