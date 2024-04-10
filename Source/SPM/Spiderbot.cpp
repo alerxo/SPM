@@ -28,6 +28,13 @@ void ASpiderbot::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FRotator ControlRotation = GetControlRotation();
+	FRotator ActorRotation = GetActorRotation();
+
+	FRotator NewRotation = GetActorRotation();
+	NewRotation.Pitch = ControlRotation.Pitch;
+
+	SetActorRotation(NewRotation);
 }
 
 void ASpiderbot::Fire()
