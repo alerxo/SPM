@@ -18,6 +18,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class ASPMProjectile> ProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class AFireballProjectile> FireballClass;
+
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class ASPMCharacter> ElectricityClass;
+
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* FireSound;
@@ -38,6 +44,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* FireAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ShootFireballAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ShootElectricityAction;
+
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
@@ -49,6 +61,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
 
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ShootFireball();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ShootElectricity();
+	
 protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()
