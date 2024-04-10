@@ -27,7 +27,7 @@ EBTNodeResult::Type UBTTask_SpiderbotShoot::ExecuteTask(UBehaviorTreeComponent& 
 		return EBTNodeResult::Failed;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Shooting Player"));
+	Spiderbot->Fire();
 
 	return EBTNodeResult::Succeeded;
 }
