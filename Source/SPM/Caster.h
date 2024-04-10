@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DamageComponent.h"
+#include "GameplayEvent.h"
 #include "Components/SceneComponent.h"
 #include "Caster.generated.h"
 
@@ -28,6 +29,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	void Cast();
+	
+	UPROPERTY()
+	AGameplayEvent* Event;
 
 	//Parent InputController
 	UPROPERTY()

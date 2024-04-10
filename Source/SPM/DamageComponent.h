@@ -24,7 +24,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float Damage = 1;
-
+	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDamageType> DamageType;
 
