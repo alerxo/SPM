@@ -4,6 +4,7 @@
 #include "FireballProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AFireballProjectile::AFireballProjectile()
@@ -33,13 +34,54 @@ AFireballProjectile::AFireballProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
+void AFireballProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CollisionComp->OnComponentHit.AddDynamic(this, &AFireballProjectile::OnHit);
+}
+
+
+void AFireballProjectile::Explode()
+{
+	TArray<FHitResult> OutHits;
+
+	FVector HitLocation = GetActorLocation();
+		
+	FCollisionShape CollisionSphere = FCollisionShape::MakeSphere(ExplosiveRadius);
+	DrawDebugSphere(GetWorld(), HitLocation, CollisionSphere.GetSphereRadius(),
+		30, FColor::Red, true);
+	bool isHit = GetWorld()->SweepMultiByChannel(OutHits, HitLocation, HitLocation,
+		FQuat::Identity, ECC_WorldStatic, CollisionSphere);
+
+	if(isHit)
+	{
+		for(auto& Hit : OutHits)
+		{
+			UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
+
+			if(MeshComponent)
+			{
+				MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
+			}
+		}
+	}
+		
+		
+	UE_LOG(LogTemp, Warning, TEXT("FireHit"));
+}
+
+
 void AFireballProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+
+	UE_LOG(LogTemp, Warning, TEXT("FireHit"));
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
+		Explode();
 		Destroy();
 	}
 }
