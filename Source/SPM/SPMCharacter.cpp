@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "ManaComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -22,6 +23,10 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 ASPMCharacter::ASPMCharacter()
 {
+
+	//Create ManaComponent
+	ManaComponent = CreateDefaultSubobject<UManaComponent>(TEXT("Mana"));
+	
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
 	
@@ -144,4 +149,9 @@ void ASPMCharacter::SetHasRifle(bool bNewHasRifle)
 bool ASPMCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+float ASPMCharacter::GetMana() const
+{
+	return  ManaComponent->GetMana();
 }

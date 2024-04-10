@@ -25,16 +25,14 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	//Getter for Mana
+	
 	float GetMana() const {return  Mana;}
 
 	//Getters and setter DecreaseAmount
 	void SetDecreaseAmount(float Amount) { DecreaseAmount = Amount; }
 	float GetDecreaseAmount(){return  DecreaseAmount;}
 
-	UPROPERTY(EditAnywhere)
-	
-	
-	
+	UPROPERTY()
 	class USPMGameInstanceSubsystem* Subsystem;
 	
 	UPROPERTY(EditAnywhere)
@@ -45,7 +43,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void DecreaseMana(float Amount);
-	
+
+
 private: 
 
 	float Mana;

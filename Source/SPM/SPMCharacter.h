@@ -7,6 +7,7 @@
 #include "Logging/LogMacros.h"
 #include "SPMCharacter.generated.h"
 
+class UManaComponent;
 class UInputComponent;
 class USkeletalMeshComponent;
 class UCameraComponent;
@@ -52,6 +53,8 @@ class ASPMCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	int DashCount;
 
+	UPROPERTY(EditAnywhere)
+	class UManaComponent* ManaComponent;
 	/** Dash max count */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	int DashMaxCount = 1;
@@ -87,6 +90,9 @@ public:
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
+
+	//Getter for float
+	float GetMana() const;
 	
 protected:
 	/** Called for movement input */
