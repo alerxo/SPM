@@ -58,10 +58,12 @@ void URaidalActionComponent::DisableRadial(UPrimitiveComponent* OverlappedCompon
 void URaidalActionComponent::EnableRadial(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
 {
 	UE_LOG(LogTemp, Warning, TEXT("Enable %s"), *OtherActor->GetName());
+	/*
 	if(Count >= 30)
 	{
 		return;
 	}
 	ForceActor->EnableForce();
 	Count++;
+	*/
 }

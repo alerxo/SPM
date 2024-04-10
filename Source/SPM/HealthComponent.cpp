@@ -33,7 +33,7 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 	{
 		return;
 	}
-	if((DefaultHealth -= Damage) == 0)
+	if((DefaultHealth -= Damage) <= 0)
 	{
 		
 	}
