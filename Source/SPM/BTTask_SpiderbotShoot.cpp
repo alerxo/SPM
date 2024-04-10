@@ -11,6 +11,7 @@ UBTTask_SpiderbotShoot::UBTTask_SpiderbotShoot()
 	NodeName = TEXT("Shoot");
 }
 
+//Executes shoot method in Spiderbot class
 EBTNodeResult::Type UBTTask_SpiderbotShoot::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);

@@ -3,6 +3,8 @@
 
 #include "SpiderbotController.h"
 
+
+//Runs behavior tree on startup
 void ASpiderbotController::BeginPlay()
 {
 	Super::BeginPlay();

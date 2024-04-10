@@ -28,6 +28,8 @@ void ASpiderbot::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+	//rotates AI to where it's aiming
 	FRotator ControlRotation = GetControlRotation();
 	FRotator ActorRotation = GetActorRotation();
 
@@ -37,6 +39,7 @@ void ASpiderbot::Tick(float DeltaTime)
 	SetActorRotation(NewRotation);
 }
 
+//shoots projectile
 void ASpiderbot::Fire()
 {
 	ASpiderbotProjectile* Projectile = GetWorld()->SpawnActor<ASpiderbotProjectile>(

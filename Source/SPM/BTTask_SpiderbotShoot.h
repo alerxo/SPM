@@ -15,7 +15,7 @@ class SPM_API UBTTask_SpiderbotShoot : public UBTTaskNode
 	GENERATED_BODY()
 
 public:
-	UBTTask_SpiderbotShoot();
+	UBTTask_SpiderbotShoot(); 
 
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;

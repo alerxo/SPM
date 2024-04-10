@@ -11,6 +11,7 @@ UBTService_UpdatePlayerLocation::UBTService_UpdatePlayerLocation()
 	NodeName = TEXT("Update Player Location");
 }
 
+//Updates player last known position
 void UBTService_UpdatePlayerLocation::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
