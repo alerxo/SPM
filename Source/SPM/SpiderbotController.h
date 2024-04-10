@@ -19,6 +19,8 @@ public:
 
 	float GetVisionRange() const;
 
+	bool IsDead() const;
+
 protected:
 	virtual void BeginPlay() override;
 

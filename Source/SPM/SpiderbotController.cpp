@@ -22,3 +22,8 @@ float ASpiderbotController::GetVisionRange() const
 {
 	return VisionRange;
 }
+
+bool ASpiderbotController::IsDead() const
+{
+	return false;
+}
