@@ -33,6 +33,9 @@ class ASPMCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true")	)
+	USceneComponent* FiringPoint;
+	
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* JumpAction;
@@ -40,6 +43,26 @@ class ASPMCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+	
+	/** Dash Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* DashAction;
+
+	/** Dash count value */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
+	int DashCount;
+
+	/** Dash max count */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
+	int DashMaxCount = 1;
+
+	/** Dash max count */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
+	float DashSpeed = 5.0f;
+
+	/** Dash cooldowntime */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
+	float DashCooldown = 2.0f;
 	
 public:
 	ASPMCharacter();
@@ -64,7 +87,7 @@ public:
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
-
+	
 protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
@@ -72,6 +95,8 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+	/** Called for dashing input */
+	void Dash(const FInputActionValue& Value);
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
