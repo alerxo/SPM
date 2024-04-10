@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DamageComponent.h"
 #include "GameFramework/Actor.h"
 #include "FireballProjectile.generated.h"
 
@@ -46,4 +47,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Projectile")
 	float ExplosiveImpulseStrength = 2000.f;
+
+	UPROPERTY(EditAnywhere, Category="Projectile")
+	UDamageComponent* DamageComponent;
 };
