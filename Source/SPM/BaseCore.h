@@ -43,17 +43,19 @@ public:
 	UPROPERTY(EditAnywhere)
 	UHealthComponent* HealthComponent;
 
-
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* MeshComponent;
 	
 	UPROPERTY()
 	USPMGameInstanceSubsystem* GameInstanceSubsystem;
+	
+	UPROPERTY(EditAnywhere)
+	USphereComponent* SphereComponent;
+
+	
 private:
 	bool bCanBeActivated;
 
-	UPROPERTY(EditAnywhere)
-	USphereComponent* SphereComponent;
 
 	void DestroyCore();
 
