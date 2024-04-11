@@ -72,6 +72,7 @@ void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
+//Recharges mana 
 void UManaComponent::RechargeMana(float DeltaTime)
 {
 	if(Timer <= 0)
