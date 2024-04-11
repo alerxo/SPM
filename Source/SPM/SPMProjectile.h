@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "DamageComponent.h"
 #include "SPMProjectile.generated.h"
 
 class USphereComponent;
@@ -33,5 +34,10 @@ public:
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+private:
+	UPROPERTY(EditAnywhere, Category="Projectile")
+	UDamageComponent* DamageComponent;
+	
 };
 
