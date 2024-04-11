@@ -53,7 +53,7 @@ void AFireballProjectile::Explode()
 		
 	FCollisionShape CollisionSphere = FCollisionShape::MakeSphere(ExplosiveRadius);
 	DrawDebugSphere(GetWorld(), HitLocation, CollisionSphere.GetSphereRadius(),
-		25, FColor::Red, true);
+		25, FColor::Red, false, 1.5f);
 	bool isHit = GetWorld()->SweepMultiByChannel(OutHits, HitLocation, HitLocation,
 		FQuat::Identity, ECC_WorldStatic, CollisionSphere);
 
