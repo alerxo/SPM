@@ -32,6 +32,7 @@ public:
 	UFUNCTION()
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	UFUNCTION(BlueprintCallable)
 	float GetHealth() const;
 
 	//float GetHealthStartValue() const{return Health;}
