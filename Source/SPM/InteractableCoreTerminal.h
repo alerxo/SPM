@@ -6,6 +6,7 @@
 #include "Interactable.h"
 #include "InteractableCoreTerminal.generated.h"
 
+class ABaseCore;
 class USPMGameInstanceSubsystem;
 /**
  * 
@@ -27,7 +28,16 @@ public:
 	
 	UFUNCTION()
 	void SetIsActive(bool Value);
-	
+
+	bool GetIsActive()const{return bIsActive;}
+
+	UPROPERTY(EditAnywhere)
+	TArray<ABaseCore*> Cores;
+
 	UPROPERTY()
-	USPMGameInstanceSubsystem* GameInstanceSubsystem;
+	class USPMGameInstanceSubsystem* GameInstanceSubsystem;
+	
+	UFUNCTION()
+	void CheckCores(ABaseCore* Core);
+	
 };

@@ -18,6 +18,8 @@ ABaseCore::ABaseCore()
 
 	RootComponent = SphereComponent;
 	MeshComponent->SetupAttachment(RootComponent);
+
+	//HealthComponent->SetActive(false);
 }
 
 // Called when the game starts or when spawned
@@ -27,7 +29,6 @@ void ABaseCore::BeginPlay()
 
 	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
 	GameInstanceSubsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
-	
 	
 	OnTakeAnyDamage.AddDynamic(this, &ABaseCore::Test);
 	//SphereComponent->OnComponentHit.AddDynamic(this, &ABaseCore::Test);ff
@@ -39,9 +40,11 @@ void ABaseCore::Test(AActor* DamagedActor, float Damage, const class UDamageType
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Core Destroyed"));
 		DestroyCore();
-	}else
+	}else if(bCanBeActivated)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ApplyDamage"));
 		HealthComponent->TakeDamage(this, Damage,DamageType, InstigatedBy,this);
+		//Health -= 1;
 	}
 }
 
@@ -58,12 +61,19 @@ void ABaseCore::DestroyCore()
 	if(GameInstanceSubsystem)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DestroyCore GameInstance"));
-		GameInstanceSubsystem->OnCoreDestroyed.Broadcast(true);
+		GameInstanceSubsystem->OnCoreDestroyed.Broadcast(this);
 	}
 	
 	Destroy();
 
 	//call event delegate 
 }
+
+void ABaseCore::SetCanBeActivated(bool Value)
+{
+	bCanBeActivated = true;
+	HealthComponent->SetHealth(HealthComponent->Health);
+}
+
 
 

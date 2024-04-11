@@ -24,6 +24,8 @@ public:
 
 	//float GetHealth() const {return  DefaultHealth;}
 
+	void SetHealth(float Value){ DefaultHealth = Value;}
+
 	UPROPERTY(EditAnywhere)
 	float Health = 100;
 
@@ -31,6 +33,8 @@ public:
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	float GetHealth() const;
+
+	//float GetHealthStartValue() const{return Health;}
 
 private:
 	float DefaultHealth;
