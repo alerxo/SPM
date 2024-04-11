@@ -33,7 +33,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetCanBeActivated(bool Value){bCanBeActivated = Value;}
+	void SetCanBeActivated(bool Value);
 
 	USphereComponent* GetSphereComponent() const {return SphereComponent;}
 	
@@ -43,17 +43,21 @@ public:
 	UPROPERTY(EditAnywhere)
 	UHealthComponent* HealthComponent;
 
-
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* MeshComponent;
 	
 	UPROPERTY()
 	USPMGameInstanceSubsystem* GameInstanceSubsystem;
-private:
-	bool bCanBeActivated;
-
+	
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereComponent;
+
+	
+private:
+
+	//float Health = 20;
+	bool bCanBeActivated;
+
 
 	void DestroyCore();
 
