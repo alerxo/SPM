@@ -41,7 +41,7 @@ void ASpiderbot::Tick(float DeltaTime)
 
 	if (IsDead())
 	{
-		GetController()->UnPossess();
+		GetController()->Destroy();
 		Destroy();
 	}
 }
