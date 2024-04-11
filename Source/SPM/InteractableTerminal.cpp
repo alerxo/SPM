@@ -3,11 +3,14 @@
 
 #include "InteractableTerminal.h"
 
+#include "BaseCore.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
 void AInteractableTerminal::BeginPlay()
 {
+	
 	AActor::BeginPlay();
 	UInputComponent* PlayerInput = UGameplayStatics::GetPlayerController(GetWorld(),0)->InputComponent;
 	if(PlayerInput)
@@ -22,7 +25,15 @@ void AInteractableTerminal::Interact()
 {
 	if(GetIsInteractable())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Interact Terminal"));
+		if(Core)
+		{
+			Core->SetCanBeActivated(true);
+			UE_LOG(LogTemp, Warning, TEXT("Interact Terminal"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("No Core Selected"));
+		}
 	}
 	
 }

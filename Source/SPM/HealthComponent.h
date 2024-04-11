@@ -20,7 +20,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
+	float GetHealth() const {return  DefaultHealth;}
 
 	UPROPERTY(EditAnywhere)
 	float Health = 100;

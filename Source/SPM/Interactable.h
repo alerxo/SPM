@@ -55,7 +55,9 @@ public:
 
 	UFUNCTION()
 	virtual void SphereEndOverlaped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	
+
+
+	//Use Trigger
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereComponent;
 
@@ -63,6 +65,9 @@ public:
 	UStaticMeshComponent* MeshComponent;
 	
 	bool GetIsInteractable(){return bIsInteractable;}
+
+
+	void SetIsInteractable(bool Value){bIsInteractable = Value;}
 private:
 
 	bool bIsInteractable;

@@ -4,26 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "Interactable.h"
-#include "InteractableTerminal.generated.h"
+#include "InteractableCoreTerminal.generated.h"
 
-class ABaseCore;
+class USPMGameInstanceSubsystem;
 /**
  * 
  */
-
 UCLASS()
-class SPM_API AInteractableTerminal : public AInteractable
+class SPM_API AInteractableCoreTerminal : public AInteractable
 {
 	GENERATED_BODY()
-
-
 protected:
 	virtual void BeginPlay() override;
-
 	void Interact() override;
+
+	
 public:
+	bool bIsActive;
 
 	UPROPERTY(EditAnywhere)
-	ABaseCore* Core; 
+	FName LevelName; 
 	
+	UFUNCTION()
+	void SetIsActive(bool Value);
+	
+	UPROPERTY()
+	USPMGameInstanceSubsystem* GameInstanceSubsystem;
 };
