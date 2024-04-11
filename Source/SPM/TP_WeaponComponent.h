@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ManaComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
@@ -75,4 +76,10 @@ protected:
 private:
 	/** The Character holding this weapon*/
 	ASPMCharacter* Character;
+
+	UPROPERTY(EditAnywhere)
+	UManaComponent* ManaComponent;
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	float ManaCost = 10.f;
 };

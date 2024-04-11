@@ -17,6 +17,9 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 {
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
+
+	ManaComponent = CreateDefaultSubobject<UManaComponent>(TEXT("Mana"));
+	
 }
 
 
@@ -67,6 +70,8 @@ void UTP_WeaponComponent::Fire()
 
 void UTP_WeaponComponent::ShootFireball()
 {
+	
+	
 	if (Character == nullptr || Character->GetController() == nullptr)
 	{
 		return;
@@ -75,6 +80,11 @@ void UTP_WeaponComponent::ShootFireball()
 	// Try and fire a projectile
 	if (FireballClass != nullptr)
 	{
+		if(ManaComponent->GetMana() <= ManaCost)
+		{
+			return;
+		}
+		ManaComponent->DecreaseMana(ManaCost);
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{

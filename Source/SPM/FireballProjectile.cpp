@@ -60,14 +60,17 @@ void AFireballProjectile::Explode()
 	{
 		for(auto& Hit : OutHits)
 		{
-			UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
-			UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
-			if(MeshComponent)
+			if(Hit.GetActor() != nullptr)
 			{
-				MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
+				UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
+				UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
+				if(MeshComponent)
+				{
+					MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
 				
+				}
+				DestroyWithFireball();	
 			}
-			DestroyWithFireball();
 		}
 		
 	}
