@@ -18,7 +18,7 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 
-	ManaComponent = CreateDefaultSubobject<UManaComponent>(TEXT("Mana"));
+	
 	
 }
 
@@ -80,7 +80,7 @@ void UTP_WeaponComponent::ShootFireball()
 	// Try and fire a projectile
 	if (FireballClass != nullptr)
 	{
-		if(ManaComponent->GetMana() <= ManaCost)
+		if(ManaComponent->GetMana() < ManaCost)
 		{
 			return;
 		}
@@ -200,6 +200,14 @@ void UTP_WeaponComponent::AttachWeapon(ASPMCharacter* TargetCharacter)
 		}
 	}
 }
+
+void UTP_WeaponComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ManaComponent = UGameplayStatics::GetPlayerCharacter(this, 0)->GetComponentByClass<UManaComponent>();
+}
+
 
 void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
