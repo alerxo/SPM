@@ -24,6 +24,11 @@ protected:
 public:
 
 	UPROPERTY(EditAnywhere)
-	ABaseCore* Core; 
+	TArray<ABaseCore*> Cores;
 	
+	UPROPERTY(EditAnywhere)
+	ABaseCore* Core; 
+
+
+	ABaseCore* CorePtr;
 };
