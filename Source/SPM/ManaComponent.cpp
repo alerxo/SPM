@@ -40,7 +40,7 @@ void UManaComponent::BeginPlay()
 	Subsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
 	if(Subsystem)
 	{
-		Subsystem->OnLocalTest.AddDynamic(this, &UManaComponent::DecreaseMana);
+		Subsystem->OnSpellShot.AddDynamic(this, &UManaComponent::DecreaseMana);
 	}
 	//Set float in Timer 
 	Timer = DefaultTimer;
@@ -107,7 +107,7 @@ void UManaComponent::DecreaseMana(float Amount)
 	Timer = DefaultTimer;
 	if( ( Mana -= DecreaseAmount ) <= 0)
 	{
-		
+		Mana = 0;
 	}
 	
 }

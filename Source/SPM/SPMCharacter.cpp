@@ -116,11 +116,6 @@ void ASPMCharacter::Dash(const FInputActionValue& Value)
 		LaunchCharacter(MoveSpeed, false, false);
 		DashCount++;
 	}
-	if(SubSystem)
-	{
-		SubSystem->OnLocalTest.Broadcast(1);
-	}
-
 }
 
 

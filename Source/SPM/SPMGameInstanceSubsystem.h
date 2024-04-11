@@ -10,7 +10,7 @@
  * 
  */
 //https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/Subsystems/
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLocalTest, float, Amount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpellShot, float, Amount);
 UCLASS()
 class SPM_API USPMGameInstanceSubsystem : public UGameInstanceSubsystem
 {
@@ -22,7 +22,7 @@ public:
 	// End USubsystem
 
 	UPROPERTY(BlueprintAssignable)
-	FOnLocalTest OnLocalTest;
+	FOnSpellShot OnSpellShot;
 
 	UFUNCTION(BlueprintCallable, Category="MySubSystem")
 	USPMGameInstanceSubsystem* GetSPMGameInstanceSubSystem();

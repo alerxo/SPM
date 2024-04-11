@@ -32,11 +32,11 @@ public:
 	void SetDecreaseAmount(float Amount) { DecreaseAmount = Amount; }
 	float GetDecreaseAmount(){return  DecreaseAmount;}
 
+
+	//Game Instance class for Delegate
 	UPROPERTY()
 	class USPMGameInstanceSubsystem* Subsystem;
 	
-	UPROPERTY(EditAnywhere)
-	class APlayerStateListener* GameplayEvent;
 	//Decrease the amount of Mana
 	//DECLARE_DELEGATE_OneParam(DelegateName, Param1Type)
 
