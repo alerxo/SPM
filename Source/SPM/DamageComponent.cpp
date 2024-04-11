@@ -3,6 +3,7 @@
 
 #include "DamageComponent.h"
 
+
 // Sets default values for this component's properties
 UDamageComponent::UDamageComponent()
 {
@@ -19,6 +20,7 @@ void UDamageComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	TSubclassOf<UDamageType> test = GetDamageType();
 	// ...
 	
 }
@@ -31,7 +33,12 @@ float UDamageComponent::GetDamage() const
 
 TSubclassOf<UDamageType> UDamageComponent::GetDamageType() const
 {
-	return  DamageType;
+	if(DamageType)
+	{
+		return  DamageType;
+	}
+	UE_LOG(LogTemp, Error, TEXT("No DamageType Selected : %s"), *GetOwner()->GetName());
+	return DamageType;
 }
 /*
 */
