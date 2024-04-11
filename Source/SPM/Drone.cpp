@@ -29,3 +29,20 @@ void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+float ADrone::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	float TakenDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	TakenDamage = FMath::Min(Health, TakenDamage);
+	Health -= TakenDamage;
+	
+	UE_LOG(LogTemp, Log, TEXT("Drone Damage Taken %F, Health Left %F"), TakenDamage, Health);
+
+	if(Health <= 0)
+	{
+		Destroy();
+	}
+	
+	return TakenDamage;
+}
