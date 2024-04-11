@@ -1,11 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Caster.h"
 
-#include "CollisionDebugDrawingPublic.h"
-#include "KismetTraceUtils.h"
+
+#include "Caster.h"
+#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "DamageComponent.h"
+
+
 
 // Sets default values for this component's properties
 UCaster::UCaster()
@@ -14,6 +17,7 @@ UCaster::UCaster()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	
 	DamageComponent = CreateDefaultSubobject<UDamageComponent>(TEXT("DamageComp"));
 	// ...
 }
@@ -23,6 +27,7 @@ UCaster::UCaster()
 void UCaster::BeginPlay()
 {
 	Super::BeginPlay();
+	
 
 	
 	Input = GetOwner()->InputComponent;
@@ -58,7 +63,19 @@ void UCaster::Cast()
 			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Green, false, 5);
 		}
 
-		//
+		/*
+		if(Event)
+		{
+			Event->OnDecreaseMana.Broadcast(10);
+		}
+		*/
+		/*
+		if(GameplayEvent)
+		{
+			GameplayEvent->OnDecreaseMana.Broadcast(10);
+			UE_LOG(LogTemp,Warning, TEXT("Mana Decrease"))
+		}
+		*/
 		AActor* Owner = GetOwner();
 		UGameplayStatics::ApplyDamage(Hit.GetActor(),DamageComponent->GetDamage(), Owner->GetInstigatorController(), Owner, DamageComponent->GetDamageType());
 

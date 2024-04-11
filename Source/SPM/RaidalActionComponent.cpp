@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "PhysicsEngine/RadialForceActor.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values for this component's properties
 URaidalActionComponent::URaidalActionComponent()
@@ -24,12 +25,14 @@ void URaidalActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BoxCollision = Cast<UBoxComponent>(ComponentUtils::GetAttachedParent(this));
+	BoxCollision = Cast<UBoxComponent>(ComponentUtils::GetAttachedParent(this)->GetAttachParent());
+	EndBoxCollision = Cast<UBoxComponent>(ComponentUtils::GetAttachedParent(this));
+	
 	ForceActor = Cast<ARadialForceActor>(GetOwner());
 	if(BoxCollision)
 	{
 		BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &URaidalActionComponent::DisableRadial);
-		BoxCollision->OnComponentEndOverlap.AddDynamic(this, &URaidalActionComponent::EnableRadial);
+		
 		UE_LOG(LogTemp, Warning, TEXT("Delegate"));
 		UE_LOG(LogTemp, Warning, TEXT("Owner %s"), *GetOwner()->GetName());
 	}
@@ -42,6 +45,10 @@ void URaidalActionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if(bPlayerIn)
+	{
+		
+	}
 	
 
 	// ...
@@ -50,20 +57,34 @@ void URaidalActionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void URaidalActionComponent::DisableRadial(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) 
 {
-	UE_LOG(LogTemp, Warning, TEXT("Disable %s"), *OtherActor->GetName());
-	ForceActor->DisableForce();
-	Count++;
+	UShapeComponent* Shape = Cast<UShapeComponent>(OtherComp);
+	if(Shape)
+	{
+	
+		//ForceActor->DisableForce();
+		//Shape->SetSimulatePhysics(true);
+		ForceActor->GetForceComponent()->ForceStrength = -150000;
+		//Shape->SetLinearDamping(FallDamping);
+		BoxCollision->OnComponentBeginOverlap.RemoveDynamic(this, &URaidalActionComponent::DisableRadial);
+		EndBoxCollision->OnComponentBeginOverlap.AddDynamic(this, &URaidalActionComponent::EnableRadial);
+		//Shape->OnComponentHit.AddDynamic(this, &URaidalActionComponent::EnableRadial);
+	}
 }
 //Enable force of the raidal Actor
-void URaidalActionComponent::EnableRadial(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
+void URaidalActionComponent::EnableRadial(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) 
 {
-	UE_LOG(LogTemp, Warning, TEXT("Enable %s"), *OtherActor->GetName());
-	/*
-	if(Count >= 30)
+	//Stäng av damping
+	UShapeComponent* Shape = Cast<UShapeComponent>(OtherComp);
+	ForceActor->GetForceComponent()->Deactivate();
+	if(Shape)
 	{
-		return;
+		
+		//Shape->SetLinearDamping(0.01);
+		//Shape->SetSimulatePhysics(false);
+		//UE_LOG(LogTemp, Warning, TEXT("Enable"))
+		//EndBoxCollision->OnComponentBeginOverlap.RemoveDynamic(this, &URaidalActionComponent::EnableRadial);
+		
 	}
-	ForceActor->EnableForce();
-	Count++;
-	*/
+	
 }
+

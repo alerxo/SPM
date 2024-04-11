@@ -7,6 +7,7 @@
 #include "Logging/LogMacros.h"
 #include "SPMCharacter.generated.h"
 
+class UManaComponent;
 class UInputComponent;
 class USkeletalMeshComponent;
 class UCameraComponent;
@@ -20,6 +21,9 @@ UCLASS(config=Game)
 class ASPMCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+	UPROPERTY()
+	class USPMGameInstanceSubsystem* SubSystem;
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
@@ -52,6 +56,8 @@ class ASPMCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	int DashCount;
 
+	UPROPERTY(EditAnywhere)
+	class UManaComponent* ManaComponent;
 	/** Dash max count */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	int DashMaxCount = 1;
@@ -87,6 +93,9 @@ public:
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
+
+	//Getter for float
+	float GetMana() const;
 	
 protected:
 	/** Called for movement input */
