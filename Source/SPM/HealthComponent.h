@@ -22,7 +22,7 @@ protected:
 
 public:
 
-	float GetHealth() const {return  DefaultHealth;}
+	//float GetHealth() const {return  DefaultHealth;}
 
 	UPROPERTY(EditAnywhere)
 	float Health = 100;
