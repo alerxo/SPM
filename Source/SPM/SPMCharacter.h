@@ -58,6 +58,9 @@ class ASPMCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere)
 	class UManaComponent* ManaComponent;
+
+	UPROPERTY(EditAnywhere)
+	class UHealthComponent* HealthComponent;
 	/** Dash max count */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	int DashMaxCount = 1;
