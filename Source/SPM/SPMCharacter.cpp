@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "ManaComponent.h"
+#include "HealthComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -28,6 +29,7 @@ ASPMCharacter::ASPMCharacter()
 
 	//Create ManaComponent
 	ManaComponent = CreateDefaultSubobject<UManaComponent>(TEXT("Mana"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health");
 	
 	// Character doesnt have a rifle at start
 	bHasRifle = false;

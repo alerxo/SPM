@@ -35,7 +35,7 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 	}
 	if((DefaultHealth -= Damage) <= 0)
 	{
-		
+		DefaultHealth = 0;
 	}
 }
 
@@ -44,3 +44,7 @@ float UHealthComponent::GetHealth() const
 		return DefaultHealth;;
 }
 
+float UHealthComponent::GetHealthPercentage() const
+{
+	return DefaultHealth / Health;
+}
