@@ -33,11 +33,6 @@ private:
 	bool DebugMode = false;
 
 public:
-
-		
-	UPROPERTY(EditAnywhere)
-	class APlayerStateListener* GameplayEvent;
-	
 	//spell casting cooldown
 	UPROPERTY(EditAnywhere) 
 	float CoolDown = 0;

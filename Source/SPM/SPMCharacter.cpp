@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
-#include "SPMGameInstanceSubsystem.h"
 #include "SPMCharacter.h"
+#include "SPMGameInstanceSubsystem.h"
 #include "SPMProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -17,7 +16,7 @@
 #include "Math/UnitConversion.h"
 #include "Tasks/Task.h"
 
-//DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 
 

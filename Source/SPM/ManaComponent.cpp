@@ -2,7 +2,6 @@
 
 
 #include "ManaComponent.h"
-#include "PlayerStateListener.h"
 #include "SPMGameInstanceSubsystem.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -98,14 +97,14 @@ void UManaComponent::RechargeMana(float DeltaTime)
 void UManaComponent::DecreaseMana(float Amount)
 {
 	
-	if(DecreaseAmount <= 0)
+	if(Amount <= 0)
 	{
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
 	bCanRecharge = true;
 	Timer = DefaultTimer;
-	if( ( Mana -= DecreaseAmount ) <= 0)
+	if( ( Mana -= Amount ) <= 0)
 	{
 		Mana = 0;
 	}
