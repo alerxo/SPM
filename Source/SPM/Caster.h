@@ -3,12 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DamageComponent.h"
-#include "GameplayEvent.h"
-#include "Components/SceneComponent.h"
 #include "Caster.generated.h"
-
-
 class UInputAction;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -29,9 +24,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	void Cast();
-	
-	UPROPERTY()
-	AGameplayEvent* Event;
 
 	//Parent InputController
 	UPROPERTY()
@@ -60,7 +52,7 @@ public:
 	//Spell class
 	//TO-DO Create a classes for the spells
 	UPROPERTY(EditAnywhere)
-	UDamageComponent* DamageComponent;
+	class UDamageComponent* DamageComponent;
 	
 	void SetDebug();
 };

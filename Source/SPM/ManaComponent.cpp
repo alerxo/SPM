@@ -2,7 +2,8 @@
 
 
 #include "ManaComponent.h"
-#include "GameplayEvent.h"
+#include "SPMGameInstanceSubsystem.h"
+#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -14,6 +15,7 @@ UManaComponent::UManaComponent()
 
 	Mana = DefaultMana;
 
+
 	// ...
 }
 
@@ -23,8 +25,30 @@ void UManaComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/*
+	if(ACharacter* Owner = Cast<ACharacter>(GetOwner()))
+	{
+		GameplayEvent =  Cast<APlayerStateListener>(Owner->GetPlayerState());
+		UE_LOG(LogTemp,Warning, TEXT("BINDED"))
+	}
+	*/
+
+
+	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
+
+	Subsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
+	if(Subsystem)
+	{
+		Subsystem->OnSpellShot.AddDynamic(this, &UManaComponent::DecreaseMana);
+	}
+	//Set float in Timer 
+	Timer = DefaultTimer;
+	//Set float in Mana
 	Mana = DefaultMana;
 
+
+	
+	//GameplayEvent->OnDecreaseMana.AddDynamic(this, &UManaComponent::DecreaseMana);
 	/*
 	if(Event)
 	{
@@ -41,20 +65,49 @@ void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	
+	if(bCanRecharge)
+	{
+		RechargeMana(DeltaTime);
+	}
+
 	// ...
 }
+
+void UManaComponent::RechargeMana(float DeltaTime)
+{
+	if(Timer <= 0)
+	{
+		Mana += 1;
+	
+		if(Mana >= DefaultMana)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Full Recharged %f"), Mana);
+			Mana = DefaultMana;
+			bCanRecharge = false;
+		}
+		
+	} 
+	Timer -= DeltaTime;
+	//UE_LOG(LogTemp, Warning, TEXT("%f"), Timer);
+}
+
 
 
 void UManaComponent::DecreaseMana(float Amount)
 {
-	if(DecreaseAmount <= 0)
+	
+	if(Amount <= 0)
 	{
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
-	if( ( Mana -= DecreaseAmount ) <= 0)
+	bCanRecharge = true;
+	Timer = DefaultTimer;
+	if( ( Mana -= Amount ) <= 0)
 	{
-		
+		Mana = 0;
 	}
+	
 }
 
