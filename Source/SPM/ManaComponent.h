@@ -27,12 +27,7 @@ public:
 	//Getter for Mana
 	
 	float GetMana() const {return  Mana;}
-
-	//Getters and setter DecreaseAmount
-	void SetDecreaseAmount(float Amount) { DecreaseAmount = Amount; }
-	float GetDecreaseAmount(){return  DecreaseAmount;}
-
-
+	
 	//Game Instance class for Delegate
 	UPROPERTY()
 	class USPMGameInstanceSubsystem* Subsystem;
@@ -58,9 +53,7 @@ private:
 	//Timer used for time calculation
 	float Timer;
 	float Mana;
-
-	UPROPERTY(EditAnywhere)
-	float DecreaseAmount = 1;
+	
 	UPROPERTY(EditAnywhere)
 	float DefaultMana = 100; 
 
