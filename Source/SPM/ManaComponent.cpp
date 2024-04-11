@@ -72,6 +72,7 @@ void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
+//Recharges mana 
 void UManaComponent::RechargeMana(float DeltaTime)
 {
 	if(Timer <= 0)
@@ -80,7 +81,7 @@ void UManaComponent::RechargeMana(float DeltaTime)
 	
 		if(Mana >= DefaultMana)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Full Recharged %f"), Mana);
+			//UE_LOG(LogTemp, Warning, TEXT("Full Recharged %f"), Mana);
 			Mana = DefaultMana;
 			bCanRecharge = false;
 		}
@@ -99,7 +100,7 @@ void UManaComponent::DecreaseMana(float Amount)
 	{
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
+	//UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
 	bCanRecharge = true;
 	Timer = DefaultTimer;
 	if( ( Mana -= Amount ) <= 0)

@@ -10,9 +10,10 @@
  * 
  */
 //https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/Subsystems/
+class ABaseCore;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpellShot, float, Amount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractable);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDestroyed, bool, IsInteractable);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDestroyed, ABaseCore*, Core);
 UCLASS()
 class SPM_API USPMGameInstanceSubsystem : public UGameInstanceSubsystem
 {

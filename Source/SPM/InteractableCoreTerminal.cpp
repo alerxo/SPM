@@ -16,13 +16,19 @@ void AInteractableCoreTerminal::BeginPlay()
 	if(GameInstanceSubsystem)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BeginPlay GameInstance"));
-		GameInstanceSubsystem->OnCoreDestroyed.AddDynamic(this, &AInteractableCoreTerminal::SetIsActive);
+		//GameInstanceSubsystem->OnCoreDestroyed.AddDynamic(this, &AInteractableCoreTerminal::SetIsActive);
 	}
 	UInputComponent* PlayerInput = UGameplayStatics::GetPlayerController(GetWorld(),0)->InputComponent;
 	if(PlayerInput)
 	{
 		FInputActionBinding IAP = PlayerInput->BindAction(TEXT("Interact"), IE_Pressed, this, &AInteractable::Interact);
 	}
+
+	if(GameInstanceSubsystem)
+	{
+		GameInstanceSubsystem->OnCoreDestroyed.AddDynamic(this, &AInteractableCoreTerminal::CheckCores);
+	}
+
 	
 	
 	SetUpCollision();
@@ -31,7 +37,7 @@ void AInteractableCoreTerminal::BeginPlay()
 void AInteractableCoreTerminal::Interact()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Should Interact"));
-	if(GetIsInteractable())
+	if(GetIsActive())
 	{
 		
 		UE_LOG(LogTemp, Warning, TEXT("Ainteractable Core Terminal"));
@@ -44,5 +50,23 @@ void AInteractableCoreTerminal::SetIsActive(bool Value)
 {
 	bIsActive = Value;
 }
+
+void AInteractableCoreTerminal::CheckCores(ABaseCore* Core)
+{
+	if(this == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No CoreTerminal in Interactable"));
+		return;
+	}
+	UE_LOG(LogTemp, Error, TEXT("Check Cores"));
+	Cores.Remove(Core);
+	if(Cores.Num() == 0)
+	{
+		this->SetIsActive(true);
+	}
+}
+
+
+
 
 

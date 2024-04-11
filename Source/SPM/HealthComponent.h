@@ -24,6 +24,8 @@ public:
 
 	//float GetHealth() const {return  DefaultHealth;}
 
+	void SetHealth(float Value){ DefaultHealth = Value;}
+
 	UPROPERTY(EditAnywhere)
 	float Health = 100;
 
@@ -32,6 +34,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const;
+
+	//float GetHealthStartValue() const{return Health;}
 
 private:
 	float DefaultHealth;
