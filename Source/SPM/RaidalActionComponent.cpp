@@ -78,7 +78,9 @@ void URaidalActionComponent::EnableRadial(UPrimitiveComponent* OverlappedCompone
 	ForceActor->GetForceComponent()->Deactivate();
 	if(Shape)
 	{
-		
+
+		//	GetCharacterMovement()->ClearAccumulatedForces();
+		//ACharacter* s = Cast<ACharacter>(Shape->GetOwner());
 		//Shape->SetLinearDamping(0.01);
 		//Shape->SetSimulatePhysics(false);
 		//UE_LOG(LogTemp, Warning, TEXT("Enable"))
