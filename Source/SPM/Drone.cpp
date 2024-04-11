@@ -2,6 +2,7 @@
 
 
 #include "Drone.h"
+#include "PhysicsEngine/PhysicsThrusterComponent.h"
 
 // Sets default values
 ADrone::ADrone()
@@ -9,6 +10,7 @@ ADrone::ADrone()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	PhysicsThrusterComponent = CreateDefaultSubobject<UPhysicsThrusterComponent>(TEXT("Thruster"));
 }
 
 // Called when the game starts or when spawned
@@ -27,7 +29,6 @@ void ADrone::Tick(float DeltaTime)
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 float ADrone::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,

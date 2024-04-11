@@ -31,4 +31,6 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 	float Health = 10;
+	
+	class UPhysicsThrusterComponent* PhysicsThrusterComponent;
 };
