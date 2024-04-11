@@ -5,6 +5,7 @@
 #include "SPMGameInstanceSubsystem.h"
 #include "HealthComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABaseCore::ABaseCore()
@@ -13,6 +14,8 @@ ABaseCore::ABaseCore()
 	PrimaryActorTick.bCanEverTick = true;
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 
 	RootComponent = SphereComponent;
 	MeshComponent->SetupAttachment(RootComponent);
@@ -33,10 +36,13 @@ void ABaseCore::BeginPlay()
 
 void ABaseCore::Test(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	if(bCanBeActivated)
+	if(bCanBeActivated && HealthComponent->GetHealth() <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Core Destroyed"));
 		DestroyCore();
+	}else
+	{
+		HealthComponent->TakeDamage(this, Damage,DamageType, InstigatedBy,this);
 	}
 }
 

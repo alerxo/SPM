@@ -39,9 +39,9 @@ public:
 	
 	UFUNCTION()
 	void Test(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-
-
 	
+	UPROPERTY(EditAnywhere)
+	UHealthComponent* HealthComponent;
 
 
 	UPROPERTY(EditAnywhere)

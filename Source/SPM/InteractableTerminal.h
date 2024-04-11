@@ -22,13 +22,7 @@ protected:
 
 	void Interact() override;
 public:
-
-	UPROPERTY(EditAnywhere)
-	TArray<ABaseCore*> Cores;
-	
 	UPROPERTY(EditAnywhere)
 	ABaseCore* Core; 
-
-
-	ABaseCore* CorePtr;
+	
 };
