@@ -3,11 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DamageComponent.h"
-#include "Components/SceneComponent.h"
 #include "Caster.generated.h"
-
-
 class UInputAction;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -56,7 +52,7 @@ public:
 	//Spell class
 	//TO-DO Create a classes for the spells
 	UPROPERTY(EditAnywhere)
-	UDamageComponent* DamageComponent;
+	class UDamageComponent* DamageComponent;
 	
 	void SetDebug();
 };

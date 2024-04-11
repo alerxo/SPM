@@ -27,14 +27,26 @@ public:
 	UPROPERTY(Category=Character, VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	class UBoxComponent* BoxCollision;
 
-	class ARadialForceActor* ForceActor;
+	UPROPERTY(Category=Character, VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	class UBoxComponent* EndBoxCollision;
 
-	int Count;
+	class ARadialForceActor* ForceActor;
+	
+	UPROPERTY(EditAnywhere)
+	float FallDamping;
+
 
 	UFUNCTION()
 	void DisableRadial(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	UFUNCTION()
-	void EnableRadial(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void EnableRadial(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+
+
+private:
+	bool bPlayerIn;
+
+	
 	
 };

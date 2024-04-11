@@ -3,6 +3,7 @@
 
 #include "Spiderbot.h"
 
+#include "HealthComponent.h"
 #include "SpiderbotProjectile.h"
 
 // Sets default values
@@ -37,6 +38,12 @@ void ASpiderbot::Tick(float DeltaTime)
 	NewRotation.Pitch = ControlRotation.Pitch;
 
 	SetActorRotation(NewRotation);
+
+	if (IsDead())
+	{
+		GetController()->UnPossess();
+		Destroy();
+	}
 }
 
 //shoots projectile
@@ -55,4 +62,11 @@ void ASpiderbot::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
 }
+
+bool ASpiderbot::IsDead() const
+{
+	UHealthComponent* HealthComponent = GetComponentByClass<UHealthComponent>();
+	return HealthComponent->GetHealth() <= 0;
+}
+
 
