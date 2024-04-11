@@ -3,8 +3,6 @@
 
 #include "ManaComponent.h"
 #include "SPMGameInstanceSubsystem.h"
-#include "GameFramework/Character.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UManaComponent::UManaComponent()
