@@ -3,11 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayEvent.h"
 #include "Components/ActorComponent.h"
 #include "ManaComponent.generated.h"
 
-class AGameplayEvent;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API UManaComponent : public UActorComponent
 {
@@ -27,25 +25,35 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	//Getter for Mana
+	
 	float GetMana() const {return  Mana;}
-
-	//Getters and setter DecreaseAmount
-	void SetDecreaseAmount(float Amount) { DecreaseAmount = Amount; }
-	float GetDecreaseAmount(){return  DecreaseAmount;}
-
-	//TSharedRef<AGameplayEvent> GameplayEvent(new AGameplayEvent());
-
+	
+	//Game Instance class for Delegate
+	UPROPERTY()
+	class USPMGameInstanceSubsystem* Subsystem;
+	
 	//Decrease the amount of Mana
 	//DECLARE_DELEGATE_OneParam(DelegateName, Param1Type)
 
-	UFUNCTION()
+	
+	UFUNCTION(BlueprintCallable)
 	void DecreaseMana(float Amount);
+
+
+	void RechargeMana(float DeltaTime);
+
 private: 
 
-	float Mana;
+	bool bCanRecharge;
 
+	//Default Value of Timer on Start
 	UPROPERTY(EditAnywhere)
-	float DecreaseAmount = 1;
+	float DefaultTimer = 2;
+
+	//Timer used for time calculation
+	float Timer;
+	float Mana;
+	
 	UPROPERTY(EditAnywhere)
 	float DefaultMana = 100; 
 
