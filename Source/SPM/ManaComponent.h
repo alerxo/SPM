@@ -57,5 +57,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	float DefaultMana = 100; 
 
-		
+	UFUNCTION(BlueprintCallable)
+	float GetManaPercent() const;
 };

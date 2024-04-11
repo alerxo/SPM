@@ -33,5 +33,6 @@ public:
 private:
 	float DefaultHealth;
 
-
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPercentage() const;
 };

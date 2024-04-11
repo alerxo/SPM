@@ -111,3 +111,8 @@ void UManaComponent::DecreaseMana(float Amount)
 	
 }
 
+float UManaComponent::GetManaPercent() const
+{
+	return Mana / DefaultMana;
+}
+
