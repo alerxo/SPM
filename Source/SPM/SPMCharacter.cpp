@@ -1,5 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "SPMGameInstanceSubsystem.h"
 #include "SPMCharacter.h"
 #include "SPMProjectile.h"
 #include "Animation/AnimInstance.h"
@@ -16,7 +17,9 @@
 #include "Math/UnitConversion.h"
 #include "Tasks/Task.h"
 
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+//DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // ASPMCharacter
@@ -54,6 +57,11 @@ void ASPMCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	
+	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
+
+	SubSystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
 
 	// Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
@@ -108,6 +116,11 @@ void ASPMCharacter::Dash(const FInputActionValue& Value)
 		LaunchCharacter(MoveSpeed, false, false);
 		DashCount++;
 	}
+	if(SubSystem)
+	{
+		SubSystem->OnLocalTest.Broadcast(1);
+	}
+
 }
 
 

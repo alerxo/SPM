@@ -45,8 +45,18 @@ public:
 	void DecreaseMana(float Amount);
 
 
+	void RechargeMana(float DeltaTime);
+
 private: 
 
+	bool bCanRecharge;
+
+	//Default Value of Timer on Start
+	UPROPERTY(EditAnywhere)
+	float DefaultTimer = 2;
+
+	//Timer used for time calculation
+	float Timer;
 	float Mana;
 
 	UPROPERTY(EditAnywhere)

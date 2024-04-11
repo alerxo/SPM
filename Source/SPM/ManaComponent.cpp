@@ -16,6 +16,7 @@ UManaComponent::UManaComponent()
 
 	Mana = DefaultMana;
 
+
 	// ...
 }
 
@@ -33,6 +34,7 @@ void UManaComponent::BeginPlay()
 	}
 	*/
 
+
 	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
 
 	Subsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
@@ -40,6 +42,9 @@ void UManaComponent::BeginPlay()
 	{
 		Subsystem->OnLocalTest.AddDynamic(this, &UManaComponent::DecreaseMana);
 	}
+	//Set float in Timer 
+	Timer = DefaultTimer;
+	//Set float in Mana
 	Mana = DefaultMana;
 
 
@@ -60,25 +65,50 @@ void UManaComponent::BeginPlay()
 void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if(Subsystem)
+
+	
+	if(bCanRecharge)
 	{
-		Subsystem->OnLocalTest.Broadcast(1);
+		RechargeMana(DeltaTime);
 	}
 
 	// ...
 }
 
+void UManaComponent::RechargeMana(float DeltaTime)
+{
+	if(Timer <= 0)
+	{
+		Mana += 1;
+	
+		if(Mana >= DefaultMana)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Full Recharged %f"), Mana);
+			Mana = DefaultMana;
+			bCanRecharge = false;
+		}
+		
+	} 
+	Timer -= DeltaTime;
+	//UE_LOG(LogTemp, Warning, TEXT("%f"), Timer);
+}
+
+
 
 void UManaComponent::DecreaseMana(float Amount)
 {
+	
 	if(DecreaseAmount <= 0)
 	{
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
+	bCanRecharge = true;
+	Timer = DefaultTimer;
 	if( ( Mana -= DecreaseAmount ) <= 0)
 	{
-		//
+		
 	}
+	
 }
 
