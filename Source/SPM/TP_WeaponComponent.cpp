@@ -80,7 +80,7 @@ void UTP_WeaponComponent::ShootFireball()
 	// Try and fire a projectile
 	if (FireballClass != nullptr)
 	{
-		if(ManaComponent->GetMana() <= ManaCost)
+		if(ManaComponent->GetMana() < ManaCost)
 		{
 			return;
 		}
