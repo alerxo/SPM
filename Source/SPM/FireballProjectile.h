@@ -34,6 +34,9 @@ public:
 	UFUNCTION()
 	void Explode();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void DestroyWithFireball();
+
 	/** Returns CollisionComp subobject **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	/** Returns ProjectileMovement subobject **/
@@ -51,7 +54,4 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Projectile")
 	UDamageComponent* DamageComponent;
-
-	//UPROPERTY(EditAnywhere, Category="Projectile", BlueprintReadWrite, meta=(DisplayName = "ExplosiveRadius", AllowPrivateAccess = "true"))
-	//UFieldSystemComponent* DestructiveExplosion;
 };

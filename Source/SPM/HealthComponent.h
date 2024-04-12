@@ -20,7 +20,11 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
+	//float GetHealth() const {return  DefaultHealth;}
+
+	void SetHealth(float Value){ DefaultHealth = Value;}
 
 	UPROPERTY(EditAnywhere)
 	float Health = 100;
@@ -28,8 +32,14 @@ public:
 	UFUNCTION()
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	UFUNCTION(BlueprintCallable)
+	float GetHealth() const;
+
+	//float GetHealthStartValue() const{return Health;}
+
 private:
 	float DefaultHealth;
 
-
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPercentage() const;
 };

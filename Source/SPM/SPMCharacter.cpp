@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "SPMCharacter.h"
+#include "SPMGameInstanceSubsystem.h"
 #include "SPMProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "ManaComponent.h"
+#include "HealthComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -17,6 +18,8 @@
 #include "Tasks/Task.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // ASPMCharacter
@@ -26,6 +29,7 @@ ASPMCharacter::ASPMCharacter()
 
 	//Create ManaComponent
 	ManaComponent = CreateDefaultSubobject<UManaComponent>(TEXT("Mana"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health");
 	
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
@@ -54,6 +58,11 @@ void ASPMCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	
+	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
+
+	SubSystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
 
 	// Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))

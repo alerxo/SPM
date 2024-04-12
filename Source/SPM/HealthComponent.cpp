@@ -28,14 +28,23 @@ void UHealthComponent::BeginPlay()
 // Called every frame
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%f"), DefaultHealth);
+	UE_LOG(LogTemp, Warning, TEXT("Health %f"), DefaultHealth);
 	if(Damage <= 0)
 	{
 		return;
 	}
 	if((DefaultHealth -= Damage) <= 0)
 	{
-		
+		DefaultHealth = 0;
 	}
 }
 
+float UHealthComponent::GetHealth() const
+{
+		return DefaultHealth;
+}
+
+float UHealthComponent::GetHealthPercentage() const
+{
+	return DefaultHealth / Health;
+}

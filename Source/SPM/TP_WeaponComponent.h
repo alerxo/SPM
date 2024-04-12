@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ManaComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
@@ -72,7 +73,18 @@ protected:
 	UFUNCTION()
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	UFUNCTION()
+	virtual void BeginPlay() override;
+
 private:
 	/** The Character holding this weapon*/
 	ASPMCharacter* Character;
+
+	UPROPERTY(EditAnywhere)
+	UManaComponent* ManaComponent;
+
+	
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	float ManaCost = 10.f;
 };

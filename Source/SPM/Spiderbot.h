@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HealthComponent.h"
 #include "GameFramework/Character.h"
 #include "Spiderbot.generated.h"
 
@@ -25,12 +26,16 @@ public:
 
 	void Fire();
 
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ASpiderbotProjectile> ProjectileClass;
 
+
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
+
+	bool IsDead() const;
 
 
 
