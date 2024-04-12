@@ -39,7 +39,7 @@ float ADrone::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	TakenDamage = FMath::Min(Health, TakenDamage);
 	Health -= TakenDamage;
 	
-	UE_LOG(LogTemp, Log, TEXT("Drone Damage Taken %F, Health Left %F"), TakenDamage, Health);
+	//UE_LOG(LogTemp, Log, TEXT("Drone Damage Taken %F, Health Left %F"), TakenDamage, Health);
 
 	if(Health <= 0)
 	{
@@ -59,6 +59,6 @@ void ADrone::ShootTarget()
 		FVector Origin = GetOwner()->GetActorLocation();
 		FVector Target = player->GetActorLocation();
 		FVector Rotation = Target-Origin.Normalize();
-		GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation.Rotation());
+		//GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation.Rotation());
 	}
 }
