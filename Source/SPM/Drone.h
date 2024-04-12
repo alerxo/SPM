@@ -28,9 +28,13 @@ public:
 
 	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-public:
+	UFUNCTION(BlueprintCallable)
+	void ShootTarget();
+
 	UPROPERTY(EditAnywhere)
 	float Health = 10;
-	
-	class UPhysicsThrusterComponent* PhysicsThrusterComponent;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class ADroneProjectile> Projectile;
 };
