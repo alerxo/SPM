@@ -16,8 +16,8 @@ class UInputMappingContext;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
-
 UCLASS(config=Game)
+
 class ASPMCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -58,6 +58,9 @@ class ASPMCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere)
 	class UManaComponent* ManaComponent;
+
+	UPROPERTY(EditAnywhere)
+	class UHealthComponent* HealthComponent;
 	/** Dash max count */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	int DashMaxCount = 1;

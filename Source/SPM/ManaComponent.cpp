@@ -3,8 +3,6 @@
 
 #include "ManaComponent.h"
 #include "SPMGameInstanceSubsystem.h"
-#include "GameFramework/Character.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UManaComponent::UManaComponent()
@@ -74,6 +72,7 @@ void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
+//Recharges mana 
 void UManaComponent::RechargeMana(float DeltaTime)
 {
 	if(Timer <= 0)
@@ -82,7 +81,7 @@ void UManaComponent::RechargeMana(float DeltaTime)
 	
 		if(Mana >= DefaultMana)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Full Recharged %f"), Mana);
+			//UE_LOG(LogTemp, Warning, TEXT("Full Recharged %f"), Mana);
 			Mana = DefaultMana;
 			bCanRecharge = false;
 		}
@@ -101,7 +100,7 @@ void UManaComponent::DecreaseMana(float Amount)
 	{
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
+	//UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
 	bCanRecharge = true;
 	Timer = DefaultTimer;
 	if( ( Mana -= Amount ) <= 0)
@@ -109,5 +108,10 @@ void UManaComponent::DecreaseMana(float Amount)
 		Mana = 0;
 	}
 	
+}
+
+float UManaComponent::GetManaPercent() const
+{
+	return Mana / DefaultMana;
 }
 

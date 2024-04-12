@@ -42,8 +42,8 @@ void AFireballProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	CollisionComp->OnComponentHit.AddDynamic(this, &AFireballProjectile::OnHit);
-}
 
+}
 
 void AFireballProjectile::Explode()
 {
@@ -52,8 +52,7 @@ void AFireballProjectile::Explode()
 	FVector HitLocation = GetActorLocation();
 		
 	FCollisionShape CollisionSphere = FCollisionShape::MakeSphere(ExplosiveRadius);
-	DrawDebugSphere(GetWorld(), HitLocation, CollisionSphere.GetSphereRadius(),
-		25, FColor::Red, true);
+	//DrawDebugSphere(GetWorld(), HitLocation, CollisionSphere.GetSphereRadius(), 25, FColor::Red, true);
 	bool isHit = GetWorld()->SweepMultiByChannel(OutHits, HitLocation, HitLocation,
 		FQuat::Identity, ECC_WorldStatic, CollisionSphere);
 
@@ -61,12 +60,16 @@ void AFireballProjectile::Explode()
 	{
 		for(auto& Hit : OutHits)
 		{
-			UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
-			UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
-			if(MeshComponent)
+			if(Hit.GetActor() != nullptr)
 			{
-				MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
+				UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
+				UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
+				if(MeshComponent)
+				{
+					MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
 				
+				}
+				DestroyWithFireball();	
 			}
 		}
 		
