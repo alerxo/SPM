@@ -39,7 +39,7 @@ void AInteractableCoreTerminal::BeginPlay()
 void AInteractableCoreTerminal::Interact()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Should Interact"));
-	if(GetIsActive())
+	if(GetIsActive() && GetIsInteractable())
 	{
 		
 		UE_LOG(LogTemp, Warning, TEXT("Ainteractable Core Terminal"));
