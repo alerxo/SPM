@@ -58,7 +58,7 @@ public:
 
 
 	//Use Trigger
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* SphereComponent;
 
 	UPROPERTY(EditAnywhere)
