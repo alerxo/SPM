@@ -11,11 +11,10 @@ class USPMGameInstanceSubsystem;
 class UHealthComponent;
 class USphereComponent;
 
-
+//Delegate Declaration for FOnCoreActivate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCoreActivate);
 UCLASS()
 
-//When Destroyed Activate terminal access
 class SPM_API ABaseCore : public AActor
 {
 	GENERATED_BODY()
@@ -30,35 +29,43 @@ protected:
 
 public:
 
+	//Delegate for OnCoreActivate
 	FOnCoreActivate OnCoreActivate;
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//Setter for bool
 	void SetCanBeActivated(bool Value);
 
+	//Getter for USphereComponent
 	USphereComponent* GetSphereComponent() const {return SphereComponent;}
-	
+
+	//Function to Damage Core
 	UFUNCTION()
-	void Test(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-	
+	void DamageCore(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	//HealthComponent
 	UPROPERTY(EditAnywhere)
 	UHealthComponent* HealthComponent;
 
+	//MeshComponent
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* MeshComponent;
-	
+
+	//GameInstanceSubSystem for calling delegates
 	UPROPERTY()
 	USPMGameInstanceSubsystem* GameInstanceSubsystem;
-	
+
+	//SphereComponent EditAnywhere
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereComponent;
 
 private:
-
-	//float Health = 20;
+	//Bool if Core is active or not
 	bool bCanBeActivated;
 
-
+	//Destroy the core
 	void DestroyCore();
 
 };

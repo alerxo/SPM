@@ -18,10 +18,13 @@ class SPM_API AInteractableTerminal : public AInteractable
 
 
 protected:
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	//Called When Player Interacts
 	void Interact() override;
 public:
+	
+	//The Core the terminal is connected to
 	UPROPERTY(EditAnywhere)
 	ABaseCore* Core;
 	

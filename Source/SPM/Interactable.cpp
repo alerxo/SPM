@@ -15,10 +15,11 @@ AInteractable::AInteractable()
 	PrimaryActorTick.bCanEverTick = true;
 
 
-	
+	//Create Subobjects
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Nesh"));
 
+	//Set up the Hierarchy of the Interactable 
 	RootComponent = SphereComponent;
 	MeshComponent->SetupAttachment(RootComponent);
 }
@@ -27,10 +28,13 @@ AInteractable::AInteractable()
 void AInteractable::BeginPlay()
 {
 	Super::BeginPlay();
+	//Get InputComponent
 	UInputComponent* PlayerInput = UGameplayStatics::GetPlayerController(GetWorld(),0)->InputComponent;
+	
 	if(PlayerInput)
 	{
-		FInputActionBinding IAP = PlayerInput->BindAction(TEXT("Interact"), IE_Pressed, this, &AInteractable::Interact);
+		//Bind Player Input Action to Interact method
+		FInputActionBinding InputActionBinding = PlayerInput->BindAction(TEXT("Interact"), IE_Pressed, this, &AInteractable::Interact);
 	}
 
 
@@ -44,18 +48,18 @@ void AInteractable::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
+//Called When another actor Begins To Overlap with collision
 void AInteractable::SphereBeginOverlaped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	bIsInteractable = true;
 }
-
+//Called When another actor Exit The collision
 void AInteractable::SphereEndOverlaped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	bIsInteractable = false;
 }
 
-
+//Called When Player Interacts
 void AInteractable::Interact()
 {
 	if(bIsInteractable)
@@ -65,6 +69,7 @@ void AInteractable::Interact()
 
 }
 
+//Set up the collision Delegates
 void AInteractable::SetUpCollision()
 {
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AInteractable::SphereBeginOverlaped);

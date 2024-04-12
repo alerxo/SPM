@@ -23,12 +23,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
+	//Method to Create A Ray And apply Damage
 	void Cast();
 
 	//Parent InputController
 	UPROPERTY()
 	UInputComponent* Input;
-	
+
+	//Bool for Debug mode
 	UPROPERTY()
 	bool DebugMode = false;
 
@@ -46,11 +48,9 @@ public:
 	float EndDistance = 2000;
 
 	UPROPERTY(EditAnywhere)
-	//TO-DO make more Damage Types like fire damage and Electricity Damage
 	TSubclassOf<UDamageType> DamageType;
 
 	//Spell class
-	//TO-DO Create a classes for the spells
 	UPROPERTY(EditAnywhere)
 	class UDamageComponent* DamageComponent;
 	
