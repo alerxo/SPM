@@ -3,6 +3,8 @@
 
 #include "InteractableCoreTerminal.h"
 
+#include "BaseCore.h"
+#include "InteractableTerminal.h"
 #include "SPMGameInstanceSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -37,7 +39,7 @@ void AInteractableCoreTerminal::BeginPlay()
 void AInteractableCoreTerminal::Interact()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Should Interact"));
-	if(GetIsInteractable())
+	if(GetIsActive())
 	{
 		
 		UE_LOG(LogTemp, Warning, TEXT("Ainteractable Core Terminal"));
@@ -60,6 +62,7 @@ void AInteractableCoreTerminal::CheckCores(ABaseCore* Core)
 	}
 	UE_LOG(LogTemp, Error, TEXT("Check Cores"));
 	Cores.Remove(Core);
+	Core->Destroy();
 	if(Cores.Num() == 0)
 	{
 		this->SetIsActive(true);
