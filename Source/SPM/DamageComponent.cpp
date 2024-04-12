@@ -19,18 +19,16 @@ UDamageComponent::UDamageComponent()
 void UDamageComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	TSubclassOf<UDamageType> test = GetDamageType();
-	// ...
 	
 }
 
-
+//Gets the amount of Damage The Owner Causes
 float UDamageComponent::GetDamage() const
 {
 	return Damage;
 }
 
+//Returns A DamageType Based on Chosen DamageType
 TSubclassOf<UDamageType> UDamageComponent::GetDamageType() const
 {
 	if(DamageType)

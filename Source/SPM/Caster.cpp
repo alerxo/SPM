@@ -17,7 +17,7 @@ UCaster::UCaster()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	
+	//Create DamageComponent as Subobject
 	DamageComponent = CreateDefaultSubobject<UDamageComponent>(TEXT("DamageComp"));
 	// ...
 }
@@ -29,7 +29,7 @@ void UCaster::BeginPlay()
 	Super::BeginPlay();
 	
 
-	
+	//Bind Input so you can shoot
 	Input = GetOwner()->InputComponent;
 	if(Input)
 	{
@@ -51,10 +51,12 @@ void UCaster::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponen
 //Casts aa spell
 void UCaster::Cast() 
 {
-	
+	//Create a Hit
 	FHitResult Hit;
 	const FVector EndLocation = GetComponentLocation() + GetForwardVector()*EndDistance;
-	bool HitResult = GetWorld()->LineTraceSingleByChannel(Hit, GetComponentLocation(), EndLocation, ECC_GameTraceChannel2); 
+	//Get Result of the line trace
+	bool HitResult = GetWorld()->LineTraceSingleByChannel(Hit, GetComponentLocation(), EndLocation, ECC_GameTraceChannel2);
+	//If there is a Hit Result Apply Damage
 	if(HitResult)
 	{
 		if(DebugMode)
@@ -62,26 +64,14 @@ void UCaster::Cast()
 			DrawDebugLine(GetWorld(), GetComponentLocation(), EndLocation,FColor::Red, false, 5);
 			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 10, 12, FColor::Green, false, 5);
 		}
-
-		/*
-		if(Event)
-		{
-			Event->OnDecreaseMana.Broadcast(10);
-		}
-		*/
-		/*
-		if(GameplayEvent)
-		{
-			GameplayEvent->OnDecreaseMana.Broadcast(10);
-			UE_LOG(LogTemp,Warning, TEXT("Mana Decrease"))
-		}
-		*/
+		
 		AActor* Owner = GetOwner();
 		UGameplayStatics::ApplyDamage(Hit.GetActor(),DamageComponent->GetDamage(), Owner->GetInstigatorController(), Owner, DamageComponent->GetDamageType());
 
 	}
 }
 
+//Set if you can see debug
 void UCaster::SetDebug()
 {
 	DebugMode = !DebugMode;

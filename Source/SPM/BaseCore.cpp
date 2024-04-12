@@ -27,15 +27,19 @@ void ABaseCore::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//instantiate
 	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
 	GameInstanceSubsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
-	
-	OnTakeAnyDamage.AddDynamic(this, &ABaseCore::Test);
+
+	//Add DamageCore Method to delegate OnTakeAnyDamage
+	OnTakeAnyDamage.AddDynamic(this, &ABaseCore::DamageCore);
 	//SphereComponent->OnComponentHit.AddDynamic(this, &ABaseCore::Test);ff
 }
 
-void ABaseCore::Test(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+//Damages the core
+void ABaseCore::DamageCore(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
+	//Checks if it can take Damage
 	if(bCanBeActivated && HealthComponent->GetHealth() <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Core Destroyed"));
@@ -44,7 +48,6 @@ void ABaseCore::Test(AActor* DamagedActor, float Damage, const class UDamageType
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ApplyDamage"));
 		HealthComponent->TakeDamage(this, Damage,DamageType, InstigatedBy,this);
-		//Health -= 1;
 	}
 }
 
@@ -55,20 +58,18 @@ void ABaseCore::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-
+//Destroy The Core
 void ABaseCore::DestroyCore()
 {
 	if(GameInstanceSubsystem)
 	{
+		//Broadcast (Activate) Delegate OnCoreDestroyed
 		UE_LOG(LogTemp, Warning, TEXT("DestroyCore GameInstance"));
 		GameInstanceSubsystem->OnCoreDestroyed.Broadcast(this);
 	}
-	
-	//Destroy();
-
-	//call event delegate 
 }
 
+//Set So the core can be shoot
 void ABaseCore::SetCanBeActivated(bool Value)
 {
 	bCanBeActivated = true;

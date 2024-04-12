@@ -22,14 +22,18 @@ protected:
 
 private:
 
+	//float property for Damage
 	UPROPERTY(EditAnywhere)
 	float Damage = 1;
-	
+
+	//DamageType Property
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDamageType> DamageType;
 
 public:
+	//Getter Return float of Damage
 	float GetDamage() const;
+	//Getter Return DamageType
 	TSubclassOf<UDamageType> GetDamageType() const;
 		
 };

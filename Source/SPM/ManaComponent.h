@@ -34,15 +34,16 @@ public:
 	//Decrease the amount of Mana
 	//DECLARE_DELEGATE_OneParam(DelegateName, Param1Type)
 
-	
+	//Method to Decrease Mana 
 	UFUNCTION(BlueprintCallable)
 	void DecreaseMana(float Amount);
 
-
+	//Method to Recharge Mana
 	void RechargeMana(float DeltaTime);
 
 private: 
 
+	//bCanRecharge
 	bool bCanRecharge;
 
 	//Default Value of Timer on Start
@@ -51,11 +52,14 @@ private:
 
 	//Timer used for time calculation
 	float Timer;
+	//float for mana
 	float Mana;
-	
+
+	//Default mana flaot
 	UPROPERTY(EditAnywhere)
 	float DefaultMana = 100; 
 
+	//Getter for Mana Percentage
 	UFUNCTION(BlueprintCallable)
 	float GetManaPercent() const;
 };

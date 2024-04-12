@@ -19,11 +19,13 @@ ACoreManager::ACoreManager()
 void ACoreManager::BeginPlay()
 {
 	Super::BeginPlay();
+	//Create GameInstanceSubSystem to call delegates
 	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
 	GameInstanceSubsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
 
 	if(GameInstanceSubsystem)
 	{
+		//Dynamically add CheckCores to OnCoreDestroyed
 		GameInstanceSubsystem->OnCoreDestroyed.AddDynamic(this, &ACoreManager::CheckCores);
 	}
 
@@ -37,6 +39,7 @@ void ACoreManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+//Method to Check the Cores Array and remove chosen core
 void ACoreManager::CheckCores(ABaseCore* Core)
 {
 	if(CoreTerminal)
@@ -46,6 +49,7 @@ void ACoreManager::CheckCores(ABaseCore* Core)
 	}
 	UE_LOG(LogTemp, Error, TEXT("Check Cores"));
 	Cores.Remove(Core);
+	//if null then Terminal is active
 	if(Cores.Num() == 0)
 	{
 		CoreTerminal->SetIsActive(true);

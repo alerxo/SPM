@@ -33,10 +33,11 @@ public:
 	
 	UPROPERTY()
 	USPMGameInstanceSubsystem*  GameInstanceSubsystem;
-	
+
+	//Bind sp bIsInteractable is true 
 	UFUNCTION(BlueprintCallable)
 	void BindInteractionAction();
-
+	//Bind sp bIsInteractable is false 
 	UFUNCTION(BlueprintCallable)
 	void UnBindInteractionAction();
 	

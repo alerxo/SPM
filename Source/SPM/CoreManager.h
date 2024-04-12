@@ -25,15 +25,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//Array of cores
 	UPROPERTY(EditAnywhere)
 	TArray<ABaseCore*> Cores;
-	
+
+	//The terminal that hold the cores
 	UPROPERTY(EditAnywhere)
 	AInteractableCoreTerminal* CoreTerminal;
 
+	//GameInstanceSubSystem
 	UPROPERTY()
 	class USPMGameInstanceSubsystem* GameInstanceSubsystem;
 	
+	//Function to check a core and remove from array
 	UFUNCTION()
 	void CheckCores(ABaseCore* Core);
 
