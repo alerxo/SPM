@@ -23,6 +23,6 @@ protected:
 	void Interact() override;
 public:
 	UPROPERTY(EditAnywhere)
-	ABaseCore* Core; 
+	ABaseCore* Core;
 	
 };
