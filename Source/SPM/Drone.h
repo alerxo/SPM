@@ -35,13 +35,13 @@ public:
 	float Health = 10;
 
 	UPROPERTY(VisibleDefaultsOnly)
-	class UPhysicsConstraintComponent* PhysicsConstraint;
-
-	UPROPERTY(VisibleDefaultsOnly)
-	class UStaticMeshComponent* StableMesh;
+	USkeletalMeshComponent* StableMesh;
 	
 	UPROPERTY(VisibleDefaultsOnly)
-	class UStaticMeshComponent* ConstraintMesh;
+	class UPhysicsConstraintComponent* PhysicsConstraint;
+	
+	UPROPERTY(VisibleDefaultsOnly)
+	UStaticMeshComponent* ConstraintMesh;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")

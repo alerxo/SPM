@@ -13,10 +13,7 @@ ADrone::ADrone()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>();
-
-	StableMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StableMesh"));
-	StableMesh->SetupAttachment(SkeletalMeshComponent);
+	StableMesh = FindComponentByClass<USkeletalMeshComponent>();
 	
 	PhysicsConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("Physics Constraint"));
 	PhysicsConstraint->SetupAttachment(StableMesh);
@@ -29,8 +26,9 @@ ADrone::ADrone()
 void ADrone::BeginPlay()
 {
 	Super::BeginPlay();
+	
 
-	PhysicsConstraint->SetConstrainedComponents(StableMesh, TEXT("Stable Mesh"), ConstraintMesh, TEXT("Constraint Mesh"));
+	PhysicsConstraint->SetConstrainedComponents(StableMesh, NAME_None, ConstraintMesh, NAME_None);
 }
 
 // Called every frame
