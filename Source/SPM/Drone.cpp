@@ -29,6 +29,8 @@ ADrone::ADrone()
 void ADrone::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PhysicsConstraint->SetConstrainedComponents(StableMesh, TEXT("Stable Mesh"), ConstraintMesh, TEXT("Constraint Mesh"));
 }
 
 // Called every frame
