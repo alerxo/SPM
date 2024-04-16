@@ -26,13 +26,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
 	void ShootTarget();
 
 	UPROPERTY(EditAnywhere)
 	float Health = 10;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	class UPhysicsConstraintComponent* PhysicsConstraint;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	class UStaticMeshComponent* StableMesh;
+	
+	UPROPERTY(VisibleDefaultsOnly)
+	class UStaticMeshComponent* ConstraintMesh;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
