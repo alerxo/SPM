@@ -7,37 +7,34 @@
 #include "Kismet/GameplayStatics.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 
-// Sets default values
 ADrone::ADrone()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	StableMesh = FindComponentByClass<USkeletalMeshComponent>();
 	
-	PhysicsConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("Physics Constraint"));
+	PhysicsConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
 	PhysicsConstraint->SetupAttachment(StableMesh);
 
 	ConstraintMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConstraintMesh"));
 	ConstraintMesh->SetupAttachment(PhysicsConstraint);
+
+	ProjectileOrigin = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOrigin"));
+	ProjectileOrigin->SetupAttachment(ConstraintMesh);
 }
 
-// Called when the game starts or when spawned
 void ADrone::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
 	PhysicsConstraint->SetConstrainedComponents(StableMesh, NAME_None, ConstraintMesh, NAME_None);
 }
 
-// Called every frame
 void ADrone::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -46,14 +43,11 @@ void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 float ADrone::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	AActor* DamageCauser)
 {
-	float TakenDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	TakenDamage = FMath::Min(Health, TakenDamage);
-	Health -= TakenDamage;
+	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));;
 	
-	//UE_LOG(LogTemp, Log, TEXT("Drone Damage Taken %F, Health Left %F"), TakenDamage, Health);
-
-	if(Health <= 0)
+	if((Health -= TakenDamage) <= 0)
 	{
+		GetController()->Destroy();
 		Destroy();
 	}
 	
@@ -62,17 +56,9 @@ float ADrone::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 void ADrone::ShootTarget()
 {
-	if(AActor* player = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+	if(const AActor* Player = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
-		FVector Origin = GetOwner()->GetActorLocation();
-		
-		FVector Target = player->GetActorLocation();
-		FVector Rotation = Target-Origin.Normalize();
-
-
-		GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation.Rotation());
-
-
-		UE_LOG(LogTemp, Log, TEXT("BOOM"));
+		ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, ProjectileOrigin->GetComponentLocation(), ProjectileOrigin->GetComponentRotation());
+		NewProjectile->SetOwner(this);
 	}
 }
