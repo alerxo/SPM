@@ -6,6 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "RaidalActionComponent.generated.h"
 
+//////////////////////////////////////////
+//CLASS IS JUST TEST AND WILL BE DELETED//
+/////////////////////////////////////////
+//MyRadialForceComponent is used instead
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API URaidalActionComponent : public USceneComponent

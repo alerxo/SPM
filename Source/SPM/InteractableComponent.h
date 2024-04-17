@@ -27,16 +27,17 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-
+	
+	
 	bool bIsInteractable;
 	
 	UPROPERTY()
 	USPMGameInstanceSubsystem*  GameInstanceSubsystem;
-	
+
+	//Bind sp bIsInteractable is true 
 	UFUNCTION(BlueprintCallable)
 	void BindInteractionAction();
-
+	//Bind sp bIsInteractable is false 
 	UFUNCTION(BlueprintCallable)
 	void UnBindInteractionAction();
 	

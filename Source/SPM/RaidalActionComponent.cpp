@@ -9,6 +9,11 @@
 #include "PhysicsEngine/RadialForceActor.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
+//////////////////////////////////////////
+//CLASS IS JUST TEST AND WILL BE DELETED//
+/////////////////////////////////////////
+//MyRadialForceComponent is used instead
+
 // Sets default values for this component's properties
 URaidalActionComponent::URaidalActionComponent()
 {

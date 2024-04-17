@@ -3,13 +3,16 @@
 
 #include "InteractableCoreTerminal.h"
 
+#include "BaseCore.h"
+#include "InteractableTerminal.h"
 #include "SPMGameInstanceSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
-
+// Called when the game starts or when spawned
 void AInteractableCoreTerminal::BeginPlay()
 {
 	AActor::BeginPlay();
+	//Create GameInstanceSubSystem to call delegates
 	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
 	GameInstanceSubsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
 
@@ -21,23 +24,25 @@ void AInteractableCoreTerminal::BeginPlay()
 	UInputComponent* PlayerInput = UGameplayStatics::GetPlayerController(GetWorld(),0)->InputComponent;
 	if(PlayerInput)
 	{
-		FInputActionBinding IAP = PlayerInput->BindAction(TEXT("Interact"), IE_Pressed, this, &AInteractable::Interact);
+		FInputActionBinding InputActionBinding = PlayerInput->BindAction(TEXT("Interact"), IE_Pressed, this, &AInteractable::Interact);
 	}
 
 	if(GameInstanceSubsystem)
 	{
+		//Dynamically add CheckCOres to OnCoreDestroyed
 		GameInstanceSubsystem->OnCoreDestroyed.AddDynamic(this, &AInteractableCoreTerminal::CheckCores);
 	}
 
 	
-	
+	//Setup The collision
 	SetUpCollision();
 }
-
+//Called When Player Interacts
 void AInteractableCoreTerminal::Interact()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Should Interact"));
-	if(GetIsInteractable())
+	//if active and all cores destroyed open level
+	if(GetIsActive() && GetIsInteractable())
 	{
 		
 		UE_LOG(LogTemp, Warning, TEXT("Ainteractable Core Terminal"));
@@ -45,12 +50,13 @@ void AInteractableCoreTerminal::Interact()
 	}
 }
 
-
+//Setter Terminal is Active
 void AInteractableCoreTerminal::SetIsActive(bool Value)
 {
 	bIsActive = Value;
 }
 
+//function to remove core in array and check it
 void AInteractableCoreTerminal::CheckCores(ABaseCore* Core)
 {
 	if(this == nullptr)
@@ -60,6 +66,7 @@ void AInteractableCoreTerminal::CheckCores(ABaseCore* Core)
 	}
 	UE_LOG(LogTemp, Error, TEXT("Check Cores"));
 	Cores.Remove(Core);
+	Core->Destroy();
 	if(Cores.Num() == 0)
 	{
 		this->SetIsActive(true);

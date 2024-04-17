@@ -11,6 +11,7 @@
  */
 //https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/Subsystems/
 class ABaseCore;
+//Declare Diffrent Delegates 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpellShot, float, Amount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractable);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDestroyed, ABaseCore*, Core);
@@ -26,12 +27,15 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnCoreDestroyed OnCoreDestroyed;
 
+	//Declare Delegate Class FOnSpellShot
 	UPROPERTY(BlueprintAssignable)
 	FOnSpellShot OnSpellShot;
 
+	//Declare Delegate FOnInteractable
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractable OnInteractable;
 
+	//Getter For GameInstanceSubSystem
 	UFUNCTION(BlueprintCallable, Category="MySubSystem")
 	USPMGameInstanceSubsystem* GetSPMGameInstanceSubSystem();
 };

@@ -31,12 +31,13 @@ void UManaComponent::BeginPlay()
 	}
 	*/
 
-
+	//Create GameInstanceSubSystem to call delegates
 	UGameInstance* GameInstance = GetWorld()->GetGameInstance();
-
 	Subsystem = GameInstance->GetSubsystem<USPMGameInstanceSubsystem>();
+	
 	if(Subsystem)
 	{
+		//Dynamically Add Decrease mana to OnSpellShot Delegate
 		Subsystem->OnSpellShot.AddDynamic(this, &UManaComponent::DecreaseMana);
 	}
 	//Set float in Timer 
@@ -62,7 +63,6 @@ void UManaComponent::BeginPlay()
 void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	
 	if(bCanRecharge)
 	{
@@ -92,7 +92,7 @@ void UManaComponent::RechargeMana(float DeltaTime)
 }
 
 
-
+//Decrease mana When called
 void UManaComponent::DecreaseMana(float Amount)
 {
 	
@@ -110,6 +110,7 @@ void UManaComponent::DecreaseMana(float Amount)
 	
 }
 
+//Getter float of mana percentage
 float UManaComponent::GetManaPercent() const
 {
 	return Mana / DefaultMana;
