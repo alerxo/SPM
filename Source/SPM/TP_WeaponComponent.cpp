@@ -6,11 +6,13 @@
 #include "SPMProjectile.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
+//#include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "FireballProjectile.h"
 #include "ElectricProjectile.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -121,7 +123,7 @@ void UTP_WeaponComponent::ShootFireball()
 
 void UTP_WeaponComponent::ShootElectricity()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Shoot Electric"));
+	//UE_LOG(LogTemp, Warning, TEXT("Shoot Electric"));
 	if (Character == nullptr || Character->GetController() == nullptr)
 	{
 		return;
@@ -133,7 +135,7 @@ void UTP_WeaponComponent::ShootElectricity()
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
-			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+			/*APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
 			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
 			const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
@@ -143,7 +145,29 @@ void UTP_WeaponComponent::ShootElectricity()
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	
 			// Spawn the projectile at the muzzle
-			World->SpawnActor<AElectricProjectile>(ElectricityClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			World->SpawnActor<AElectricProjectile>(ElectricityClass, SpawnLocation, SpawnRotation, ActorSpawnParams);*/
+
+			FHitResult OutHit;
+
+			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+			FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+			FVector Start = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
+			FVector CameraForwardVector = PlayerController->PlayerCameraManager->GetActorForwardVector();
+			//FVector End = Start + (GetForwardVector() * 5000.0f);
+			FVector End = Start + (CameraForwardVector * 5000.0f);
+
+			FCollisionQueryParams CollisionParams;
+			CollisionParams.AddIgnoredActor(this->GetOwner());
+
+			DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 1, 0 ,1);
+
+			bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
+			if(IsHit)
+			{
+				//deal damage
+				UE_LOG(LogTemp, Display, TEXT("ElectricHit"));
+			}
+			
 		}
 	}
 	
@@ -197,6 +221,8 @@ void UTP_WeaponComponent::AttachWeapon(ASPMCharacter* TargetCharacter)
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
 			
 			EnhancedInputComponent->BindAction(ShootFireballAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootFireball);
+
+			EnhancedInputComponent->BindAction(ShootElectricityAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootElectricity);
 		}
 	}
 }

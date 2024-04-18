@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ManaComponent.h"
+//#include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
@@ -82,6 +83,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UManaComponent* ManaComponent;
+
+	//UPROPERTY(EditAnywhere)
+	//UCameraComponent* CameraComponent;
 
 	
 
