@@ -16,6 +16,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Math/UnitConversion.h"
 #include "Tasks/Task.h"
+#include "WorldPartition/ContentBundle/ContentBundleLog.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -101,20 +102,23 @@ void ASPMCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	}
 }
 
-void ASPMCharacter::Dash(const FInputActionValue& Value)
+void ASPMCharacter::Dash()
 {
 	if(Controller == nullptr)return;
-	// Get the MoveDirection as a FVector3d
-	FVector3d MoveDirection = Value.Get<FVector3d>();
 
-	// Set the MoveSpeed
-	FVector MoveSpeed = this->GetCharacterMovement()->Velocity;
-	MoveSpeed.Set(MoveSpeed.X, MoveSpeed.Y, 0);
-	MoveSpeed *= DashSpeed;
+	// Get the MoveDirection
+	FVector MoveDirection = this->GetCharacterMovement()->GetLastInputVector();
+	
+	// Set the MaxMoveSpeed
+	double MaxMoveSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
 
-	if(DashCount < DashMaxCount && Controller->GetCharacter()->GetCharacterMovement()->IsFalling())
+	//Set the DashDirection
+	FVector Dash = DashSpeed * MoveDirection * MaxMoveSpeed;
+
+	//Launch the Character if the dashcount is less than max and the character is falling
+	if(DashCount < DashMaxCount && this->GetCharacterMovement()->IsFalling())
 	{
-		LaunchCharacter(MoveSpeed, false, false);
+		LaunchCharacter(Dash, false, false);
 		DashCount++;
 	}
 }
