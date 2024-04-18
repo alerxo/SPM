@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseCore.generated.h"
 
+class AInteractableTerminal;
 class USPMGameInstanceSubsystem;
 class UHealthComponent;
 class USphereComponent;
@@ -52,7 +53,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereComponent;
 
-	
 private:
 
 	//float Health = 20;

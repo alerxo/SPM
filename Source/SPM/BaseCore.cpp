@@ -64,7 +64,7 @@ void ABaseCore::DestroyCore()
 		GameInstanceSubsystem->OnCoreDestroyed.Broadcast(this);
 	}
 	
-	Destroy();
+	//Destroy();
 
 	//call event delegate 
 }

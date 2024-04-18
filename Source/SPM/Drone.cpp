@@ -2,6 +2,9 @@
 
 
 #include "Drone.h"
+
+#include "DroneProjectile.h"
+#include "Kismet/GameplayStatics.h"
 #include "PhysicsEngine/PhysicsThrusterComponent.h"
 
 // Sets default values
@@ -9,8 +12,6 @@ ADrone::ADrone()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	PhysicsThrusterComponent = CreateDefaultSubobject<UPhysicsThrusterComponent>(TEXT("Thruster"));
 }
 
 // Called when the game starts or when spawned
@@ -46,4 +47,18 @@ float ADrone::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	}
 	
 	return TakenDamage;
+}
+
+
+void ADrone::ShootTarget()
+{
+	AActor* player = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	
+	if(player)
+	{
+		FVector Origin = GetOwner()->GetActorLocation();
+		FVector Target = player->GetActorLocation();
+		FVector Rotation = Target-Origin.Normalize();
+		GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation.Rotation());
+	}
 }
