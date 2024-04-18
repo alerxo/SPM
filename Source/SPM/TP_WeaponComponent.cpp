@@ -19,6 +19,7 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 {
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
+	ElectricOffset = FVector(40.0f, 0.0f, 15.0f);
 
 	
 	
@@ -151,7 +152,7 @@ void UTP_WeaponComponent::ShootElectricity()
 
 			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
 			FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-			FVector Start = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
+			FVector Start = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(FVector(ElectricOffset));
 			FVector CameraForwardVector = PlayerController->PlayerCameraManager->GetActorForwardVector();
 			//FVector End = Start + (GetForwardVector() * 5000.0f);
 			FVector End = Start + (CameraForwardVector * 5000.0f);
@@ -159,13 +160,35 @@ void UTP_WeaponComponent::ShootElectricity()
 			FCollisionQueryParams CollisionParams;
 			CollisionParams.AddIgnoredActor(this->GetOwner());
 
-			DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 1, 0 ,1);
+			//spawn electric effect
+			DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 5, 0 ,1);
 
 			bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
 			if(IsHit)
 			{
 				//deal damage
-				UE_LOG(LogTemp, Display, TEXT("ElectricHit"));
+				//UE_LOG(LogTemp, Display, TEXT("ElectricHit"));
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *OutHit.GetActor()->GetName());
+				for(int32 i = 0; i < 3; i++)
+				{
+					FHitResult BounceHit;
+
+					FVector BounceStart = OutHit.GetActor()->GetActorLocation();
+					FVector BounceEnd = BounceStart + (OutHit.GetActor()->GetActorForwardVector() * 5000.0f);
+
+					FCollisionQueryParams CollisionBounceParams;
+					CollisionBounceParams.AddIgnoredActor(OutHit.GetActor());
+					DrawDebugLine(GetWorld(), BounceStart, BounceEnd, FColor::Blue, false, 5, 0 ,1);
+
+					bool IsBounceHit = GetWorld()->LineTraceSingleByChannel(BounceHit, BounceStart, BounceEnd, ECC_Visibility, CollisionBounceParams);
+					if(IsBounceHit)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("%s"), *BounceHit.GetActor()->GetName());
+					}
+
+					
+
+				}
 			}
 			
 		}
@@ -174,7 +197,7 @@ void UTP_WeaponComponent::ShootElectricity()
 	// Try and play the sound if specified
 	if (FireSound != nullptr)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
+		//UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
 	}
 	
 	// Try and play a firing animation if specified
