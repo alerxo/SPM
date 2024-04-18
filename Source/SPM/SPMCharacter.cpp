@@ -134,6 +134,7 @@ void ASPMCharacter::Move(const FInputActionValue& Value)
 		// add movement 
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
+		//Reset dash on the ground
 		if(DashCount >= DashMaxCount && !Controller->GetCharacter()->GetCharacterMovement()->IsFalling())
 		{
 			DashCount = 0;

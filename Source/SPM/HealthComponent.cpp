@@ -51,3 +51,12 @@ float UHealthComponent::GetHealthPercentage() const
 {
 	return DefaultHealth / Health;
 }
+
+void UHealthComponent::RestoreHealth(float HealthToRestore)
+{
+	DefaultHealth += HealthToRestore;
+	if (DefaultHealth > Health)
+	{
+		DefaultHealth = Health;
+	}
+}

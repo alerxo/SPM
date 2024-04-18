@@ -36,12 +36,18 @@ public:
 	//Getter for Getting a float that is Health
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const;
+
+	UFUNCTION(BlueprintCallable)
+	void RestoreHealth(float HealthToRestore);
+
+	//Getter method for the Health Precentage
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPercentage() const;
 	
 private:
 	//Float property for DefaultHealth that is used for removing Healt Points
 	float DefaultHealth;
 
-	//Getter method for the Health Precentage
-	UFUNCTION(BlueprintCallable)
-	float GetHealthPercentage() const;
+	
+	
 };
