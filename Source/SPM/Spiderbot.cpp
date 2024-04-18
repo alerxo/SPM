@@ -21,6 +21,8 @@ ASpiderbot::ASpiderbot()
 void ASpiderbot::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OnTakeAnyDamage.AddDynamic(this, &ASpiderbot::OnTakeDamage);
 	
 }
 
@@ -68,5 +70,15 @@ bool ASpiderbot::IsDead() const
 	UHealthComponent* HealthComponent = GetComponentByClass<UHealthComponent>();
 	return HealthComponent->GetHealth() <= 0;
 }
+
+void ASpiderbot::OnTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (!bHasTakenDamage)
+	{
+		//increase fire range
+		bHasTakenDamage = true;
+	}
+}
+
 
 
