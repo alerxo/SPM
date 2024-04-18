@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-
+#include "HazardousWater.h"
 #include "DamageComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "HazardousWater.h"
+
 
 
 // Sets default values
@@ -29,11 +29,6 @@ AHazardousWater::AHazardousWater()
 
 
 	Timer = TimeUntilDamage;
-
-
-
-
-	
  }
 
 // Called when the game starts or when spawned
@@ -50,7 +45,8 @@ void AHazardousWater::BeginPlay()
 void AHazardousWater::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
+	//Timer when player should take damage
 	if(bIsPlayerOnWater)
 	{
 		if(Timer <= 0)
@@ -63,12 +59,14 @@ void AHazardousWater::Tick(float DeltaTime)
 
 void AHazardousWater::DamageActor()
 {
+	//Apply the Damage to Actor
 	UGameplayStatics::ApplyDamage(UGameplayStatics::GetPlayerPawn(GetWorld(), 0), DamageComponent->GetDamage(), this->GetInstigatorController(), this,DamageComponent->GetDamageType());
 	Timer = TimeUntilDamage;
 }
 
 void AHazardousWater::SetMaxAcceleration(float Amount)
 {
+	//Change the speed of Player when on the water
 	if(Player)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SET MAX ACCELERATION"));
