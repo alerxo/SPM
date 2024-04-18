@@ -108,7 +108,7 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	/** Called for dashing input */
-	void Dash(const FInputActionValue& Value);
+	void Dash();
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
