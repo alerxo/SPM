@@ -23,7 +23,7 @@ public:
 	TSubclassOf<class AFireballProjectile> FireballClass;
 
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class ASPMCharacter> ElectricityClass;
+	TSubclassOf<class AElectricProjectile> ElectricityClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)

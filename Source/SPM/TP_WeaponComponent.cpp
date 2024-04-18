@@ -71,7 +71,6 @@ void UTP_WeaponComponent::Fire()
 void UTP_WeaponComponent::ShootFireball()
 {
 	
-	
 	if (Character == nullptr || Character->GetController() == nullptr)
 	{
 		return;
@@ -122,6 +121,7 @@ void UTP_WeaponComponent::ShootFireball()
 
 void UTP_WeaponComponent::ShootElectricity()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Shoot Electric"));
 	if (Character == nullptr || Character->GetController() == nullptr)
 	{
 		return;
