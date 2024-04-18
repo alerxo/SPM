@@ -10,6 +10,7 @@ class UUserWidget;
 class USphereComponent;
 UCLASS()
 
+//NOTES FOR THE CLASS SYSTEM 
 //CLASSES
 //Default Terminal class - Interaction - 
 // |							|
@@ -45,30 +46,35 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	
+	//Called When Player Interacts
 	virtual void Interact();
 
+	//Set up the collision Delegates
 	void SetUpCollision();
-	
+
+	//Called When another actor Begins To Overlap with collision
 	UFUNCTION()
 	virtual void SphereBeginOverlaped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
+	//Called When another actor Exit The collision
 	UFUNCTION()
 	virtual void SphereEndOverlaped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 
-	//Use Trigger
+	//SphereComponent for collision
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* SphereComponent;
 
+	//MeshComponent for the Interactables
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* MeshComponent;
-	
+
+	//Getter for Interactable can be interacted with
 	bool GetIsInteractable(){return bIsInteractable;}
 
-
+	//Setter for Interactable can be interacted with
 	void SetIsInteractable(bool Value){bIsInteractable = Value;}
 private:
 
+	//bool property for IsInteractable
 	bool bIsInteractable;
 };

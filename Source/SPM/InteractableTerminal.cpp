@@ -7,26 +7,30 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-
+// Called when the game starts or when spawned
 void AInteractableTerminal::BeginPlay()
 {
 	
 	AActor::BeginPlay();
+	
+	//Get player input
 	UInputComponent* PlayerInput = UGameplayStatics::GetPlayerController(GetWorld(),0)->InputComponent;
 	if(PlayerInput)
 	{
-		FInputActionBinding IAP = PlayerInput->BindAction(TEXT("Interact"), IE_Pressed, this, &AInteractable::Interact);
+		//Bind Action sp when player presses Action button Interact Method is called 
+		FInputActionBinding InputActionBinding = PlayerInput->BindAction(TEXT("Interact"), IE_Pressed, this, &AInteractable::Interact);
 	}
 	SetUpCollision();
 	
 }
-
+//Called When Player Interacts
 void AInteractableTerminal::Interact()
 {
 	if(GetIsInteractable())
 	{
 		if(Core)
 		{
+			//Core is Activated
 			Core->SetCanBeActivated(true);
 			UE_LOG(LogTemp, Warning, TEXT("Interact Terminal"));
 		}

@@ -18,14 +18,15 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	//Dynamically Add TakeDamage Method to OnTakeDamage Delegate
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+	
 	DefaultHealth = Health;
-	// ...
 	
 }
 
 
-// Called every frame
+// Called when the event for Taking Damage OnTakeAnyDamage Delegate
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Health %f"), DefaultHealth);
@@ -33,17 +34,19 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 	{
 		return;
 	}
+	//Damage the Owner(Actor)
 	if((DefaultHealth -= Damage) <= 0)
 	{
 		DefaultHealth = 0;
 	}
 }
 
+//Getter for getting Health
 float UHealthComponent::GetHealth() const
 {
 		return DefaultHealth;
 }
-
+//Getter for The Health Precentage
 float UHealthComponent::GetHealthPercentage() const
 {
 	return DefaultHealth / Health;

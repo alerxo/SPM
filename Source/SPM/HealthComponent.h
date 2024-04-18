@@ -22,24 +22,26 @@ protected:
 
 public:
 
-	//float GetHealth() const {return  DefaultHealth;}
-
+	//Setter float that sets health
 	void SetHealth(float Value){ DefaultHealth = Value;}
 
+	//float Property for Health
 	UPROPERTY(EditAnywhere)
 	float Health = 100;
 
+	//TakeDamage method so Owner takes Damage When hit
 	UFUNCTION()
 	virtual void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	//Getter for Getting a float that is Health
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const;
-
-	//float GetHealthStartValue() const{return Health;}
-
+	
 private:
+	//Float property for DefaultHealth that is used for removing Healt Points
 	float DefaultHealth;
 
+	//Getter method for the Health Precentage
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPercentage() const;
 };
