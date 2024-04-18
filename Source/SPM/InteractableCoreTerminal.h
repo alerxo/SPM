@@ -25,6 +25,7 @@ protected:
 	
 public:
 	//Terminal is active
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsActive;
 
 	//name of level to call
