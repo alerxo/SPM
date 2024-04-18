@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ManaComponent.h"
+//#include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
@@ -23,7 +24,7 @@ public:
 	TSubclassOf<class AFireballProjectile> FireballClass;
 
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class ASPMCharacter> ElectricityClass;
+	TSubclassOf<class AElectricProjectile> ElectricityClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
@@ -36,6 +37,9 @@ public:
 	/** Gun muzzle's offset from the characters location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector MuzzleOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	FVector ElectricOffset;
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
@@ -82,6 +86,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UManaComponent* ManaComponent;
+
+	//UPROPERTY(EditAnywhere)
+	//UCameraComponent* CameraComponent;
 
 	
 
