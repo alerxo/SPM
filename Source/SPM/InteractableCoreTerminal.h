@@ -11,6 +11,7 @@ class USPMGameInstanceSubsystem;
 /**
  * 
  */
+
 UCLASS()
 class SPM_API AInteractableCoreTerminal : public AInteractable
 {
@@ -38,7 +39,7 @@ public:
 	bool GetIsActive()const{return bIsActive;}
 
 	//Array of Cores
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<ABaseCore*> Cores;
 
 	//GameInstanceSubSystem to Call Delegates
