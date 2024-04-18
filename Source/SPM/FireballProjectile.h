@@ -34,6 +34,9 @@ public:
 	UFUNCTION()
 	void Explode();
 
+	UFUNCTION()
+	void DisablePlayerCollision(FHitResult& Hit);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void DestroyWithFireball();
 
