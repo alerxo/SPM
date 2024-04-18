@@ -43,7 +43,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsPlayerOnWater;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	ACharacter* Player;
 	
 	UFUNCTION(BlueprintCallable)
@@ -51,6 +51,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetMaxAcceleration(float Amount);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SlowDownAmount = 400;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float OriginalSpeed; 
 
 
 

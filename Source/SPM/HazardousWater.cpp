@@ -41,6 +41,9 @@ void AHazardousWater::BeginPlay()
 {
 	Super::BeginPlay();
 	Player = UGameplayStatics::GetPlayerCharacter(GetWorld(),0);
+	
+	OriginalSpeed = Player->GetCharacterMovement()->MaxWalkSpeed;
+	
 }
 
 // Called every frame
