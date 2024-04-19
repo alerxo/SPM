@@ -4,8 +4,10 @@
 #include "InteractableTerminal.h"
 
 #include "BaseCore.h"
+#include "PaperSpriteComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+
 
 // Called when the game starts or when spawned
 void AInteractableTerminal::BeginPlay()
@@ -22,6 +24,7 @@ void AInteractableTerminal::BeginPlay()
 	}
 	SetUpCollision();
 	
+	
 }
 //Called When Player Interacts
 void AInteractableTerminal::Interact()
@@ -32,6 +35,7 @@ void AInteractableTerminal::Interact()
 		{
 			//Core is Activated
 			Core->SetCanBeActivated(true);
+			OnScreenChange.Broadcast();
 			UE_LOG(LogTemp, Warning, TEXT("Interact Terminal"));
 		}
 		else

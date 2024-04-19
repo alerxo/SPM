@@ -58,10 +58,11 @@ void AFireballProjectile::Explode()
 
 	if(isHit)
 	{
-		for(auto& Hit : OutHits)
+		for(FHitResult& Hit : OutHits)
 		{
 			if(Hit.GetActor() != nullptr)
 			{
+				DisablePlayerCollision(Hit);
 				UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
 				UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
 				if(MeshComponent)
@@ -97,4 +98,14 @@ void AFireballProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 		Destroy();
 	}*/
 }
+
+void AFireballProjectile::DisablePlayerCollision(FHitResult& Hit)
+{
+	if(Hit.GetActor()->Tags.Contains("Destructible"))
+	{
+		Hit.GetComponent()->SetCollisionProfileName("IgnorePlayerTest", true);
+		Hit.GetComponent()->SetCollisionObjectType(ECC_Destructible);
+	}
+}
+
 
