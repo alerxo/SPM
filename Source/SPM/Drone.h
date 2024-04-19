@@ -45,5 +45,10 @@ public:
 	float Health = 10;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	USceneComponent* ProjectileOrigin;
+	USceneComponent* ProjectileOriginLeft;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	USceneComponent* ProjectileOriginRight;
+private:
+	bool LeftFire = false;
 };

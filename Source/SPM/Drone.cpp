@@ -19,8 +19,11 @@ ADrone::ADrone()
 	ConstraintMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConstraintMesh"));
 	ConstraintMesh->SetupAttachment(PhysicsConstraint);
 
-	ProjectileOrigin = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOrigin"));
-	ProjectileOrigin->SetupAttachment(ConstraintMesh);
+	ProjectileOriginLeft = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginLeft"));
+	ProjectileOriginLeft->SetupAttachment(ConstraintMesh);
+
+	ProjectileOriginRight = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginRight"));
+	ProjectileOriginRight->SetupAttachment(ConstraintMesh);
 }
 
 void ADrone::BeginPlay()
@@ -58,7 +61,15 @@ void ADrone::ShootTarget()
 {
 	if(const AActor* Player = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
-		ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, ProjectileOrigin->GetComponentLocation(), ProjectileOrigin->GetComponentRotation());
+		LeftFire = !LeftFire;
+		
+		FVector Origin = LeftFire ? ProjectileOriginLeft->GetComponentLocation() : ProjectileOriginRight->GetComponentLocation();
+		FRotator Rotation = LeftFire ? ProjectileOriginLeft->GetComponentRotation() : ProjectileOriginRight->GetComponentRotation();
+
+		FVector Position = Origin;
+		
+		
+		ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
 		NewProjectile->SetOwner(this);
 	}
 }
