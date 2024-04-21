@@ -119,7 +119,11 @@ void ASPMCharacter::Dash()
 	if(DashCount < DashMaxCount && this->GetCharacterMovement()->IsFalling())
 	{
 		LaunchCharacter(Dash, false, false);
+		bIsDashing = true;
 		DashCount++;
+	}else
+	{
+		bIsDashing = false;
 	}
 }
 
@@ -137,6 +141,7 @@ void ASPMCharacter::Move(const FInputActionValue& Value)
 		//Reset dash on the ground
 		if(DashCount >= DashMaxCount && !Controller->GetCharacter()->GetCharacterMovement()->IsFalling())
 		{
+			bIsDashing = false;
 			DashCount = 0;
 		}
 	}
