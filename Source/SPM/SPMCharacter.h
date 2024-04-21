@@ -72,6 +72,9 @@ class ASPMCharacter : public ACharacter
 	/** Dash cooldowntime */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	float DashCooldown = 2.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
+	bool bIsDashing = false;
 	
 public:
 	ASPMCharacter();
