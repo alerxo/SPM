@@ -18,12 +18,20 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+public:	
+	virtual void Tick(float DeltaTime) override;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void OnCollision(const FHitResult& Result);
+
+	void SetDamage(float);
+	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UStaticMeshComponent* ProjectileMesh;
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	UProjectileMovementComponent* ProjectileMovement;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+	float Damage = 0;
 };
