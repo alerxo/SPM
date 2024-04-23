@@ -19,11 +19,11 @@ ADrone::ADrone()
 	ConstraintMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConstraintMesh"));
 	ConstraintMesh->SetupAttachment(PhysicsConstraint);
 
-	ProjectileOriginLeft = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginLeft"));
-	ProjectileOriginLeft->SetupAttachment(ConstraintMesh);
+	WeaponLeft = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponLeft"));
+	WeaponLeft->SetupAttachment(ConstraintMesh);
 
-	ProjectileOriginRight = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginRight"));
-	ProjectileOriginRight->SetupAttachment(ConstraintMesh);
+	WeaponRight = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponRight"));
+	WeaponRight->SetupAttachment(ConstraintMesh);
 }
 
 void ADrone::BeginPlay()
@@ -59,17 +59,12 @@ float ADrone::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 void ADrone::ShootTarget()
 {
-	if(const AActor* Player = UGameplayStatics::GetPlayerController(GetWorld(), 0))
-	{
-		LeftFire = !LeftFire;
-		
-		FVector Origin = LeftFire ? ProjectileOriginLeft->GetComponentLocation() : ProjectileOriginRight->GetComponentLocation();
-		FRotator Rotation = LeftFire ? ProjectileOriginLeft->GetComponentRotation() : ProjectileOriginRight->GetComponentRotation();
-
-		FVector Position = Origin;
-		
-		
-		ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
-		NewProjectile->SetOwner(this);
-	}
+	LeftFire = !LeftFire;
+	FVector Origin = LeftFire ? WeaponLeft->GetComponentLocation() : WeaponRight->GetComponentLocation();
+	FRotator Rotation = LeftFire ? WeaponLeft->GetComponentRotation() : WeaponRight->GetComponentRotation();
+	Rotation.Pitch += FMath::RandRange(-AccuracyMargin, AccuracyMargin);
+	Rotation.Roll += FMath::RandRange(-AccuracyMargin, AccuracyMargin);;
+	Rotation.Yaw += FMath::RandRange(-AccuracyMargin, AccuracyMargin);;
+	ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
+	NewProjectile->SetOwner(this);
 }

@@ -37,18 +37,22 @@ public:
 	
 	UPROPERTY(VisibleDefaultsOnly)
 	UStaticMeshComponent* ConstraintMesh;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
+	USkeletalMeshComponent* WeaponLeft;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
+	USkeletalMeshComponent* WeaponRight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	float Health = 0;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float Health = 10;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	USceneComponent* ProjectileOriginLeft;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	USceneComponent* ProjectileOriginRight;
+	float AccuracyMargin = 0;
+	
 private:
 	bool LeftFire = false;
 };
