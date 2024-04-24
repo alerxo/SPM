@@ -24,7 +24,7 @@ void ADroneProjectile::BeginPlay()
 	ProjectileMovement->OnProjectileStop.AddDynamic(this, &ADroneProjectile::OnCollision);
 }
 
-void ADroneProjectile::Tick(float DeltaTime)
+void ADroneProjectile::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
