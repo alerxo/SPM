@@ -36,9 +36,10 @@ void ADrone::BeginPlay()
 	PhysicsConstraint->SetConstrainedComponents(StableMesh, NAME_None, ConstraintMesh, NAME_None);
 	Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	BlackboardComponent = UAIBlueprintHelperLibrary::GetBlackboard(this);
-
 	BlackboardComponent->SetValueAsFloat("AttackSpeed", AttackSpeed);
+	BlackboardComponent->SetValueAsFloat("ReloadSpeed", ReloadSpeed);
 	AmmoCount = Ammo;
+	Destination = GetActorLocation();
 }
 
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -51,6 +52,9 @@ void ADrone::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	TryLookAtPlayer();
+	MoveTowardsDestination();
+	ObstacleAvoidance();
+	Movement(DeltaTime);
 }
 
 void ADrone::TryLookAtPlayer() const
@@ -68,18 +72,53 @@ void ADrone::TryLookAtPlayer() const
 	BlackboardComponent->SetValueAsObject("Target", Cast<ASPMCharacter>(Result.GetActor()) != nullptr && Result.Distance <= AttackRange ? Player : nullptr);
 }
 
-float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+void ADrone::MoveTowardsDestination()
 {
-	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));;
-	
-	if((Health -= TakenDamage) <= 0)
+	if(FVector::Distance(Destination, GetActorLocation()) < 0.1f)
 	{
-		GetController()->Destroy();
-		Destroy();
+		Velocity.X = 0;
+		Velocity.Y = 0;
+		return;
 	}
 	
-	return TakenDamage;
+	FVector Direction = Destination - GetActorLocation();
+	Direction.Z = 0;
+	Direction.Normalize();
+	Velocity.X = Direction.X * MovementSpeed;
+	Velocity.Y = Direction.Y * MovementSpeed;
+}
+
+void ADrone::SetDestination(const FVector Position)
+{
+	Destination = Position;
+}
+
+void ADrone::ObstacleAvoidance()
+{
+	FHitResult Result;
+	FVector Start = RootComponent->GetComponentLocation() + FVector(0, 0, 0);
+	FVector End = Start - FVector(0, 0, TargetHeight * 10);
+	FCollisionQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddIgnoredActor(this);
+
+	const FName TraceTag("MyTraceTag");
+	GetWorld()->DebugDrawTraceTag = TraceTag;
+	CollisionQueryParams.TraceTag = TraceTag;
+	
+	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
+	DebugHeight = Result.Distance;
+	
+	float ZVelocity = 0;
+	if(Result.Distance > TargetHeight + HoverMargin) ZVelocity = -HoverSpeed;
+	else if(Result.Distance < TargetHeight - HoverMargin) ZVelocity = HoverSpeed;
+	
+	Velocity.Z = ZVelocity;
+}
+
+void ADrone::Movement(const float DeltaTime) const
+{
+	if(Velocity.Length() < 0.01) return;
+	GetRootComponent()->AddWorldOffset(Velocity * DeltaTime);
 }
 
 void ADrone::ShootTarget()
@@ -101,5 +140,15 @@ void ADrone::Reload()
 	AmmoCount = Ammo;
 }
 
-
-
+float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));;
+	
+	if((Health -= TakenDamage) <= 0)
+	{
+		GetController()->Destroy();
+		Destroy();
+	}
+	
+	return TakenDamage;
+}

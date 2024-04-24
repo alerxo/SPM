@@ -29,9 +29,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Reload();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetDestination(const FVector Position);
 
 private:
 	void TryLookAtPlayer() const;
+	void MoveTowardsDestination();
+	void ObstacleAvoidance();
+	void Movement(const float) const;
 
 public:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -54,17 +60,34 @@ public:
 	float Damage = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float Ammo = 0;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int AmmoCount = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AttackSpeed = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	float ReloadSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AttackRange = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AccuracyMargin = 0;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float MovementSpeed = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float HoverSpeed = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float TargetHeight = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float HoverMargin = 0;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	FVector Velocity;
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	float DebugHeight;
+	
 private:
 	AActor* Player;
 	class UBlackboardComponent* BlackboardComponent;
+	FVector Destination;
 	bool LeftFire = false;
 };
