@@ -169,7 +169,7 @@ void UTP_WeaponComponent::ShootElectricity()
 				//deal damage
 				//UE_LOG(LogTemp, Display, TEXT("ElectricHit"));
 				UE_LOG(LogTemp, Warning, TEXT("%s"), *OutHit.GetActor()->GetName());
-				for(int32 i = 0; i < 3; i++)
+				/*for(int32 i = 0; i < 3; i++)
 				{
 					FHitResult BounceHit;
 
@@ -185,7 +185,8 @@ void UTP_WeaponComponent::ShootElectricity()
 					{
 						UE_LOG(LogTemp, Warning, TEXT("%s"), *BounceHit.GetActor()->GetName());
 					}
-
+				*/
+				
 					
 
 				}
