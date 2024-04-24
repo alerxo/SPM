@@ -7,6 +7,7 @@
 #include "SPMCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 
@@ -14,14 +15,17 @@ ADrone::ADrone()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	StableMesh = FindComponentByClass<USkeletalMeshComponent>();
+	Root = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Root"));
+	
+	StableMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("StableMesh"));
+	StableMesh->SetupAttachment(Root);
 	
 	PhysicsConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
 	PhysicsConstraint->SetupAttachment(StableMesh);
-
+	
 	ConstraintMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConstraintMesh"));
 	ConstraintMesh->SetupAttachment(PhysicsConstraint);
-
+	
 	WeaponLeft = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponLeft"));
 	WeaponLeft->SetupAttachment(ConstraintMesh);
 
@@ -76,16 +80,16 @@ void ADrone::MoveTowardsDestination()
 {
 	if(FVector::Distance(Destination, GetActorLocation()) < 0.1f)
 	{
-		Velocity.X = 0;
-		Velocity.Y = 0;
+		TargetVelocity.X = 0;
+		TargetVelocity.Y = 0;
 		return;
 	}
 	
 	FVector Direction = Destination - GetActorLocation();
 	Direction.Z = 0;
 	Direction.Normalize();
-	Velocity.X = Direction.X * MovementSpeed;
-	Velocity.Y = Direction.Y * MovementSpeed;
+	TargetVelocity.X = Direction.X * MovementSpeed;
+	TargetVelocity.Y = Direction.Y * MovementSpeed;
 }
 
 void ADrone::SetDestination(const FVector Position)
@@ -106,19 +110,19 @@ void ADrone::ObstacleAvoidance()
 	CollisionQueryParams.TraceTag = TraceTag;
 	
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
-	DebugHeight = Result.Distance;
+	Height = Result.Distance;
 	
 	float ZVelocity = 0;
-	if(Result.Distance > TargetHeight + HoverMargin) ZVelocity = -HoverSpeed;
-	else if(Result.Distance < TargetHeight - HoverMargin) ZVelocity = HoverSpeed;
+	if(Height > TargetHeight + HoverMargin) ZVelocity = -HoverSpeed;
+	else if(Height < TargetHeight - HoverMargin) ZVelocity = HoverSpeed;
 	
-	Velocity.Z = ZVelocity;
+	TargetVelocity.Z = ZVelocity;
 }
 
 void ADrone::Movement(const float DeltaTime) const
 {
-	if(Velocity.Length() < 0.01) return;
-	GetRootComponent()->AddWorldOffset(Velocity * DeltaTime);
+	//if(Velocity.Length() < 0.01) return;
+	Root->AddWorldOffset(TargetVelocity * DeltaTime);
 }
 
 void ADrone::ShootTarget()

@@ -7,7 +7,7 @@
 #include "Drone.generated.h"
 
 UCLASS()
-class SPM_API ADrone : public ACharacter
+class SPM_API ADrone : public APawn
 {
 	GENERATED_BODY()
 
@@ -40,6 +40,8 @@ private:
 	void Movement(const float) const;
 
 public:
+	UPROPERTY(VisibleDefaultsOnly)
+	UCapsuleComponent* Root;
 	UPROPERTY(VisibleDefaultsOnly)
 	USkeletalMeshComponent* StableMesh;
 	UPROPERTY(VisibleDefaultsOnly)
@@ -80,10 +82,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float HoverMargin = 0;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	FVector TargetVelocity;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FVector Velocity;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	float DebugHeight;
+	float Height;
 	
 private:
 	AActor* Player;
