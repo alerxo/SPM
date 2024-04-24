@@ -245,6 +245,8 @@ void UTP_WeaponComponent::AttachWeapon(ASPMCharacter* TargetCharacter)
 			
 			EnhancedInputComponent->BindAction(ShootFireballAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootFireball);
 
+			EnhancedInputComponent->BindAction(ShootBlueFireballAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootFireball);
+
 			EnhancedInputComponent->BindAction(ShootElectricityAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootElectricity);
 		}
 	}

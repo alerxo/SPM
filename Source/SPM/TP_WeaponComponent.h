@@ -24,6 +24,9 @@ public:
 	TSubclassOf<class AFireballProjectile> FireballClass;
 
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class AFireballProjectile> BlueFireballClass;
+
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AElectricProjectile> ElectricityClass;
 
 	/** Sound to play each time we fire */
@@ -51,6 +54,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* ShootFireballAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ShootBlueFireballAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* ShootElectricityAction;
