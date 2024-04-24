@@ -6,6 +6,9 @@
 #include "ManaComponent.h"
 //#include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
+
 #include "TP_WeaponComponent.generated.h"
 
 class ASPMCharacter;
@@ -100,4 +103,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Weapon")
 	float ManaCost = 10.f;
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	float ElectricRadius = 300.0f;
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	UNiagaraSystem* ElectricNiagara;
 };
