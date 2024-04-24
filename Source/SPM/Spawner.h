@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "Spawner.generated.h"
 
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API USpawner : public UActorComponent
 {

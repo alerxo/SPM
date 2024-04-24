@@ -6,8 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "MasterMind.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpawnOnCore);
 UCLASS()
-class SPM_API AMasterMind : public AActor
+class SPM_API AMasterMind : public APawn
 {
 	GENERATED_BODY()
 	
@@ -23,4 +24,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnSpawnOnCore OnSpawnOnCore;
+
+	UFUNCTION()
+	void print();
 };
