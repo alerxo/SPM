@@ -100,4 +100,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Weapon")
 	float ManaCost = 10.f;
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	float ElectricRadius = 300.0f;
 };
