@@ -27,5 +27,5 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	bool bIsDead() const;
+	bool IsDead() const;
 };
