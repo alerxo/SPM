@@ -25,7 +25,7 @@ void ABrawler::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(bIsDead()) GetController()->Destroy(), Destroy();
+	if(IsDead()) GetController()->Destroy(), Destroy();
 }
 
 // Called to bind functionality to input
@@ -35,7 +35,7 @@ void ABrawler::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-bool ABrawler::bIsDead() const
+bool ABrawler::IsDead() const
 {
 	UHealthComponent* HealthComponent = GetComponentByClass<UHealthComponent>();
 	return HealthComponent->GetHealth() <= 0;
