@@ -36,40 +36,30 @@ private:
 public:
 	UPROPERTY(VisibleDefaultsOnly)
 	USkeletalMeshComponent* StableMesh;
-	
 	UPROPERTY(VisibleDefaultsOnly)
 	class UPhysicsConstraintComponent* PhysicsConstraint;
-	
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 	UStaticMeshComponent* ConstraintMesh;
-	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
 	USkeletalMeshComponent* WeaponLeft;
-
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
 	USkeletalMeshComponent* WeaponRight;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float Health = 0;
-
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
 	float Damage = 0;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float Ammo = 0;
-
 	UPROPERTY(BlueprintReadOnly)
-	int AmmoCount;
-	
+	int AmmoCount = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AttackSpeed = 0;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AttackRange = 0;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AccuracyMargin = 0;
 
