@@ -26,8 +26,6 @@ void AWallbreaker::BeginPlay()
 void AWallbreaker::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if(IsDead()) GetController()->Destroy(), Destroy();
 }
 
 // Called to bind functionality to input
@@ -37,24 +35,12 @@ void AWallbreaker::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
-float AWallbreaker::GetAcceptanceRadius()
+float AWallbreaker::GetAcceptableDistance()
 {
-	return AcceptanceRadius;
-}
-
-void AWallbreaker::SetAcceptanceRadius(float NewAcceptanceRadius)
-{
-	AcceptanceRadius = NewAcceptanceRadius;
+	return AcceptableDistance;
 }
 
 float AWallbreaker::GetMaxWalkSpeed()
 {
 	return MaxWalkSpeed;
 }
-
-bool AWallbreaker::IsDead() const
-{
-	UHealthComponent* HealthComponent = GetComponentByClass<UHealthComponent>();
-	return HealthComponent->GetHealth() <= 0;
-}
-
