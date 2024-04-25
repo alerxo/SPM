@@ -31,7 +31,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetDestination(const FVector Position);
 	UFUNCTION(BlueprintCallable)
-	void LookAt(const FVector Position);
+	void RotateTowards(const FRotator Direction);
 
 private:
 	void CheckLineOfSightAtPlayer() const;
@@ -73,10 +73,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AccuracyMargin = 0;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float Acceleration = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float StopDistance = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float MovementSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
