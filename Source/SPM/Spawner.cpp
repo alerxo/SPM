@@ -19,8 +19,9 @@ void USpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Time = DefaultTime;
 	// ...
-	
+	CurrentObjPoolPosition = 0; 
 }
 
 
@@ -31,4 +32,29 @@ void USpawner::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	// ...
 }
+
+void USpawner::SpawnAtLocation(int TotalTokens)
+{
+
+	if(Time <= 0)
+	{
+		int rand = FMath::RandRange(0, SpawnLocations.Max() -1);
+		if(EnemyObjectPool.IsValidIndex(0))
+		{
+			FVector Pos = SpawnLocations[rand]->GetActorForwardVector() + SpawnLocations[rand]->GetActorLocation();
+			Pos.Y += YOffset;
+			EnemyObjectPool[0]->SetActorLocation(Pos);
+			EnemyObjectPool.RemoveAt(0);
+		}
+
+		
+		
+		Time = DefaultTime;
+		return;
+	}
+	UE_LOG(LogTemp, Warning ,TEXT("%f"), Time);
+	Time-= 1 * GetWorld()->DeltaTimeSeconds;
+	
+}
+
 

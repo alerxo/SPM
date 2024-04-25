@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "MasterMind.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpawnOnCore);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpawnOnCore, int, TotalTokens);
 UCLASS()
 class SPM_API AMasterMind : public APawn
 {
@@ -28,5 +28,5 @@ public:
 	FOnSpawnOnCore OnSpawnOnCore;
 
 	UFUNCTION()
-	void print();
+	void print(int token);
 };

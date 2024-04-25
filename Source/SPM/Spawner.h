@@ -25,6 +25,27 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> SpawnLocations;
+
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> EnemyObjectPool;
 	
-		
+	UFUNCTION(BlueprintCallable)
+	void SpawnAtLocation(int TotalTokens);
+
+
+	UPROPERTY()
+	int CurrentObjPoolPosition;
+
+	
+	//Time to Spawn enemy
+	UPROPERTY(EditAnywhere)
+	float DefaultTime;
+
+	float Time;
+
+
+	UPROPERTY(EditAnywhere)
+	float YOffset;
 };

@@ -27,9 +27,9 @@ void AMasterMind::Tick(float DeltaTime)
 
 }
 
-void AMasterMind::print()
+void AMasterMind::print(int token)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Call Event OnSpawnOnCore"))
+	UE_LOG(LogTemp, Warning, TEXT("Call Event OnSpawnOnCore %i" ), token)
 }
 
 
