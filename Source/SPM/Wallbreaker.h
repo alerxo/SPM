@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "EnemyBaseClass.h"
 #include "Wallbreaker.generated.h"
 
 UCLASS()
-class SPM_API AWallbreaker : public ACharacter
+class SPM_API AWallbreaker : public AEnemyBaseClass
 {
 	GENERATED_BODY()
 
@@ -27,15 +27,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable)
-	float GetAcceptanceRadius();
-
-	UFUNCTION(BlueprintCallable)
-	void SetAcceptanceRadius(float NewAcceptanceRadius);
+	float GetAcceptableDistance();
 
 	UFUNCTION(BlueprintCallable)
 	float GetMaxWalkSpeed();
 private:
-	bool IsDead() const;
-	float AcceptanceRadius = 1000;
+	float AcceptableDistance = 2000;
 	float MaxWalkSpeed;
 };
