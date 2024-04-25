@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Brawler.h"
+#include "Wallbreaker.h"
 
 #include "HealthComponent.h"
 
 // Sets default values
-ABrawler::ABrawler()
+AWallbreaker::AWallbreaker()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -14,14 +14,14 @@ ABrawler::ABrawler()
 }
 
 // Called when the game starts or when spawned
-void ABrawler::BeginPlay()
+void AWallbreaker::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ABrawler::Tick(float DeltaTime)
+void AWallbreaker::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -29,13 +29,13 @@ void ABrawler::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void ABrawler::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AWallbreaker::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
 
-bool ABrawler::IsDead() const
+bool AWallbreaker::IsDead() const
 {
 	UHealthComponent* HealthComponent = GetComponentByClass<UHealthComponent>();
 	return HealthComponent->GetHealth() <= 0;

@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Brawler.generated.h"
+#include "Wallbreaker.generated.h"
 
 UCLASS()
-class SPM_API ABrawler : public ACharacter
+class SPM_API AWallbreaker : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	ABrawler();
+	AWallbreaker();
 
 protected:
 	// Called when the game starts or when spawned
