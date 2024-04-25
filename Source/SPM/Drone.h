@@ -26,18 +26,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ShootTarget();
-
 	UFUNCTION(BlueprintCallable)
 	void Reload();
-	
 	UFUNCTION(BlueprintCallable)
 	void SetDestination(const FVector Position);
+	UFUNCTION(BlueprintCallable)
+	void LookAt(const FVector Position);
 
 private:
-	void TryLookAtPlayer() const;
+	void CheckLineOfSightAtPlayer() const;
 	void MoveTowardsDestination();
 	void ObstacleAvoidance();
-	void Movement(const float) const;
+	void Movement(const float);
 
 public:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -74,22 +74,33 @@ public:
 	float AccuracyMargin = 0;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float Acceleration = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float StopDistance = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float MovementSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float HoverSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float TargetHeight = 0;
+	float DefaultHoverHeight = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float HoverMargin = 0;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	FVector	TargetPosition;
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	FVector Velocity;
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector TargetVelocity;
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	FRotator TargetRotation;
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	float TargetHeight;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	float Height;
 	
 private:
 	AActor* Player;
 	class UBlackboardComponent* BlackboardComponent;
-	FVector Destination;
 	bool LeftFire = false;
 };
