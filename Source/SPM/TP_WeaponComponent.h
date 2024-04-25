@@ -6,6 +6,9 @@
 #include "ManaComponent.h"
 //#include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
+
 #include "TP_WeaponComponent.generated.h"
 
 class ASPMCharacter;
@@ -22,6 +25,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AFireballProjectile> FireballClass;
+
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class AFireballProjectile> BlueFireballClass;
 
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AElectricProjectile> ElectricityClass;
@@ -51,6 +57,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* ShootFireballAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ShootBlueFireballAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* ShootElectricityAction;
@@ -94,4 +103,15 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Weapon")
 	float ManaCost = 10.f;
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	float ElectricManaCost = 0.5f;
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	float ElectricRadius = 500.0f;
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	UNiagaraSystem* ElectricNiagara;
+
+	bool PlayNiagara = true;
 };

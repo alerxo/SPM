@@ -47,7 +47,5 @@ public:
 private:
 	//Float property for DefaultHealth that is used for removing Healt Points
 	float DefaultHealth;
-
-	
 	
 };
