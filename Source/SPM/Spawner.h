@@ -32,7 +32,7 @@ public:
 	TArray<AActor*> EnemyObjectPool;
 	
 	UFUNCTION(BlueprintCallable)
-	void SpawnAtLocation(int TotalTokens);
+	int SpawnAtLocation(int TotalTokens);
 
 
 	UPROPERTY()

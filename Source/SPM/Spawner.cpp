@@ -33,28 +33,29 @@ void USpawner::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	// ...
 }
 
-void USpawner::SpawnAtLocation(int TotalTokens)
+int USpawner::SpawnAtLocation(int TotalTokens)
 {
+
 
 	if(Time <= 0)
 	{
 		int rand = FMath::RandRange(0, SpawnLocations.Max() -1);
 		if(EnemyObjectPool.IsValidIndex(0))
 		{
-			FVector Pos = SpawnLocations[rand]->GetActorForwardVector() + SpawnLocations[rand]->GetActorLocation();
-			Pos.Y += YOffset;
+			FVector Pos = (SpawnLocations[rand]->GetActorForwardVector() * YOffset) +  SpawnLocations[rand]->GetActorLocation();
 			EnemyObjectPool[0]->SetActorLocation(Pos);
 			EnemyObjectPool.RemoveAt(0);
-		}
+			TotalTokens -= 10;
 
-		
+		}
 		
 		Time = DefaultTime;
-		return;
+		return TotalTokens;
 	}
 	UE_LOG(LogTemp, Warning ,TEXT("%f"), Time);
 	Time-= 1 * GetWorld()->DeltaTimeSeconds;
-	
+
+	return  TotalTokens;
 }
 
 
