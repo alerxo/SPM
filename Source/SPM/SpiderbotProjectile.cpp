@@ -49,4 +49,3 @@ void ASpiderbotProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 	
 	Destroy();
 }
-

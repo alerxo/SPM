@@ -26,8 +26,6 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	UBehaviorTree* SpiderbotBehavior;
-	UPROPERTY(EditDefaultsOnly)
 	float VisionRange;
 
 

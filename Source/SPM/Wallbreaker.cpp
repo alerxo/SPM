@@ -4,6 +4,7 @@
 #include "Wallbreaker.h"
 
 #include "HealthComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AWallbreaker::AWallbreaker()
@@ -17,15 +18,14 @@ AWallbreaker::AWallbreaker()
 void AWallbreaker::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	MaxWalkSpeed = this->GetComponentByClass<UCharacterMovementComponent>()->MaxWalkSpeed;
 }
 
 // Called every frame
 void AWallbreaker::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if(IsDead()) GetController()->Destroy(), Destroy();
 }
 
 // Called to bind functionality to input
@@ -35,9 +35,12 @@ void AWallbreaker::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
-bool AWallbreaker::IsDead() const
+float AWallbreaker::GetAcceptableDistance()
 {
-	UHealthComponent* HealthComponent = GetComponentByClass<UHealthComponent>();
-	return HealthComponent->GetHealth() <= 0;
+	return AcceptableDistance;
 }
 
+float AWallbreaker::GetMaxWalkSpeed()
+{
+	return MaxWalkSpeed;
+}
