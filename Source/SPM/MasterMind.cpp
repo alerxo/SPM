@@ -15,7 +15,9 @@ AMasterMind::AMasterMind()
 void AMasterMind::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+
+	OnSpawnOnCore.AddDynamic(this, &AMasterMind::print);
 }
 
 // Called every frame
@@ -24,4 +26,10 @@ void AMasterMind::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void AMasterMind::print(int token)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Call Event OnSpawnOnCore %i" ), token)
+}
+
 

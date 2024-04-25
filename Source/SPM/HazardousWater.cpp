@@ -28,7 +28,7 @@ AHazardousWater::AHazardousWater()
 	WaterCollision->SetupAttachment(RootComponent);
 
 
-	Timer = TimeUntilDamage;
+
  }
 
 // Called when the game starts or when spawned
@@ -38,7 +38,7 @@ void AHazardousWater::BeginPlay()
 	Player = UGameplayStatics::GetPlayerCharacter(GetWorld(),0);
 	
 	OriginalSpeed = Player->GetCharacterMovement()->MaxWalkSpeed;
-	
+	Timer = 0;
 }
 
 // Called every frame
@@ -54,6 +54,10 @@ void AHazardousWater::Tick(float DeltaTime)
 			DamageActor();
 		}
 		Timer -= 1 * DeltaTime;
+	}
+	else
+	{
+		Timer = 0;
 	}
 }
 
