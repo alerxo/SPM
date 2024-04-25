@@ -3,13 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HealthComponent.h"
-#include "HealthPickup.h"
-#include "GameFramework/Character.h"
+#include "EnemyBaseClass.h"
 #include "Spiderbot.generated.h"
 
 UCLASS()
-class SPM_API ASpiderbot : public ACharacter
+class SPM_API ASpiderbot : public AEnemyBaseClass
 {
 	GENERATED_BODY()
 
@@ -35,26 +33,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
-
-	bool IsDead() const;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AHealthPickup> HealthPickupClass;
-	
-	void SpawnHealthPickup();
-
-	UPROPERTY(EditDefaultsOnly)
-	float ChanceToSpawnPickup;
-
-	UPROPERTY(EditDefaultsOnly)
-	float ChanceToSpawnPickupLowHP;
-
-	UPROPERTY(EditDefaultsOnly)
-	float LowHealthThreshold;
-
-	bool CheckToSpawnPickup() const;
-	
-	
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
