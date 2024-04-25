@@ -105,7 +105,10 @@ private:
 	float ManaCost = 10.f;
 
 	UPROPERTY(EditAnywhere, Category="Weapon")
-	float ElectricRadius = 300.0f;
+	float ElectricManaCost = 0.5f;
+
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	float ElectricRadius = 500.0f;
 
 	UPROPERTY(EditAnywhere, Category="Weapon")
 	UNiagaraSystem* ElectricNiagara;
