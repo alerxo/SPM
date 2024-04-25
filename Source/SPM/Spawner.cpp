@@ -3,6 +3,8 @@
 
 #include "Spawner.h"
 
+#include "Spiderbot.h"
+
 // Sets default values for this component's properties
 USpawner::USpawner()
 {
@@ -19,8 +21,9 @@ void USpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Time = DefaultTime;
 	// ...
-	
+	CurrentObjPoolPosition = 0; 
 }
 
 
@@ -31,4 +34,31 @@ void USpawner::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	// ...
 }
+
+int USpawner::SpawnAtLocation(int TotalTokens)
+{
+
+	
+	if(Time <= 0)
+	{
+		int rand = FMath::RandRange(0, SpawnLocations.Max() -1);
+		if(EnemyObjectPool.IsValidIndex(0))
+		{
+			FVector Pos = (SpawnLocations[rand]->GetActorForwardVector() * YOffset) +  SpawnLocations[rand]->GetActorLocation();
+			//EnemyObjectPool[0]->SetActorLocation(Pos);
+			//EnemyObjectPool.RemoveAt(0);
+			
+			TotalTokens -= 10;
+
+		}
+		
+		Time = DefaultTime;
+		return TotalTokens;
+	}
+	UE_LOG(LogTemp, Warning ,TEXT("%f"), Time);
+	Time-= 1 * GetWorld()->DeltaTimeSeconds;
+
+	return  TotalTokens;
+}
+
 
