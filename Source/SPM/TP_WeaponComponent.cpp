@@ -190,9 +190,15 @@ void UTP_WeaponComponent::ShootElectricity()
 
 			bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
 			//UE_LOG(LogTemp, Warning, TEXT("%s"), OutHit.GetComponent()->GetClass()->IsChildOf(AEnemyBaseClass::StaticClass()))
+			
 			if(IsHit && Cast<AEnemyBaseClass>(OutHit.GetActor()))
 			{
+				//UE_LOG(LogTemp, Warning, TEXT("%p"), UGameplayStatics::GetPlayerCharacter(GetWorld(),0)->GetInstigatorController());
+				//UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerController->GetName());
+				//UE_LOG(LogTemp, Warning, TEXT("%p"), PlayerController->GetInstigatorController());
 				//deal damage
+				//UGameplayStatics::ApplyDamage(OutHit.GetActor(), DamageComponent->GetDamage(),UGameplayStatics::GetPlayerCharacter(GetWorld(),0)->GetInstigatorController() , UGameplayStatics::GetPlayerCharacter(GetWorld(),0), DamageComponent->GetDamageType());
+				//UGameplayStatics::ApplyDamage(OutHit.GetActor(), DamageComponent->GetDamage(),PlayerController,PlayerController , DamageComponent->GetDamageType());
 				//UE_LOG(LogTemp, Display, TEXT("ElectricHit"));
 				//UE_LOG(LogTemp, Warning, TEXT("%s"), *OutHit.GetActor()->GetName());
 				/*for(int32 i = 0; i < 3; i++)
