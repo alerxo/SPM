@@ -117,9 +117,9 @@ void UTP_WeaponComponent::ShootFireball()
 	}
 	
 	// Try and play the sound if specified
-	if (FireSound != nullptr)
+	if (FireballSound != nullptr)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, FireballSound, Character->GetActorLocation());
 	}
 	
 	// Try and play a firing animation if specified
@@ -182,11 +182,11 @@ void UTP_WeaponComponent::ShootElectricity()
 			DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 5, 0 ,1);
 			//UE_LOG(LogTemp, Warning, TEXT("%s"), GetChildComponent(0));
 			
-			if(PlayNiagara)
+			/*if(PlayNiagara)
 			{
 				UNiagaraComponent* ElectricEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(ElectricNiagara, GetChildComponent(0), NAME_None, FVector(100.f), FRotator(0.f, 80.f,0.f), EAttachLocation::Type::KeepRelativeOffset, true);
 				PlayNiagara = false;
-			}
+			}*/
 
 			bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
 			//UE_LOG(LogTemp, Warning, TEXT("%s"), OutHit.GetComponent()->GetClass()->IsChildOf(AEnemyBaseClass::StaticClass()))
