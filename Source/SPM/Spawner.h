@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "Spawner.generated.h"
 
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API USpawner : public UActorComponent
 {
@@ -23,6 +25,27 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> SpawnLocations;
+
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> EnemyObjectPool;
 	
-		
+	UFUNCTION(BlueprintCallable)
+	int SpawnAtLocation(int TotalTokens);
+
+
+	UPROPERTY()
+	int CurrentObjPoolPosition;
+
+	
+	//Time to Spawn enemy
+	UPROPERTY(EditAnywhere)
+	float DefaultTime;
+
+	float Time;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float YOffset;
 };

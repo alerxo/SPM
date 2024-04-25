@@ -8,11 +8,6 @@
 void ASpiderbotController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (SpiderbotBehavior != nullptr)
-	{
-		RunBehaviorTree(SpiderbotBehavior);
-	}
 }
 
 void ASpiderbotController::Tick(float DeltaSeconds)
