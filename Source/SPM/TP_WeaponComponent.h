@@ -112,4 +112,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Weapon")
 	UNiagaraSystem* ElectricNiagara;
+
+	bool PlayNiagara = true;
 };
