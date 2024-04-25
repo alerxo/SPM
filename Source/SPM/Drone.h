@@ -25,32 +25,34 @@ public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
-	void ShootTarget();
+	void Aim(const FVector Position);
+	UFUNCTION(BlueprintCallable)
+	void Shoot();
 	UFUNCTION(BlueprintCallable)
 	void Reload();
 	UFUNCTION(BlueprintCallable)
-	void SetDestination(const FVector Position);
+	void MoveTo(const FVector Position);
 	UFUNCTION(BlueprintCallable)
-	void RotateTowards(const FRotator Direction);
+	void LookAt(const FVector Position);
 
 private:
 	void CheckLineOfSightAtPlayer() const;
-	void MoveTowardsDestination();
-	void ObstacleAvoidance();
+	void GetMovementDirection();
+	void GetHoverHeight();
 	void Movement(const float);
 
 public:
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* Root;
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* StableMesh;
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleAnywhere)
 	class UPhysicsConstraintComponent* PhysicsConstraint;
-	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ConstraintMesh;
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
+	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* WeaponLeft;
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
+	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* WeaponRight;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -81,6 +83,10 @@ public:
 	float DefaultHoverHeight = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float HoverMargin = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float Acceleration = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float StopDistance = 0;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector	TargetPosition;
