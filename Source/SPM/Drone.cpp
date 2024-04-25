@@ -40,9 +40,8 @@ void ADrone::BeginPlay()
 	
 	PhysicsConstraint->SetConstrainedComponents(StableMesh, NAME_None, ConstraintMesh, NAME_None);
 	Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	TargetPosition = GetActorLocation();
+	MoveTo( GetActorLocation());
 	AmmoCount = Ammo;
-	TargetHeight = DefaultHoverHeight;
 
 	BlackboardComponent = UAIBlueprintHelperLibrary::GetBlackboard(this);
 	BlackboardComponent->SetValueAsFloat("AttackSpeed", AttackSpeed);
@@ -74,7 +73,6 @@ void ADrone::CheckLineOfSightAtPlayer() const
 	FCollisionQueryParams CollisionQueryParams;
 	CollisionQueryParams.AddIgnoredActor(this);
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_GameTraceChannel2, CollisionQueryParams);
-
 	BlackboardComponent->SetValueAsFloat("DistanceToTarget", Result.Distance);
 	BlackboardComponent->SetValueAsObject("Target", Cast<ASPMCharacter>(Result.GetActor()) != nullptr && Result.Distance <= AttackRange ? Player : nullptr);
 }
@@ -93,7 +91,6 @@ void ADrone::GetMovementDirection()
 	Direction.Normalize();
 	TargetVelocity.X = Direction.X * MovementSpeed;
 	TargetVelocity.Y = Direction.Y * MovementSpeed;
-
 	LookAt(TargetPosition);
 }
 
@@ -104,14 +101,8 @@ void ADrone::GetHoverHeight()
 	FVector End = Start - FVector(0, 0, DefaultHoverHeight * 10);
 	FCollisionQueryParams CollisionQueryParams;
 	CollisionQueryParams.AddIgnoredActor(this);
-
-	const FName TraceTag("MyTraceTag");
-	GetWorld()->DebugDrawTraceTag = TraceTag;
-	CollisionQueryParams.TraceTag = TraceTag;
-	
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
 	Height = Result.Distance;
-
 	const float Difference = TargetHeight - Height;
 	
 	if(Difference > HoverMargin) TargetVelocity.Z = Difference * HoverSpeed;
@@ -133,6 +124,7 @@ void ADrone::Movement(const float DeltaTime)
 void ADrone::MoveTo(const FVector Position)
 {
 	TargetPosition = Position;
+	TargetHeight = DefaultHoverHeight;
 }
 
 void ADrone::LookAt(const FVector Position)
@@ -142,9 +134,9 @@ void ADrone::LookAt(const FVector Position)
 	TargetRotation = Rotation;
 }
 
-void ADrone::Aim(const FVector Position)
+void ADrone::Aim(const FVector Position) const
 {
-	FRotator Rotation = (Position - WeaponLeft->GetComponentLocation()).GetSafeNormal().Rotation();
+	FRotator Rotation = (Position - GetActorLocation()).GetSafeNormal().Rotation();
 	Rotation.Roll = 0;
 	Rotation.Yaw = 0;
 	WeaponLeft->SetRelativeRotation(Rotation);
@@ -157,8 +149,8 @@ void ADrone::Shoot()
 	const FVector Origin = LeftFire ? WeaponLeft->GetComponentLocation() : WeaponRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponLeft->GetComponentRotation() : WeaponRight->GetComponentRotation();
 	Rotation.Pitch += FMath::RandRange(-AccuracyMargin, AccuracyMargin);
-	Rotation.Roll += FMath::RandRange(-AccuracyMargin, AccuracyMargin);;
-	Rotation.Yaw += FMath::RandRange(-AccuracyMargin, AccuracyMargin);;
+	Rotation.Roll += FMath::RandRange(-AccuracyMargin, AccuracyMargin);
+	Rotation.Yaw += FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? 4 : -4);
 	ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
 	NewProjectile->SetOwner(this);
 	NewProjectile->SetDamage(Damage);

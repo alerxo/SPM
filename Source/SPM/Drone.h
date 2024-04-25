@@ -25,7 +25,7 @@ public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
-	void Aim(const FVector Position);
+	void Aim(const FVector Position) const;
 	UFUNCTION(BlueprintCallable)
 	void Shoot();
 	UFUNCTION(BlueprintCallable)
