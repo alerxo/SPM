@@ -161,6 +161,11 @@ void UTP_WeaponComponent::ShootElectricity()
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<AElectricProjectile>(ElectricityClass, SpawnLocation, SpawnRotation, ActorSpawnParams);*/
 
+			if(ManaComponent->GetMana() < ElectricManaCost)
+			{
+				return;
+			}
+			ManaComponent->DecreaseMana(ElectricManaCost);
 			FHitResult OutHit;
 
 			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
@@ -180,7 +185,7 @@ void UTP_WeaponComponent::ShootElectricity()
 
 			bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
 			//UE_LOG(LogTemp, Warning, TEXT("%s"), OutHit.GetComponent()->GetClass()->IsChildOf(AEnemyBaseClass::StaticClass()))
-			if(IsHit /*&& OutHit.GetActor()->GetClass()->IsInA(AEnemyBaseClass::StaticClass())*/)
+			if(IsHit && Cast<AEnemyBaseClass>(OutHit.GetActor()))
 			{
 				//deal damage
 				//UE_LOG(LogTemp, Display, TEXT("ElectricHit"));
@@ -204,28 +209,32 @@ void UTP_WeaponComponent::ShootElectricity()
 
 				}*/
 
-				TArray<FHitResult> OutHits;
+				TArray<FHitResult> SpreadHits;
 
 				FVector HitLocation = OutHit.GetActor()->GetActorLocation();
 		
 				FCollisionShape CollisionSphere = FCollisionShape::MakeSphere(ElectricRadius);
 				//DrawDebugSphere(GetWorld(), HitLocation, CollisionSphere.GetSphereRadius(), 25, FColor::Red, true);
-				bool isHit = GetWorld()->SweepMultiByChannel(OutHits, HitLocation, HitLocation,
+				bool isSpreadHit = GetWorld()->SweepMultiByChannel(SpreadHits, HitLocation, HitLocation,
 					FQuat::Identity, ECC_WorldStatic, CollisionSphere);
 				
-				for(FHitResult& Hit : OutHits)
+				for(FHitResult& Hit : SpreadHits)
 				{
-					if(Hit.GetActor() != nullptr)
+					if(isSpreadHit && Hit.GetActor() != nullptr && Cast<AEnemyBaseClass>(Hit.GetActor()))
 					{
+						//Deal Damage to other enemies
+						DrawDebugLine(GetWorld(), HitLocation, Hit.GetActor()->GetActorLocation(), FColor::Red, false, 5,0,1);
+						
 						//DisablePlayerCollision(Hit);
-						UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
+						//UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
+						//UE_LOG(LogTemp, Warning, TEXT("%s"), *MeshComponent->GetName());
 						
 						//UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
-						if(MeshComponent)
-						{
+						//if(MeshComponent /*&& Cast<AEnemyBaseClass>(Hit.GetActor())*/)
+						/*{
 							//MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
 							DrawDebugLine(GetWorld(), HitLocation, Hit.GetActor()->GetActorLocation(), FColor::Red, false, 5,0,1);
-						}
+						}*/
 						//DestroyWithFireball();	
 					}
 				}
