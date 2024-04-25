@@ -3,9 +3,7 @@
 
 #include "Spiderbot.h"
 
-#include "HealthComponent.h"
 #include "SpiderbotProjectile.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASpiderbot::ASpiderbot()
@@ -40,12 +38,6 @@ void ASpiderbot::Tick(float DeltaTime)
 
 	SetActorRotation(NewRotation);
 
-	if (IsDead())
-	{
-		SpawnHealthPickup();
-		GetController()->Destroy();
-		Destroy();
-	}
 }
 
 //shoots projectile
@@ -64,46 +56,3 @@ void ASpiderbot::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
 }
-
-bool ASpiderbot::IsDead() const
-{
-	UHealthComponent* HealthComponent = GetComponentByClass<UHealthComponent>();
-	return HealthComponent->GetHealth() <= 0;
-}
-
-void ASpiderbot::SpawnHealthPickup()
-{
-	if (CheckToSpawnPickup())
-	{
-		GetWorld()->SpawnActor<AHealthPickup>(HealthPickupClass, GetActorLocation(), GetActorRotation());
-	}
-}
-
-bool ASpiderbot::CheckToSpawnPickup() const
-{
-	const UHealthComponent* HealthComponent =  UGameplayStatics::GetPlayerCharacter(this, 0)->GetComponentByClass<UHealthComponent>();
-
-	if (HealthComponent == nullptr)
-	{
-		return false;
-	}
-	
-	const float RandomNumber = FMath::RandRange(0, 100);
-
-	UE_LOG(LogTemp, Warning, TEXT("%f"), RandomNumber)
-
-	if (RandomNumber <= ChanceToSpawnPickup)
-	{
-		return true;
-	}
-	if (HealthComponent->GetHealthPercentage() < LowHealthThreshold)
-	{
-		if (RandomNumber <= ChanceToSpawnPickupLowHP)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-
