@@ -13,7 +13,9 @@
 #include "FireballProjectile.h"
 #include "ElectricProjectile.h"
 #include "DrawDebugHelpers.h"
+#include "EnemyBaseClass.h"
 #include "GameFramework/Controller.h"
+#include "UObject/UObjectBase.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -99,7 +101,18 @@ void UTP_WeaponComponent::ShootFireball()
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	
 			// Spawn the projectile at the muzzle
-			World->SpawnActor<AFireballProjectile>(FireballClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			if(PlayerController->IsInputKeyDown(EKeys::R))
+			{
+				if(BlueFireballClass != nullptr)
+				{
+					World->SpawnActor<AFireballProjectile>(FireballClass, SpawnLocation, SpawnRotation, ActorSpawnParams);	
+				}
+			}
+			else
+			{
+				World->SpawnActor<AFireballProjectile>(FireballClass, SpawnLocation, SpawnRotation, ActorSpawnParams);	
+			}
+			
 		}
 	}
 	
@@ -120,6 +133,7 @@ void UTP_WeaponComponent::ShootFireball()
 		}
 	}
 }
+
 
 void UTP_WeaponComponent::ShootElectricity()
 {
@@ -147,6 +161,11 @@ void UTP_WeaponComponent::ShootElectricity()
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<AElectricProjectile>(ElectricityClass, SpawnLocation, SpawnRotation, ActorSpawnParams);*/
 
+			if(ManaComponent->GetMana() < ElectricManaCost)
+			{
+				return;
+			}
+			ManaComponent->DecreaseMana(ElectricManaCost);
 			FHitResult OutHit;
 
 			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
@@ -162,10 +181,16 @@ void UTP_WeaponComponent::ShootElectricity()
 			//spawn electric effect
 			DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 5, 0 ,1);
 			//UE_LOG(LogTemp, Warning, TEXT("%s"), GetChildComponent(0));
-			UNiagaraComponent* ElectricEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(ElectricNiagara, GetChildComponent(0), NAME_None, FVector(100.f), FRotator(0.f, 80.f,0.f), EAttachLocation::Type::KeepRelativeOffset, true);
+			
+			if(PlayNiagara)
+			{
+				UNiagaraComponent* ElectricEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(ElectricNiagara, GetChildComponent(0), NAME_None, FVector(100.f), FRotator(0.f, 80.f,0.f), EAttachLocation::Type::KeepRelativeOffset, true);
+				PlayNiagara = false;
+			}
 
 			bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
-			if(IsHit)
+			//UE_LOG(LogTemp, Warning, TEXT("%s"), OutHit.GetComponent()->GetClass()->IsChildOf(AEnemyBaseClass::StaticClass()))
+			if(IsHit && Cast<AEnemyBaseClass>(OutHit.GetActor()))
 			{
 				//deal damage
 				//UE_LOG(LogTemp, Display, TEXT("ElectricHit"));
@@ -189,28 +214,32 @@ void UTP_WeaponComponent::ShootElectricity()
 
 				}*/
 
-				TArray<FHitResult> OutHits;
+				TArray<FHitResult> SpreadHits;
 
 				FVector HitLocation = OutHit.GetActor()->GetActorLocation();
 		
 				FCollisionShape CollisionSphere = FCollisionShape::MakeSphere(ElectricRadius);
 				//DrawDebugSphere(GetWorld(), HitLocation, CollisionSphere.GetSphereRadius(), 25, FColor::Red, true);
-				bool isHit = GetWorld()->SweepMultiByChannel(OutHits, HitLocation, HitLocation,
+				bool isSpreadHit = GetWorld()->SweepMultiByChannel(SpreadHits, HitLocation, HitLocation,
 					FQuat::Identity, ECC_WorldStatic, CollisionSphere);
 				
-				for(FHitResult& Hit : OutHits)
+				for(FHitResult& Hit : SpreadHits)
 				{
-					if(Hit.GetActor() != nullptr)
+					if(isSpreadHit && Hit.GetActor() != nullptr && Cast<AEnemyBaseClass>(Hit.GetActor()))
 					{
+						//Deal Damage to other enemies
+						DrawDebugLine(GetWorld(), HitLocation, Hit.GetActor()->GetActorLocation(), FColor::Red, false, 5,0,1);
+						
 						//DisablePlayerCollision(Hit);
-						UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
+						//UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
+						//UE_LOG(LogTemp, Warning, TEXT("%s"), *MeshComponent->GetName());
 						
 						//UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
-						if(MeshComponent)
-						{
+						//if(MeshComponent /*&& Cast<AEnemyBaseClass>(Hit.GetActor())*/)
+						/*{
 							//MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
 							DrawDebugLine(GetWorld(), HitLocation, Hit.GetActor()->GetActorLocation(), FColor::Red, false, 5,0,1);
-						}
+						}*/
 						//DestroyWithFireball();	
 					}
 				}
