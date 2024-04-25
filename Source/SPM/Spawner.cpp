@@ -3,6 +3,8 @@
 
 #include "Spawner.h"
 
+#include "Spiderbot.h"
+
 // Sets default values for this component's properties
 USpawner::USpawner()
 {
@@ -43,8 +45,9 @@ int USpawner::SpawnAtLocation(int TotalTokens)
 		if(EnemyObjectPool.IsValidIndex(0))
 		{
 			FVector Pos = (SpawnLocations[rand]->GetActorForwardVector() * YOffset) +  SpawnLocations[rand]->GetActorLocation();
-			EnemyObjectPool[0]->SetActorLocation(Pos);
-			EnemyObjectPool.RemoveAt(0);
+			//EnemyObjectPool[0]->SetActorLocation(Pos);
+			//EnemyObjectPool.RemoveAt(0);
+			
 			TotalTokens -= 10;
 
 		}
