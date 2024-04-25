@@ -13,7 +13,9 @@
 #include "FireballProjectile.h"
 #include "ElectricProjectile.h"
 #include "DrawDebugHelpers.h"
+#include "EnemyBaseClass.h"
 #include "GameFramework/Controller.h"
+#include "UObject/UObjectBase.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -99,7 +101,18 @@ void UTP_WeaponComponent::ShootFireball()
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	
 			// Spawn the projectile at the muzzle
-			World->SpawnActor<AFireballProjectile>(FireballClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			if(PlayerController->IsInputKeyDown(EKeys::R))
+			{
+				if(BlueFireballClass != nullptr)
+				{
+					World->SpawnActor<AFireballProjectile>(FireballClass, SpawnLocation, SpawnRotation, ActorSpawnParams);	
+				}
+			}
+			else
+			{
+				World->SpawnActor<AFireballProjectile>(FireballClass, SpawnLocation, SpawnRotation, ActorSpawnParams);	
+			}
+			
 		}
 	}
 	
@@ -120,6 +133,7 @@ void UTP_WeaponComponent::ShootFireball()
 		}
 	}
 }
+
 
 void UTP_WeaponComponent::ShootElectricity()
 {
@@ -165,7 +179,8 @@ void UTP_WeaponComponent::ShootElectricity()
 			UNiagaraComponent* ElectricEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(ElectricNiagara, GetChildComponent(0), NAME_None, FVector(100.f), FRotator(0.f, 80.f,0.f), EAttachLocation::Type::KeepRelativeOffset, true);
 
 			bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
-			if(IsHit)
+			//UE_LOG(LogTemp, Warning, TEXT("%s"), OutHit.GetComponent()->GetClass()->IsChildOf(AEnemyBaseClass::StaticClass()))
+			if(IsHit /*&& OutHit.GetActor()->GetClass()->IsInA(AEnemyBaseClass::StaticClass())*/)
 			{
 				//deal damage
 				//UE_LOG(LogTemp, Display, TEXT("ElectricHit"));
