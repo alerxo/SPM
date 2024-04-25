@@ -26,6 +26,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
+	float GetAcceptanceRadius();
+
+	UFUNCTION(BlueprintCallable)
+	void SetAcceptanceRadius(float NewAcceptanceRadius);
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxWalkSpeed();
 private:
 	bool IsDead() const;
+	float AcceptanceRadius = 1000;
+	float MaxWalkSpeed;
 };

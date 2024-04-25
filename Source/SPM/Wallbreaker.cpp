@@ -4,6 +4,7 @@
 #include "Wallbreaker.h"
 
 #include "HealthComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AWallbreaker::AWallbreaker()
@@ -17,7 +18,8 @@ AWallbreaker::AWallbreaker()
 void AWallbreaker::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	MaxWalkSpeed = this->GetComponentByClass<UCharacterMovementComponent>()->MaxWalkSpeed;
 }
 
 // Called every frame
@@ -33,6 +35,21 @@ void AWallbreaker::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+float AWallbreaker::GetAcceptanceRadius()
+{
+	return AcceptanceRadius;
+}
+
+void AWallbreaker::SetAcceptanceRadius(float NewAcceptanceRadius)
+{
+	AcceptanceRadius = NewAcceptanceRadius;
+}
+
+float AWallbreaker::GetMaxWalkSpeed()
+{
+	return MaxWalkSpeed;
 }
 
 bool AWallbreaker::IsDead() const
