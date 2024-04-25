@@ -50,9 +50,9 @@ public:
 	class UPhysicsConstraintComponent* PhysicsConstraint;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ConstraintMesh;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* WeaponLeft;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* WeaponRight;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
