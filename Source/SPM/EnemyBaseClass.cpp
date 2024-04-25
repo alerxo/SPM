@@ -50,7 +50,7 @@ void AEnemyBaseClass::SpawnHealthPickup()
 {
 	if (CheckToSpawnPickup())
 	{
-		GetWorld()->SpawnActor<AHealthPickup>(HealthPickupClass, GetActorLocation(), GetActorRotation());
+		GetWorld()->SpawnActor<AHealthPickup>(HealthPickupClass, GetActorLocation(), FRotator::ZeroRotator);
 	}
 }
 
