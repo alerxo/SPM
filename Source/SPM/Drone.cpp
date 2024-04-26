@@ -136,11 +136,7 @@ void ADrone::LookAt(const FVector Position)
 
 void ADrone::Aim(const FVector Position) const
 {
-	FRotator Rotation = (Position - GetActorLocation()).GetSafeNormal().Rotation();
-	Rotation.Roll = 0;
-	Rotation.Yaw = 0;
-	WeaponLeft->SetRelativeRotation(Rotation);
-	WeaponRight->SetRelativeRotation(Rotation);
+	//TODO: Move from blueprint into c++
 }
 
 void ADrone::Shoot()
@@ -150,7 +146,7 @@ void ADrone::Shoot()
 	FRotator Rotation = LeftFire ? WeaponLeft->GetComponentRotation() : WeaponRight->GetComponentRotation();
 	Rotation.Pitch += FMath::RandRange(-AccuracyMargin, AccuracyMargin);
 	Rotation.Roll += FMath::RandRange(-AccuracyMargin, AccuracyMargin);
-	Rotation.Yaw += FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? 4 : -4);
+	Rotation.Yaw += FMath::RandRange(-AccuracyMargin, AccuracyMargin); // + (LeftFire ? 4 : -4);
 	ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
 	NewProjectile->SetOwner(this);
 	NewProjectile->SetDamage(Damage);
