@@ -117,6 +117,11 @@ void ADrone::Movement(const float DeltaTime)
 		Velocity += Step * (Acceleration * DeltaTime);
 	}
 
+	if(Height < 25 && Velocity.Z < 0)
+	{
+		Velocity.Z = 0;
+	}
+	
 	Root->AddWorldOffset(Velocity * DeltaTime);
 	Root->SetWorldRotation(TargetRotation);
 }
