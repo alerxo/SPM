@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ManaComponent.h"
 //#include "Camera/CameraComponent.h"
+#include "DamageComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
@@ -35,6 +36,9 @@ public:
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	USoundBase* FireballSound;
 	
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -92,6 +96,9 @@ protected:
 private:
 	/** The Character holding this weapon*/
 	ASPMCharacter* Character;
+
+	//UPROPERTY(EditAnywhere)
+	//UDamageComponent* DamageComponent;
 
 	UPROPERTY(EditAnywhere)
 	UManaComponent* ManaComponent;

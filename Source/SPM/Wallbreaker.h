@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetMaxWalkSpeed();
 private:
+
+	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess = true))
 	float AcceptableDistance = 2000;
+	
 	float MaxWalkSpeed;
 };
