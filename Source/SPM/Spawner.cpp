@@ -37,8 +37,6 @@ void USpawner::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 int USpawner::SpawnAtLocation(int TotalTokens)
 {
-
-	
 	if(Time <= 0)
 	{
 		int rand = FMath::RandRange(0, SpawnLocations.Max() -1);
