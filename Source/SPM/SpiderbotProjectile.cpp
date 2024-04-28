@@ -4,6 +4,7 @@
 #include "SpiderbotProjectile.h"
 
 #include "DamageComponent.h"
+#include "EnemyBaseClass.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -34,15 +35,17 @@ void ASpiderbotProjectile::Tick(float DeltaTime)
 
 }
 
-void ASpiderbotProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalInpuls, const FHitResult& Hit)
+void ASpiderbotProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	AController* MyOwnerInstigator = GetOwner()->GetInstigatorController();
 	UDamageComponent* DamageComponent = GetOwner()->GetComponentByClass<UDamageComponent>();
-
-	if (OtherActor && OtherActor != this && OtherActor != GetOwner())
+	if (Cast<AEnemyBaseClass>(OtherActor) == nullptr)
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, DamageComponent->GetDamage(), MyOwnerInstigator, this, DamageComponent->GetDamageType());
+		if (OtherActor && OtherActor != this && OtherActor != GetOwner())
+		{
+			UGameplayStatics::ApplyDamage(OtherActor, DamageComponent->GetDamage(), MyOwnerInstigator, this, DamageComponent->GetDamageType());
+		}
 	}
+	
 	Destroy();
 }
-

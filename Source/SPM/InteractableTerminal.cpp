@@ -36,6 +36,7 @@ void AInteractableTerminal::Interact()
 			//Core is Activated
 			Core->SetCanBeActivated(true);
 			OnScreenChange.Broadcast();
+			SetIsInteractable(false);
 			UE_LOG(LogTemp, Warning, TEXT("Interact Terminal"));
 		}
 		else
