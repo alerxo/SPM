@@ -9,7 +9,6 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "PhysicsEngine/PhysicsConstraintComponent.h"
 
 ADrone::ADrone()
 {
@@ -50,10 +49,10 @@ void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ADrone::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	CheckLineOfSightAtPlayer();
+	Rotate();
 	GetMovementDirection();
-	GetHoverHeight();
 	Movement(DeltaTime);
 }
 
@@ -71,59 +70,70 @@ void ADrone::CheckLineOfSightAtPlayer() const
 	BlackboardComponent->SetValueAsObject("Target", Cast<ASPMCharacter>(Result.GetActor()) != nullptr && Result.Distance <= AttackRange ? Player : nullptr);
 }
 
+void ADrone::Rotate() const
+{
+	Root->SetWorldRotation(TargetRotation);
+}
+
 void ADrone::GetMovementDirection()
 {
-	FVector Direction = TargetPosition - GetActorLocation();
-	
-	if(Direction.Length() < StopDistance)
+	TargetVelocity = FVector::Zero();
+
+	if(FVector::Distance(Root->GetComponentLocation(), Destination) < StopDistance)
 	{
-		TargetVelocity.X = 0;
-		TargetVelocity.Y = 0;
 		return;
 	}
 	
-	Direction.Normalize();
-	TargetVelocity.X = Direction.X * MovementSpeed;
-	TargetVelocity.Y = Direction.Y * MovementSpeed;
-	LookAt(TargetPosition);
+	const TArray LidarDirections = 
+	{
+		RootComponent->GetUpVector(),
+		-RootComponent->GetUpVector(),
+		RootComponent->GetForwardVector(),
+		RootComponent->GetRightVector(),
+		-RootComponent->GetRightVector(),
+	};
+	
+	for (const FVector LidarDirection : LidarDirections)
+	{
+		CheckLidarDirection(LidarDirection);
+	}
 }
 
-void ADrone::GetHoverHeight()
+void ADrone::CheckLidarDirection(FVector Direction)
 {
 	FHitResult Result;
-	FVector Start = RootComponent->GetComponentLocation() + FVector(0, 0, 0);
-	FVector End = Start - FVector(0, 0, DefaultHoverHeight * 10);
+	FVector Start = RootComponent->GetComponentLocation();
+	FVector End = Start + (Direction * ObstacleAvoidanceDistance);
 	FCollisionQueryParams CollisionQueryParams;
 	CollisionQueryParams.AddIgnoredActor(this);
-	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
-	Height = Result.Distance;
-	const float Difference = TargetHeight - Height;
+
+	if(Debug)
+	{
+		const FName TraceTag("DroneLidarLineTrace");
+		GetWorld()->DebugDrawTraceTag = TraceTag;
+		CollisionQueryParams.TraceTag = TraceTag;
+	}
 	
-	if(Difference > HoverMargin) TargetVelocity.Z = Difference * HoverSpeed;
-	else if(Difference < HoverMargin) TargetVelocity.Z = Difference * HoverSpeed;
-	else TargetVelocity.Z = 0;
+	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
+	TargetVelocity += Direction * (ObstacleAvoidanceDistance - Result.Distance);
 }
 
 void ADrone::Movement(const float DeltaTime)
 {
+	TargetVelocity.Normalize();
+	TargetVelocity *= MovementSpeed;
+	
 	if(const FVector Step = TargetVelocity - Velocity; Step.Length() > 1)
 	{
 		Velocity += Step * (Acceleration * DeltaTime);
 	}
-
-	if(Height < 25 && Velocity.Z < 0)
-	{
-		Velocity.Z = 0;
-	}
 	
 	Root->AddWorldOffset(Velocity * DeltaTime);
-	Root->SetWorldRotation(TargetRotation);
 }
 
 void ADrone::MoveTo(const FVector Position)
 {
-	TargetPosition = Position;
-	TargetHeight = DefaultHoverHeight;
+	Destination = Position;
 }
 
 void ADrone::LookAt(const FVector Position)

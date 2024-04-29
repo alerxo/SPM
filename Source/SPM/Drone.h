@@ -37,8 +37,9 @@ public:
 
 private:
 	void CheckLineOfSightAtPlayer() const;
+	void Rotate() const;
 	void GetMovementDirection();
-	void GetHoverHeight();
+	void CheckLidarDirection(FVector);
 	void Movement(const float);
 
 public:
@@ -78,28 +79,23 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float MovementSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float HoverSpeed = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float DefaultHoverHeight = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float HoverMargin = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float Acceleration = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float StopDistance = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float ObstacleAvoidanceDistance = 0;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FVector	TargetPosition;
+	FVector	Destination;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector Velocity;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector TargetVelocity;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FRotator TargetRotation;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	float TargetHeight;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	float Height;
+
+	UPROPERTY(EditAnywhere)
+	bool Debug = false;
 	
 private:
 	UPROPERTY()
