@@ -11,6 +11,8 @@
 #include "InputActionValue.h"
 #include "ManaComponent.h"
 #include "HealthComponent.h"
+#include "BaseBehaviors/InputBehaviorModifierStates.h"
+#include "Components/InputKeySelector.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -115,11 +117,15 @@ void ASPMCharacter::Dash()
 	//Set the DashDirection
 	FVector Dash = DashSpeed * MoveDirection * MaxMoveSpeed;
 
+	//Add Z-value
+	Dash.Z = ZValue;
+
 	//Launch the Character if the dashcount is less than max and the character is falling
 	if(DashCount < DashMaxCount && this->GetCharacterMovement()->IsFalling())
 	{
-		LaunchCharacter(Dash, false, false);
+		LaunchCharacter(Dash, false, true);
 		bIsDashing = true;
+		UE_LOG(LogTemp, Warning, TEXT("MoveDirection: %s || Dash: %s"), *MoveDirection.ToString(), *Dash.ToString());
 		DashCount++;
 	}else
 	{
@@ -138,6 +144,7 @@ void ASPMCharacter::Move(const FInputActionValue& Value)
 		// add movement 
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
+		
 		//Reset dash on the ground
 		if(DashCount >= DashMaxCount && !Controller->GetCharacter()->GetCharacterMovement()->IsFalling())
 		{
