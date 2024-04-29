@@ -11,6 +11,8 @@
 #include "InputActionValue.h"
 #include "ManaComponent.h"
 #include "HealthComponent.h"
+#include "BaseBehaviors/InputBehaviorModifierStates.h"
+#include "Components/InputKeySelector.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -142,6 +144,7 @@ void ASPMCharacter::Move(const FInputActionValue& Value)
 		// add movement 
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
+		
 		//Reset dash on the ground
 		if(DashCount >= DashMaxCount && !Controller->GetCharacter()->GetCharacterMovement()->IsFalling())
 		{
