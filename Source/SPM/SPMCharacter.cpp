@@ -115,11 +115,15 @@ void ASPMCharacter::Dash()
 	//Set the DashDirection
 	FVector Dash = DashSpeed * MoveDirection * MaxMoveSpeed;
 
+	//Add Z-value
+	Dash.Z = ZValue;
+
 	//Launch the Character if the dashcount is less than max and the character is falling
 	if(DashCount < DashMaxCount && this->GetCharacterMovement()->IsFalling())
 	{
-		LaunchCharacter(Dash, false, false);
+		LaunchCharacter(Dash, false, true);
 		bIsDashing = true;
+		UE_LOG(LogTemp, Warning, TEXT("MoveDirection: %s || Dash: %s"), *MoveDirection.ToString(), *Dash.ToString());
 		DashCount++;
 	}else
 	{
