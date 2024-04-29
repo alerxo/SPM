@@ -69,12 +69,17 @@ class ASPMCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	float DashSpeed = 5.0f;
 
-	/** Dash cooldowntime */
+	/** Dash cooldown time */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	float DashCooldown = 2.0f;
 
+	/** Bool for Dashing */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	bool bIsDashing = false;
+
+	/** Increase i Z axis on dash */
+	UPROPERTY(EditAnywhere, Blueprintable, Category=Dash, meta=(AllowPrivateAccess = "true"))
+	float ZValue = 600.0f;
 	
 public:
 	ASPMCharacter();
