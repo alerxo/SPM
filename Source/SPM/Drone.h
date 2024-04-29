@@ -45,15 +45,15 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* Root;
 	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* StableMesh;
-	UPROPERTY(VisibleAnywhere)
-	class UPhysicsConstraintComponent* PhysicsConstraint;
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ConstraintMesh;
+	UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USkeletalMeshComponent* WeaponLeft;
+	USceneComponent* WeaponBaseLeft;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* ProjectileOriginLeft;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USkeletalMeshComponent* WeaponRight;
+	USceneComponent* WeaponBaseRight;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* ProjectileOriginRight;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
@@ -102,7 +102,9 @@ public:
 	float Height;
 	
 private:
+	UPROPERTY()
 	AActor* Player;
+	UPROPERTY()
 	class UBlackboardComponent* BlackboardComponent;
 	bool LeftFire = false;
 };

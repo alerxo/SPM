@@ -17,28 +17,22 @@ ADrone::ADrone()
 
 	Root = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Root"));
 	RootComponent = Root;
-	
-	StableMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("StableMesh"));
-	StableMesh->SetupAttachment(Root);
-	
-	PhysicsConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
-	PhysicsConstraint->SetupAttachment(StableMesh);
-	
-	ConstraintMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConstraintMesh"));
-	ConstraintMesh->SetupAttachment(PhysicsConstraint);
-	
-	WeaponLeft = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponLeft"));
-	WeaponLeft->SetupAttachment(ConstraintMesh);
-
-	WeaponRight = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponRight"));
-	WeaponRight->SetupAttachment(ConstraintMesh);
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh->SetupAttachment(RootComponent);
+	WeaponBaseLeft = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseLeft"));
+	WeaponBaseLeft->SetupAttachment(RootComponent);
+	ProjectileOriginLeft = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginLeft"));
+	ProjectileOriginLeft->SetupAttachment(WeaponBaseLeft);
+	WeaponBaseRight = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseRight"));
+	WeaponBaseRight->SetupAttachment(RootComponent);
+	ProjectileOriginRight = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginRight"));
+	ProjectileOriginRight->SetupAttachment(WeaponBaseRight);
 }
 
 void ADrone::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	PhysicsConstraint->SetConstrainedComponents(StableMesh, NAME_None, ConstraintMesh, NAME_None);
 	Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	MoveTo( GetActorLocation());
 	AmmoCount = Ammo;
@@ -68,7 +62,7 @@ void ADrone::CheckLineOfSightAtPlayer() const
 	if(!Player) return;
 	
 	FHitResult Result;
-	FVector Start = ConstraintMesh->GetComponentLocation();
+	FVector Start = RootComponent->GetComponentLocation();
 	FVector End = Player->GetActorLocation();
 	FCollisionQueryParams CollisionQueryParams;
 	CollisionQueryParams.AddIgnoredActor(this);
@@ -147,11 +141,9 @@ void ADrone::Aim(const FVector Position) const
 void ADrone::Shoot()
 {
 	LeftFire = !LeftFire;
-	const FVector Origin = LeftFire ? WeaponLeft->GetComponentLocation() : WeaponRight->GetComponentLocation();
-	FRotator Rotation = LeftFire ? WeaponLeft->GetComponentRotation() : WeaponRight->GetComponentRotation();
-	Rotation.Pitch += FMath::RandRange(-AccuracyMargin, AccuracyMargin);
-	Rotation.Roll += FMath::RandRange(-AccuracyMargin, AccuracyMargin);
-	Rotation.Yaw += FMath::RandRange(-AccuracyMargin, AccuracyMargin); // + (LeftFire ? 4 : -4);
+	const FVector Origin = LeftFire ? ProjectileOriginLeft->GetComponentLocation() : ProjectileOriginRight->GetComponentLocation();
+	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
+	Rotation += FRotator(FMath::RandRange(-AccuracyMargin, AccuracyMargin), FMath::RandRange(-AccuracyMargin, AccuracyMargin), FMath::RandRange(-AccuracyMargin, AccuracyMargin));
 	ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
 	NewProjectile->SetOwner(this);
 	NewProjectile->SetDamage(Damage);
