@@ -4,6 +4,7 @@
 #include "Interactable.h"
 
 #include "Blueprint/UserWidget.h"
+#include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/Widget.h"
 #include "Kismet/GameplayStatics.h"
@@ -16,12 +17,12 @@ AInteractable::AInteractable()
 
 
 	//Create Subobjects
-	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+	SphereComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Nesh"));
 
 	//Set up the Hierarchy of the Interactable 
-	RootComponent = SphereComponent;
-	MeshComponent->SetupAttachment(RootComponent);
+	RootComponent = MeshComponent;
+	SphereComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
