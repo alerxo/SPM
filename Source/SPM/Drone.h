@@ -17,12 +17,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-public:	
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+public:
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	                         AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
 	void Aim(const FVector Position) const;
@@ -33,13 +34,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MoveTo(const FVector Position);
 	UFUNCTION(BlueprintCallable)
-	void LookAt(const FVector Position);
+	void SetFocus(AActor* Target);
+	UFUNCTION(BlueprintCallable)
+	void ClearFocus();
 
 private:
 	void CheckLineOfSightAtPlayer() const;
-	void Rotate() const;
+	void Rotate();
 	void GetMovementDirection();
-	void CheckLidarDirection(FVector);
+	void CheckLidarDirection(FRotator);
+	void GetGravity();
 	void Movement(const float);
 
 public:
@@ -55,10 +59,10 @@ public:
 	USceneComponent* WeaponBaseRight;
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* ProjectileOriginRight;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float Health = 0;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
@@ -84,9 +88,13 @@ public:
 	float StopDistance = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float ObstacleAvoidanceDistance = 0;
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float ObstacleAvoidanceForce = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float Gravity = 0;
+
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FVector	Destination;
+	FVector Destination;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector Velocity;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
@@ -94,13 +102,18 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FRotator TargetRotation;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	TArray<FRotator> LidarDirections = {};
+
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
-	
+
 private:
 	UPROPERTY()
 	AActor* Player;
 	UPROPERTY()
 	class UBlackboardComponent* BlackboardComponent;
+	UPROPERTY()
+	AActor* Focus;
 	bool LeftFire = false;
 };
