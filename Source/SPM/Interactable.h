@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Interactable.generated.h"
 
+class UBoxComponent;
 class UUserWidget;
 class USphereComponent;
 UCLASS()
@@ -62,7 +63,7 @@ public:
 
 	//SphereComponent for collision
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USphereComponent* SphereComponent;
+	UBoxComponent* SphereComponent;
 
 	//MeshComponent for the Interactables
 	UPROPERTY(EditAnywhere)

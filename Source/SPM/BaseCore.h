@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseCore.generated.h"
 
+class ASpawnPoints;
 class AInteractableTerminal;
 class USPMGameInstanceSubsystem;
 class UHealthComponent;
@@ -60,6 +61,9 @@ public:
 	//SphereComponent EditAnywhere
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<ASpawnPoints*> Spawners;
 
 private:
 	//Bool if Core is active or not
