@@ -106,6 +106,7 @@ public:
 	bool GetHasRifle();
 
 	//Getter for float
+	UFUNCTION(BlueprintCallable)
 	float GetMana() const;
 	
 protected:
