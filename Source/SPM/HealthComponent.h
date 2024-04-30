@@ -43,6 +43,13 @@ public:
 	//Getter method for the Health Precentage
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPercentage() const;
+
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateTakeDamage();
+
+	UFUNCTION(BlueprintCallable)
+	void DisableTakeDamage();
 	
 private:
 	//Float property for DefaultHealth that is used for removing Healt Points

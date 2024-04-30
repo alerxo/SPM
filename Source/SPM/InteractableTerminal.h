@@ -33,5 +33,8 @@ public:
 	//The Core the terminal is connected to
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ABaseCore* Core;
+
+
+	//Spawn Points
 	
 };
