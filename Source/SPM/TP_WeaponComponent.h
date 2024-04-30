@@ -84,6 +84,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void ShootElectricity();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void SpawnElectricity();
 	
 protected:
 	/** Ends gameplay for this component. */
