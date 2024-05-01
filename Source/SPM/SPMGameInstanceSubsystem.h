@@ -14,7 +14,7 @@ class ABaseCore;
 //Declare Diffrent Delegates 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpellShot, float, Amount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractable);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCoreActivated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreActivated, ABaseCore*, Core);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDestroyed, ABaseCore*, Core);
 UCLASS()
 class SPM_API USPMGameInstanceSubsystem : public UGameInstanceSubsystem

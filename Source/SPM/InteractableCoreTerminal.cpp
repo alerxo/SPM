@@ -66,7 +66,7 @@ void AInteractableCoreTerminal::CheckCores(ABaseCore* Core)
 	}
 	UE_LOG(LogTemp, Error, TEXT("Check Cores"));
 	Cores.Remove(Core);
-	Core->Destroy();
+	//Core->Destroy();
 	if(Cores.Num() == 0)
 	{
 		this->SetIsActive(true);

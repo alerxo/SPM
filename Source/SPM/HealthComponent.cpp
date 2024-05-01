@@ -19,11 +19,22 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	//Dynamically Add TakeDamage Method to OnTakeDamage Delegate
-	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+	ActivateTakeDamage();
 	
 	DefaultHealth = Health;
 	
 }
+
+void UHealthComponent::DisableTakeDamage()
+{
+	GetOwner()->OnTakeAnyDamage.RemoveDynamic(this, &UHealthComponent::TakeDamage);
+}
+
+void UHealthComponent::ActivateTakeDamage()
+{
+	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+}
+
 
 
 // Called when the event for Taking Damage OnTakeAnyDamage Delegate

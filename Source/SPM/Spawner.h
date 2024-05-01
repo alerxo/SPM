@@ -7,6 +7,7 @@
 #include "Spawner.generated.h"
 
 
+class ASpawnPoints;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API USpawner : public UActorComponent
@@ -26,7 +27,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<AActor*> SpawnLocations;
+	TArray<ASpawnPoints*> SpawnLocations;
 
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> EnemyObjectPool;
