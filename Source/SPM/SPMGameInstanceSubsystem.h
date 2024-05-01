@@ -17,8 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractable);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreActivated, ABaseCore*, Core);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDestroyed, ABaseCore*, Core);
 
-//Master mind Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Sender, FVector, Info);
+
 
 UCLASS()
 class SPM_API USPMGameInstanceSubsystem : public UGameInstanceSubsystem
@@ -39,9 +38,6 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnCoreActivated OnCoreActivated;
 
-	//Declare Delegate for sending Info to master mind 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FOnSentInfo OnSentInfo;
 
 	//Declare Delegate FOnInteractable
 	UPROPERTY(BlueprintAssignable)
