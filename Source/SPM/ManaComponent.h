@@ -25,6 +25,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	//Getter for Mana
+	UFUNCTION(BlueprintCallable)
 	float GetMana() const {return  Mana;}
 	
 	//Game Instance class for Delegate
