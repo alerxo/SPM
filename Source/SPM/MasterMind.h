@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "MasterMind.generated.h"
 
+class AEnemyBaseClass;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpawnOnCore, int, TotalTokens);
 UCLASS()
 class SPM_API AMasterMind : public APawn
@@ -26,6 +27,15 @@ public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnSpawnOnCore OnSpawnOnCore;
+
+
+	//Enemy sends info to Master mind
+	UFUNCTION(BlueprintCallable)
+	void SendInfo(AEnemyBaseClass* Sender, FVector info);
+
+	//Master mind Reports to nearby enemies
+	UFUNCTION(BlueprintCallable)
+	void ReportToOthers(FVector info);
 
 	UFUNCTION()
 	void print(int token);
