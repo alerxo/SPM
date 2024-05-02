@@ -16,7 +16,7 @@ ADrone::ADrone()
 
 	Root = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Root"));
 	RootComponent = Root;
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 	WeaponBaseLeft = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseLeft"));
 	WeaponBaseLeft->SetupAttachment(RootComponent);
@@ -78,9 +78,9 @@ void ADrone::Rotate()
 	{
 		MovementDirection = (Destination - GetActorLocation()).Rotation();
 	}
-	
+
 	Focus ? TargetRotation = (Focus->GetActorLocation() - GetActorLocation()).Rotation() : MovementDirection;
-	
+
 	FRotator Rotation = TargetRotation;
 	Rotation.Pitch = 0;
 	Root->SetWorldRotation(Rotation);
@@ -190,6 +190,12 @@ void ADrone::Shoot()
 	NewProjectile->SetOwner(this);
 	NewProjectile->SetDamage(Damage);
 	AmmoCount--;
+
+	OnShoot_Implementation(LeftFire);
+}
+
+void ADrone::OnShoot_Implementation(bool IsLeftFire)
+{
 }
 
 void ADrone::Reload()
