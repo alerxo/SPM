@@ -13,7 +13,8 @@ class ABaseCore;
  */
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScreenChange);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCoreDisabled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCoreReActive);
 UCLASS()
 class SPM_API AInteractableTerminal : public AInteractable
 {
@@ -27,8 +28,17 @@ protected:
 	void Interact() override;
 public:
 
-	UPROPERTY(BlueprintAssignable)
-	FOnScreenChange OnScreenChange;
+
+	UFUNCTION(BlueprintCallable)
+	void SetInteractableOnDisable();
+
+	//When core is deactivated
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnCoreDisabled OnCoreDisabled;
+
+	//Delegate when core is active again
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnCoreReActive OnCoreReActive;
 	
 	//The Core the terminal is connected to
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -86,6 +86,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bElectricActive;
 
+	/*UPROPERTY(EditAnywhere)
+	class UMaterial* BasicMaterial;
+
+	UPROPERTY(EditAnywhere)
+	class UMaterial* FireMaterial;
+
+	UPROPERTY(EditAnywhere)
+	class UMaterial* ElectricMaterial;*/
+	
+
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
