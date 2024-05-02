@@ -16,7 +16,7 @@ ADrone::ADrone()
 
 	Root = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Root"));
 	RootComponent = Root;
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 	WeaponBaseLeft = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseLeft"));
 	WeaponBaseLeft->SetupAttachment(RootComponent);

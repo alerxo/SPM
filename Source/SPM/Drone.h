@@ -50,7 +50,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* Root;
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* Mesh;
+	USkeletalMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponBaseLeft;
 	UPROPERTY(VisibleAnywhere)
