@@ -23,6 +23,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
 	void Fire();
 
 
@@ -30,6 +31,11 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ASpiderbotProjectile> ProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	USoundAttenuation* Attenuation;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* FiringSound;
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* ProjectileSpawnPoint;

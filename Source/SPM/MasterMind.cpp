@@ -33,3 +33,15 @@ void AMasterMind::print(int token)
 }
 
 
+void AMasterMind::SendInfo(AEnemyBaseClass* Sender, FVector Info)
+{
+	//OnSentInfo.Broadcast(Sender, Info);
+}
+
+void AMasterMind::ReportToOthers(FVector info)
+{
+	
+}
+
+
+
