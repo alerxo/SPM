@@ -23,13 +23,19 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 	ElectricOffset = FVector(40.0f, 0.0f, 15.0f);
+
+	bBasicActive = true;
+	bFireActive = false;
+	bElectricActive = false;
 	
 }
 
 
+
+
 void UTP_WeaponComponent::Fire()
 {
-	if (Character == nullptr || Character->GetController() == nullptr)
+	if (Character == nullptr || Character->GetController() == nullptr || bBasicActive == false)
 	{
 		return;
 	}
@@ -75,7 +81,7 @@ void UTP_WeaponComponent::Fire()
 void UTP_WeaponComponent::ShootFireball()
 {
 	
-	if (Character == nullptr || Character->GetController() == nullptr)
+	if (Character == nullptr || Character->GetController() == nullptr || bFireActive == false)
 	{
 		return;
 	}
@@ -134,12 +140,56 @@ void UTP_WeaponComponent::ShootFireball()
 	}
 }
 
+void UTP_WeaponComponent::ChangeWeapon()
+{
+
+	if (Character == nullptr || Character->GetController() == nullptr)
+	{
+		return;
+	}
+	
+	APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+	if(!PlayerController->IsInputKeyDown(EKeys::One) && !PlayerController->IsInputKeyDown(EKeys::Two) && !PlayerController->IsInputKeyDown(EKeys::Three))
+	{
+		return;
+	}
+	
+	if(PlayerController->IsInputKeyDown(EKeys::One))
+	{
+		bBasicActive = true;
+		bFireActive = false;
+		bElectricActive = false;
+	}
+	else if(PlayerController->IsInputKeyDown(EKeys::Two))
+	{
+		bBasicActive = false;
+		bFireActive = true;
+		bElectricActive = false;
+		
+	} else if(PlayerController->IsInputKeyDown(EKeys::Three))
+	{
+		bBasicActive = false;
+		bFireActive = false;
+		bElectricActive = true;
+	}
+	
+	
+}
+
+/*bool UTP_WeaponComponent::TurnOffElectric()
+{
+	return false;
+}*/
+
+
+
 
 void UTP_WeaponComponent::ShootElectricity()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Shoot Electric"));
-	if (Character == nullptr || Character->GetController() == nullptr)
+	if (Character == nullptr || Character->GetController() == nullptr || bElectricActive == false)
 	{
+		//TurnOffElectric();
 		return;
 	}
 
