@@ -34,8 +34,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AHealthPickup> HealthPickupClass;
-	
-	//void SpawnHealthPickup();
 
 	UPROPERTY(EditDefaultsOnly)
 	float ChanceToSpawnPickup;
