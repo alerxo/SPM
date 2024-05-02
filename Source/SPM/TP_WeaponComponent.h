@@ -68,6 +68,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* ShootElectricityAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* SwapToBasicAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* SwapToFireAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* SwapToElectricAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bBasicActive;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bFireActive;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bElectricActive;
+
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
@@ -84,6 +102,18 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void ShootElectricity();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ChangeWeapon();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ShootPressed();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ShootHold();
+
+	//UFUNCTION(BlueprintCallable)
+	//bool TurnOffElectric();
 
 	//UFUNCTION(BlueprintCallable, Category="Weapon")
 	//void SpawnElectricity();
@@ -124,4 +154,5 @@ private:
 	UNiagaraSystem* ElectricNiagara;
 
 	bool PlayNiagara = true;
+	
 };
