@@ -4,6 +4,7 @@
 #include "Spiderbot.h"
 
 #include "SpiderbotProjectile.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASpiderbot::ASpiderbot()
@@ -43,6 +44,7 @@ void ASpiderbot::Tick(float DeltaTime)
 //shoots projectile
 void ASpiderbot::Fire()
 {
+	UGameplayStatics::PlaySoundAtLocation(this, FiringSound, GetActorLocation(), GetActorRotation(), 1, 1, 0, Attenuation);
 	ASpiderbotProjectile* Projectile = GetWorld()->SpawnActor<ASpiderbotProjectile>(
 		ProjectileClass,
 		ProjectileSpawnPoint->GetComponentLocation(),

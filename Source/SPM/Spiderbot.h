@@ -30,6 +30,11 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ASpiderbotProjectile> ProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	USoundAttenuation* Attenuation;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* FiringSound;
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
