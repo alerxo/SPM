@@ -179,7 +179,7 @@ void UTP_WeaponComponent::ShootElectricity()
 			CollisionParams.AddIgnoredActor(this->GetOwner());
 
 			//spawn electric effect
-			DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 5, 0 ,1);
+			//DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 5, 0 ,1);
 			//UE_LOG(LogTemp, Warning, TEXT("%s"), GetChildComponent(0));
 			
 			/*if(PlayNiagara)
@@ -234,7 +234,7 @@ void UTP_WeaponComponent::ShootElectricity()
 					if(isSpreadHit && Hit.GetActor() != nullptr && Cast<AEnemyBaseClass>(Hit.GetActor()))
 					{
 						//Deal Damage to other enemies
-						DrawDebugLine(GetWorld(), HitLocation, Hit.GetActor()->GetActorLocation(), FColor::Red, false, 5,0,1);
+						//DrawDebugLine(GetWorld(), HitLocation, Hit.GetActor()->GetActorLocation(), FColor::Red, false, 5,0,1);
 						
 						//DisablePlayerCollision(Hit);
 						//UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());

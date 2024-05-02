@@ -17,12 +17,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-public:	
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+public:
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	                         AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
 	void Aim(const FVector Position) const;
@@ -33,31 +34,35 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MoveTo(const FVector Position);
 	UFUNCTION(BlueprintCallable)
-	void LookAt(const FVector Position);
+	void SetFocus(AActor* Target);
+	UFUNCTION(BlueprintCallable)
+	void ClearFocus();
 
 private:
 	void CheckLineOfSightAtPlayer() const;
+	void Rotate();
 	void GetMovementDirection();
-	void GetHoverHeight();
+	void CheckLidarDirection(FRotator);
+	void GetGravity();
 	void Movement(const float);
 
 public:
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* Root;
 	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* StableMesh;
-	UPROPERTY(VisibleAnywhere)
-	class UPhysicsConstraintComponent* PhysicsConstraint;
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ConstraintMesh;
+	UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USkeletalMeshComponent* WeaponLeft;
+	USceneComponent* WeaponBaseLeft;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* ProjectileOriginLeft;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USkeletalMeshComponent* WeaponRight;
-	
+	USceneComponent* WeaponBaseRight;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* ProjectileOriginRight;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float Health = 0;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
@@ -78,31 +83,37 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float MovementSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float HoverSpeed = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float DefaultHoverHeight = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float HoverMargin = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float Acceleration = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float StopDistance = 0;
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float ObstacleAvoidanceDistance = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float ObstacleAvoidanceForce = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float Gravity = 0;
+
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FVector	TargetPosition;
+	FVector Destination;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector Velocity;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector TargetVelocity;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FRotator TargetRotation;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	float TargetHeight;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	float Height;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	TArray<FRotator> LidarDirections = {};
+
+	UPROPERTY(EditAnywhere)
+	bool Debug = false;
+
 private:
+	UPROPERTY()
 	AActor* Player;
+	UPROPERTY()
 	class UBlackboardComponent* BlackboardComponent;
+	UPROPERTY()
+	AActor* Focus;
 	bool LeftFire = false;
 };
