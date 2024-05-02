@@ -30,6 +30,29 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	
 }
 
+void UTP_WeaponComponent::ShootPressed()
+{
+	if(bBasicActive == true)
+	{
+		Fire();
+	}
+	else if(bFireActive == true)
+	{
+		ShootFireball();
+	}
+	
+}
+
+void UTP_WeaponComponent::ShootHold()
+{
+	if(bElectricActive == true)
+	{
+		ShootElectricity();
+	}
+}
+
+
+
 
 
 
@@ -351,13 +374,13 @@ void UTP_WeaponComponent::AttachWeapon(ASPMCharacter* TargetCharacter)
 		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
 		{
 			// Fire
-			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
+			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootPressed);
 			
-			EnhancedInputComponent->BindAction(ShootFireballAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootFireball);
+			//EnhancedInputComponent->BindAction(ShootFireballAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootFireball);
 
 			EnhancedInputComponent->BindAction(ShootBlueFireballAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootFireball);
 
-			EnhancedInputComponent->BindAction(ShootElectricityAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootElectricity);
+			EnhancedInputComponent->BindAction(ShootElectricityAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootHold);
 		}
 	}
 }

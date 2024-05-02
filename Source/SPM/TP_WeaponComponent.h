@@ -106,6 +106,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void ChangeWeapon();
 
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ShootPressed();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ShootHold();
+
 	//UFUNCTION(BlueprintCallable)
 	//bool TurnOffElectric();
 
