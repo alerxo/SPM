@@ -194,7 +194,7 @@ void ADrone::Shoot()
 	OnShoot_Implementation(LeftFire);
 }
 
-void ADrone::OnShoot_Implementation(bool leftFire)
+void ADrone::OnShoot_Implementation(bool IsLeftFire)
 {
 }
 
