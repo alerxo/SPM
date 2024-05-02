@@ -49,7 +49,10 @@ void ASpiderbot::Fire()
 		ProjectileClass,
 		ProjectileSpawnPoint->GetComponentLocation(),
 		ProjectileSpawnPoint->GetComponentRotation());
-	Projectile->SetOwner(this);
+	if (this != nullptr)
+	{
+		Projectile->SetOwner(this);
+	}
 }
 
 // Called to bind functionality to input
