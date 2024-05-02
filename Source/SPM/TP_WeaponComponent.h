@@ -86,6 +86,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bElectricActive;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float FireBallCooldown = 2.0f;
+
 	/*UPROPERTY(EditAnywhere)
 	class UMaterial* BasicMaterial;
 
@@ -121,6 +124,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void ShootHold();
+	
 
 	//UFUNCTION(BlueprintCallable)
 	//bool TurnOffElectric();
