@@ -4,12 +4,15 @@
 #include "EnemyBaseClass.h"
 #include "Kismet/GameplayStatics.h"
 #include "HealthComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 AEnemyBaseClass::AEnemyBaseClass()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 }
 
 // Called when the game starts or when spawned
@@ -26,6 +29,10 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 	
 	if (IsDead_Implementation())
 	{
+		if (DeathNiagara != nullptr)
+		{
+			GetWorld()->SpawnActor<AActor>(DeathNiagara, GetActorLocation(), GetActorRotation());
+		}
 		SpawnHealthPickup_Implementation();
 		GetController()->Destroy();
 		Destroy();
