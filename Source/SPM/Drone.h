@@ -38,6 +38,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ClearFocus();
 
+	UFUNCTION(BlueprintNativeEvent)
+	void OnShoot(bool LeftFire);
+
 private:
 	void CheckLineOfSightAtPlayer() const;
 	void Rotate();
@@ -53,11 +56,11 @@ public:
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponBaseLeft;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* ProjectileOriginLeft;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponBaseRight;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* ProjectileOriginRight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -99,7 +102,7 @@ public:
 	FRotator MovementDirection;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector Destination;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector TargetVelocity;
