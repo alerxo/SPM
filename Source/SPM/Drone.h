@@ -46,7 +46,6 @@ private:
 	void Rotate();
 	void GetTargetVelocity();
 	void CheckLidarDirection(FRotator);
-	void GetGravity();
 	void Move(const float);
 
 public:
@@ -93,8 +92,6 @@ public:
 	float ObstacleAvoidanceDistance = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float ObstacleAvoidanceForce = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float Gravity = 0;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool HasDestination;

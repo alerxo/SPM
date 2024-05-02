@@ -98,14 +98,10 @@ void ADrone::GetTargetVelocity()
 		}
 
 		HasDestination = true;
+		return;
 	}
 
-	else
-	{
-		HasDestination = false;
-	}
-
-	GetGravity();
+	HasDestination = false;
 }
 
 void ADrone::CheckLidarDirection(FRotator Rotation)
@@ -126,21 +122,6 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
 	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
-}
-
-void ADrone::GetGravity()
-{
-	FHitResult Result;
-	FVector Start = RootComponent->GetComponentLocation();
-	FVector End = Start + -FVector::UpVector * ObstacleAvoidanceDistance;
-	FCollisionQueryParams CollisionQueryParams;
-	CollisionQueryParams.AddIgnoredActor(this);
-	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
-
-	if (!Result.bBlockingHit)
-	{
-		TargetVelocity.Z += Gravity;
-	}
 }
 
 void ADrone::Move(const float DeltaTime)
@@ -194,10 +175,6 @@ void ADrone::Shoot()
 	OnShoot(LeftFire);
 }
 
-void ADrone::OnShoot_Implementation(bool IsLeftFire)
-{
-}
-
 void ADrone::Reload()
 {
 	AmmoCount = Ammo;
@@ -216,4 +193,8 @@ float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEve
 	}
 
 	return TakenDamage;
+}
+
+void ADrone::OnShoot_Implementation(bool IsLeftFire)
+{
 }
