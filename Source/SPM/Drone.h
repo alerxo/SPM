@@ -39,7 +39,7 @@ public:
 	void ClearFocus();
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnShoot(bool LeftFire);
+	void OnShoot(bool IsLeftFire);
 
 private:
 	void CheckLineOfSightAtPlayer() const;
