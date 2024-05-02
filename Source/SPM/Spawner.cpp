@@ -21,9 +21,7 @@ USpawner::USpawner()
 void USpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
 	Time = DefaultTime;
-	// ...
 	CurrentObjPoolPosition = 0; 
 }
 

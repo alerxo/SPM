@@ -14,11 +14,15 @@ class ABaseCore;
 //Declare Diffrent Delegates 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpellShot, float, Amount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractable);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreActivated, ABaseCore*, Core);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDeactivated, ABaseCore*, Core);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDestroyed, ABaseCore*, Core);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreActivated, ABaseCore*, Core);
+
+
+
 UCLASS()
 class SPM_API USPMGameInstanceSubsystem : public UGameInstanceSubsystem
-{
+ {
 	GENERATED_BODY()
 public:
 	// Begin USubsystem
@@ -33,8 +37,12 @@ public:
 	FOnSpellShot OnSpellShot;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FOnCoreActivated OnCoreActivated;
+	FOnCoreDeactivated OnCoreDeactivated;
 
+	//Call when Core is Activated
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnCoreActivated OnCoreActivated;
+	
 	//Declare Delegate FOnInteractable
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractable OnInteractable;
