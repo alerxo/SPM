@@ -189,7 +189,8 @@ void UTP_WeaponComponent::ChangeWeapon()
 		bFireActive = true;
 		bElectricActive = false;
 		
-	} else if(PlayerController->IsInputKeyDown(EKeys::Three))
+	}
+	else if(PlayerController->IsInputKeyDown(EKeys::Three))
 	{
 		bBasicActive = false;
 		bFireActive = false;
