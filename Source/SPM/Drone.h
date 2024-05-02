@@ -41,10 +41,10 @@ public:
 private:
 	void CheckLineOfSightAtPlayer() const;
 	void Rotate();
-	void GetMovementDirection();
+	void GetTargetVelocity();
 	void CheckLidarDirection(FRotator);
 	void GetGravity();
-	void Movement(const float);
+	void Move(const float);
 
 public:
 	UPROPERTY(VisibleAnywhere)
@@ -92,7 +92,11 @@ public:
 	float ObstacleAvoidanceForce = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float Gravity = 0;
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	bool HasDestination;
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	FRotator MovementDirection;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FVector Destination;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
