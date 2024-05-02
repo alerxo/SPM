@@ -79,7 +79,7 @@ void ADrone::Rotate()
 		MovementDirection = (Destination - GetActorLocation()).Rotation();
 	}
 
-	Focus ? TargetRotation = (Focus->GetActorLocation() - GetActorLocation()).Rotation() : MovementDirection;
+	TargetRotation = Focus ? (Focus->GetActorLocation() - GetActorLocation()).Rotation() : MovementDirection;
 
 	FRotator Rotation = TargetRotation;
 	Rotation.Pitch = 0;
@@ -191,7 +191,7 @@ void ADrone::Shoot()
 	NewProjectile->SetDamage(Damage);
 	AmmoCount--;
 
-	OnShoot_Implementation(LeftFire);
+	OnShoot(LeftFire);
 }
 
 void ADrone::OnShoot_Implementation(bool IsLeftFire)

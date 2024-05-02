@@ -38,7 +38,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ClearFocus();
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Meta = (AllowPrivateAccess = true))
 	void OnShoot(bool IsLeftFire);
 
 private:
