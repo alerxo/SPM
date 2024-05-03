@@ -6,6 +6,7 @@
 #include "EnemyInterface.h"
 #include "GameFramework/Character.h"
 #include "HealthPickup.h"
+#include "NiagaraSystem.h"
 #include "EnemyBaseClass.generated.h"
 
 
@@ -43,6 +44,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	float LowHealthThreshold;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AActor> DeathNiagara;
 
 	bool CheckToSpawnPickup_Implementation() const;
 
