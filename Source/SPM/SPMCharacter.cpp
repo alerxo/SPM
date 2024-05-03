@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 #include "SPMCharacter.h"
 #include "SPMGameInstanceSubsystem.h"
-#include "SPMProjectile.h"
+
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -11,14 +11,10 @@
 #include "InputActionValue.h"
 #include "ManaComponent.h"
 #include "HealthComponent.h"
-#include "BaseBehaviors/InputBehaviorModifierStates.h"
-#include "Components/InputKeySelector.h"
+
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
-#include "Math/UnitConversion.h"
-#include "Tasks/Task.h"
-#include "WorldPartition/ContentBundle/ContentBundleLog.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
