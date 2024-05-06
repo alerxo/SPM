@@ -3,6 +3,8 @@
 
 #include "HealthComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
@@ -40,15 +42,19 @@ void UHealthComponent::ActivateTakeDamage()
 // Called when the event for Taking Damage OnTakeAnyDamage Delegate
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Health %f"), DefaultHealth);
-	if(Damage <= 0)
+	
+	if (DamagedActor == Cast<AActor>(UGameplayStatics::GetPlayerPawn(GetOwner(), 0)) || DamageCauser == Cast<AActor>(UGameplayStatics::GetPlayerPawn(GetOwner(), 0)))
 	{
-		return;
-	}
-	//Damage the Owner(Actor)
-	if((DefaultHealth -= Damage) <= 0)
-	{
-		DefaultHealth = 0;
+		UE_LOG(LogTemp, Warning, TEXT("Health %f"), DefaultHealth);
+		if(Damage <= 0)
+		{
+			return;
+		}
+		//Damage the Owner(Actor)
+		if((DefaultHealth -= Damage) <= 0)
+		{
+			DefaultHealth = 0;
+		}
 	}
 }
 
