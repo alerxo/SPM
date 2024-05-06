@@ -64,7 +64,7 @@ void AFireballProjectile::Explode()
 			{
 				DisablePlayerCollision(Hit);
 				UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
-				UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
+				UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), UGameplayStatics::GetPlayerPawn(this, 0), DamageComponent->GetDamageType());
 				if(MeshComponent)
 				{
 					MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
