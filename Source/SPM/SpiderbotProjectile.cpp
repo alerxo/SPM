@@ -38,7 +38,8 @@ void ASpiderbotProjectile::Tick(float DeltaTime)
 void ASpiderbotProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	AController* MyOwnerInstigator = GetOwner()->GetInstigatorController();
-	UDamageComponent* DamageComponent = GetOwner()->GetComponentByClass<UDamageComponent>();
+	//UDamageComponent* DamageComponent = GetOwner()->GetComponentByClass<UDamageComponent>();
+	UDamageComponent* DamageComponent = GetComponentByClass<UDamageComponent>();
 	if (Cast<AEnemyBaseClass>(OtherActor) == nullptr)
 	{
 		if (OtherActor && OtherActor != this && OtherActor != GetOwner())
