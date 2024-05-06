@@ -56,7 +56,7 @@ void ADrone::Tick(const float DeltaTime)
 	Move(DeltaTime);
 }
 
-void ADrone::CheckLineOfSightAtPlayer() const
+void ADrone::CheckLineOfSightAtPlayer()
 {
 	if (!Player) return;
 
@@ -67,9 +67,19 @@ void ADrone::CheckLineOfSightAtPlayer() const
 	CollisionQueryParams.AddIgnoredActor(this);
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_GameTraceChannel2, CollisionQueryParams);
 	BlackboardComponent->SetValueAsFloat("DistanceToTarget", Result.Distance);
-	BlackboardComponent->SetValueAsObject(
-		"Target",
-		Cast<ASPMCharacter>(Result.GetActor()) != nullptr && Result.Distance <= AttackRange ? Player : nullptr);
+
+	AActor* HitActor = Cast<ASPMCharacter>(Result.GetActor());
+
+	if (HitActor && (IsInCombat ? true : Result.Distance <= AttackRange + KiteRange))
+	{
+		BlackboardComponent->SetValueAsObject("Target", HitActor);
+	}
+
+	else
+	{
+		BlackboardComponent->SetValueAsObject("Target", nullptr);
+		IsInCombat = false;
+	}
 }
 
 void ADrone::Rotate()
@@ -122,6 +132,8 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
 	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
+
+	if (IsInCombat && Result.bBlockingHit) HasDestination = false;
 }
 
 void ADrone::Move(const float DeltaTime)
@@ -142,6 +154,19 @@ void ADrone::MoveTo(const FVector Position)
 	Destination = Position;
 }
 
+FVector ADrone::GetKiteLocation() const
+{
+	if (!Player) return GetActorLocation();
+
+	FVector Location = (GetActorLocation() - Player->GetActorLocation()).GetSafeNormal() * AttackRange;
+	Location += Player->GetActorLocation();
+	Location.Z = Player->GetActorLocation().Z;
+	Location += FVector(FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
+	                    FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
+	                    FMath::RandRange(50, 300));
+	return Location;
+}
+
 void ADrone::SetFocus(AActor* Target)
 {
 	Focus = Target;
@@ -159,6 +184,8 @@ void ADrone::Aim(const FVector Position) const
 
 void ADrone::Shoot()
 {
+	IsInCombat = true;
+
 	LeftFire = !LeftFire;
 	const FVector Origin = LeftFire
 		                       ? ProjectileOriginLeft->GetComponentLocation()
@@ -184,7 +211,9 @@ float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEve
                          AActor* DamageCauser)
 {
 	float const TakenDamage = FMath::Min(
-		Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));;
+		Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
+
+	IsInCombat = true;
 
 	if ((Health -= TakenDamage) <= 0)
 	{

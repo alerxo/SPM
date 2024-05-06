@@ -34,6 +34,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MoveTo(const FVector Position);
 	UFUNCTION(BlueprintCallable)
+	FVector GetKiteLocation() const;
+	UFUNCTION(BlueprintCallable)
 	void SetFocus(AActor* Target);
 	UFUNCTION(BlueprintCallable)
 	void ClearFocus();
@@ -42,7 +44,7 @@ public:
 	void OnShoot(bool IsLeftFire);
 
 private:
-	void CheckLineOfSightAtPlayer() const;
+	void CheckLineOfSightAtPlayer();
 	void Rotate();
 	void GetTargetVelocity();
 	void CheckLidarDirection(FRotator);
@@ -70,7 +72,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
 	float Damage = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float Ammo = 0;
+	int Ammo = 0;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int AmmoCount = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -78,20 +80,26 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float ReloadSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float AttackRange = 0;
+	int AttackRange = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	int KiteRange = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AccuracyMargin = 0;
-
+	UPROPERTY(VisibleAnywhere, Category = "Combat")
+	bool IsInCombat = false;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float MovementSpeed = 0;
+	int MovementSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float Acceleration = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float StopDistance = 0;
+	int StopDistance = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float ObstacleAvoidanceDistance = 0;
+	int ObstacleAvoidanceDistance = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float ObstacleAvoidanceForce = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	TArray<FRotator> LidarDirections = {};
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool HasDestination;
@@ -105,9 +113,6 @@ public:
 	FVector TargetVelocity;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	FRotator TargetRotation;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	TArray<FRotator> LidarDirections = {};
 
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
