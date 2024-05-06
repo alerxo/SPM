@@ -11,6 +11,7 @@
  */
 //Master mind Delegates
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundMade, FVector, Info);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, FVector, info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDisengage, AEnemyBaseClass*, Sender);
 UCLASS()
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
@@ -27,6 +28,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnDisengage OnDisengage;
+	
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnPlayerSeen OnPlayerSeens;
 
 	UFUNCTION(BlueprintCallable)
 	bool RequestToken();
@@ -40,6 +44,14 @@ public:
 	
 	//Amount of tokens
 	float Tokens;
+	
+	UFUNCTION(BlueprintCallable)
+	FVector GetInvestigationLocation() const;
+	
+	UFUNCTION(BlueprintCallable)
+	void SetInvestigationLocation(FVector Vector);
+
+	FVector InvestigationLocation;
 	
 	UFUNCTION(BlueprintCallable, Category="MySubSystem")
 	UMasterMindInstancedSubsystem* GetMasterMindInstancedSubsystem();
