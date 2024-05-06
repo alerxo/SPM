@@ -27,6 +27,9 @@ public:
 	//Getter for Mana
 	UFUNCTION(BlueprintCallable)
 	float GetMana() const {return  Mana;}
+
+	UFUNCTION(BlueprintCallable)
+	float GetElectricMana() const{return ElectricMana;}
 	
 	//Game Instance class for Delegate
 	UPROPERTY()
@@ -42,10 +45,16 @@ public:
 	//Method to Recharge Mana
 	void RechargeMana(float DeltaTime);
 
+	UFUNCTION(BlueprintCallable)
+	void DecreaseElectricMana(float Amount);
+
+	void RechargeElectricMana(float DeltaTime);
+
 private: 
 
 	//bCanRecharge
 	bool bCanRecharge;
+	bool bElectricCanRecharge;
 
 	//Default Value of Timer on Start
 	UPROPERTY(EditAnywhere)
@@ -53,8 +62,10 @@ private:
 
 	//Timer used for time calculation
 	float Timer;
+	float ElectricTimer;
 	//float for mana
 	float Mana;
+	float ElectricMana;
 
 	//Default mana flaot
 	UPROPERTY(EditAnywhere)
@@ -63,4 +74,7 @@ private:
 	//Getter for Mana Percentage
 	UFUNCTION(BlueprintCallable)
 	float GetManaPercent() const;
+
+	UFUNCTION(BlueprintCallable)
+	float GetElectricManaPercent() const;
 };
