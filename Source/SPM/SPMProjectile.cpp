@@ -44,7 +44,7 @@ void ASPMProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 	}
-	UGameplayStatics::ApplyDamage(OtherActor, DamageComponent->GetDamage(), this->GetInstigatorController(), this, DamageComponent->GetDamageType());
+	UGameplayStatics::ApplyDamage(OtherActor, DamageComponent->GetDamage(), this->GetInstigatorController(), UGameplayStatics::GetPlayerPawn(this, 0), DamageComponent->GetDamageType());
 
 	Destroy();
 }
