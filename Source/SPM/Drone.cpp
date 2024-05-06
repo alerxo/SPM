@@ -76,7 +76,7 @@ void ADrone::CheckLineOfSightAtPlayer()
 
 	AActor* HitActor = Cast<ASPMCharacter>(Result.GetActor());
 
-	if (HitActor && Result.Distance <= AttackRange + KiteRange)
+	if (HitActor && IsInCombat ? true : Result.Distance <= AttackRange + KiteRange)
 	{
 		BlackboardComponent->SetValueAsObject("Target", HitActor);
 	}
@@ -84,6 +84,7 @@ void ADrone::CheckLineOfSightAtPlayer()
 	else
 	{
 		BlackboardComponent->SetValueAsObject("Target", nullptr);
+		IsInCombat = false;
 	}
 }
 
@@ -190,6 +191,7 @@ void ADrone::Aim(const FVector Position) const
 
 void ADrone::Shoot()
 {
+	IsInCombat = true;
 	LeftFire = !LeftFire;
 	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
@@ -211,8 +213,9 @@ void ADrone::Reload()
 
 float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	IsInCombat = true;
 	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
-
+	
 	if ((Health -= TakenDamage) <= 0)
 	{
 		GetController()->Destroy();

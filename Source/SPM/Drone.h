@@ -114,12 +114,12 @@ private:
 	class UBlackboardComponent* BlackboardComponent;
 	UPROPERTY()
 	AActor* Focus;
-	bool LeftFire = false;
-	int TickCount = 0;
-	const int TickInterval = 10;
-	
 	FRotator MovementDirection;
 	FVector Destination;
 	FVector TargetVelocity;
 	FRotator TargetRotation;
+	bool IsInCombat = false;
+	bool LeftFire = false;
+	int TickCount = 0;
+	const int TickInterval = 10;
 };
