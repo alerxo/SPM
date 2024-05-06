@@ -9,6 +9,7 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ADrone::ADrone()
 {
@@ -20,12 +21,12 @@ ADrone::ADrone()
 	Mesh->SetupAttachment(RootComponent);
 	WeaponBaseLeft = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseLeft"));
 	WeaponBaseLeft->SetupAttachment(RootComponent);
-	ProjectileOriginLeft = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginLeft"));
-	ProjectileOriginLeft->SetupAttachment(WeaponBaseLeft);
+	WeaponLookAtLeft = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLookAtLeft"));
+	WeaponLookAtLeft->SetupAttachment(WeaponBaseLeft);
 	WeaponBaseRight = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseRight"));
 	WeaponBaseRight->SetupAttachment(RootComponent);
-	ProjectileOriginRight = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginRight"));
-	ProjectileOriginRight->SetupAttachment(WeaponBaseRight);
+	WeaponLookAtRight = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLookAtRight"));
+	WeaponLookAtRight->SetupAttachment(WeaponBaseRight);
 }
 
 void ADrone::BeginPlay()
@@ -86,10 +87,10 @@ void ADrone::Rotate()
 {
 	if (FVector::Distance(Root->GetComponentLocation(), Destination) > StopDistance)
 	{
-		MovementDirection = (Destination - GetActorLocation()).Rotation();
+		MovementDirection = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Destination);
 	}
 
-	TargetRotation = Focus ? (Focus->GetActorLocation() - GetActorLocation()).Rotation() : MovementDirection;
+	TargetRotation = Focus ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Focus->GetActorLocation()) : MovementDirection;
 
 	FRotator Rotation = TargetRotation;
 	Rotation.Pitch = 0;
@@ -179,17 +180,17 @@ void ADrone::ClearFocus()
 
 void ADrone::Aim(const FVector Position) const
 {
-	//TODO: Move from blueprint into c++
+	float Pitch = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Position).Pitch;
+	Pitch = FMath::Clamp(Pitch, -25, 25);
+	WeaponBaseLeft->SetRelativeRotation(FRotator(Pitch, 0, 0));
+	WeaponBaseRight->SetRelativeRotation(FRotator(Pitch, 0, 0));
 }
 
 void ADrone::Shoot()
 {
 	IsInCombat = true;
-
 	LeftFire = !LeftFire;
-	const FVector Origin = LeftFire
-		                       ? ProjectileOriginLeft->GetComponentLocation()
-		                       : ProjectileOriginRight->GetComponentLocation();
+	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
 	Rotation.Add(FMath::RandRange(-AccuracyMargin, AccuracyMargin),
 	             FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? 4 : -4),
@@ -207,12 +208,9 @@ void ADrone::Reload()
 	AmmoCount = Ammo;
 }
 
-float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-                         AActor* DamageCauser)
+float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float const TakenDamage = FMath::Min(
-		Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
-
+	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
 	IsInCombat = true;
 
 	if ((Health -= TakenDamage) <= 0)

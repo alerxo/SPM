@@ -58,11 +58,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponBaseLeft;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USceneComponent* ProjectileOriginLeft;
+	USceneComponent* WeaponLookAtLeft;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponBaseRight;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USceneComponent* ProjectileOriginRight;
+	USceneComponent* WeaponLookAtRight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
