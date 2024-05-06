@@ -137,7 +137,7 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 	}
 
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
-	TargetVelocity += FMath::Lerp(Direction, -Direction, Result.Distance / ObstacleAvoidanceDistance);
+	TargetVelocity += FMath::Lerp(Direction, -Direction * ObstacleAvoidanceForce, Result.Distance / ObstacleAvoidanceDistance);
 }
 
 void ADrone::Move(const float DeltaTime)
