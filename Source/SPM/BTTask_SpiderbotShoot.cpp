@@ -28,7 +28,7 @@ EBTNodeResult::Type UBTTask_SpiderbotShoot::ExecuteTask(UBehaviorTreeComponent& 
 		return EBTNodeResult::Failed;
 	}
 
-	Spiderbot->Fire();
+	//Spiderbot->Fire();
 
 	return EBTNodeResult::Succeeded;
 }
