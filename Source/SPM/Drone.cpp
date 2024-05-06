@@ -51,9 +51,14 @@ void ADrone::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CheckLineOfSightAtPlayer();
-	Rotate();
-	GetTargetVelocity();
+	if(++TickCount == TickInterval)
+	{
+		CheckLineOfSightAtPlayer();
+		Rotate();
+		GetTargetVelocity();
+		TickCount = 0;
+	}
+
 	Move(DeltaTime);
 }
 
@@ -71,7 +76,7 @@ void ADrone::CheckLineOfSightAtPlayer()
 
 	AActor* HitActor = Cast<ASPMCharacter>(Result.GetActor());
 
-	if (HitActor && (IsInCombat ? true : Result.Distance <= AttackRange + KiteRange))
+	if (HitActor && Result.Distance <= AttackRange + KiteRange)
 	{
 		BlackboardComponent->SetValueAsObject("Target", HitActor);
 	}
@@ -79,7 +84,6 @@ void ADrone::CheckLineOfSightAtPlayer()
 	else
 	{
 		BlackboardComponent->SetValueAsObject("Target", nullptr);
-		IsInCombat = false;
 	}
 }
 
@@ -132,9 +136,7 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 	}
 
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
-	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
-
-	if (IsInCombat && Result.bBlockingHit) HasDestination = false;
+	TargetVelocity += FMath::Lerp(Direction, -Direction, Result.Distance / ObstacleAvoidanceDistance);
 }
 
 void ADrone::Move(const float DeltaTime)
@@ -188,7 +190,6 @@ void ADrone::Aim(const FVector Position) const
 
 void ADrone::Shoot()
 {
-	IsInCombat = true;
 	LeftFire = !LeftFire;
 	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
@@ -211,7 +212,6 @@ void ADrone::Reload()
 float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
-	IsInCombat = true;
 
 	if ((Health -= TakenDamage) <= 0)
 	{

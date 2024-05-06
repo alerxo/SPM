@@ -85,8 +85,6 @@ public:
 	int KiteRange = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AccuracyMargin = 0;
-	UPROPERTY(VisibleAnywhere, Category = "Combat")
-	bool IsInCombat = false;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	int MovementSpeed = 0;
@@ -103,17 +101,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool HasDestination;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FRotator MovementDirection;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FVector Destination;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FVector TargetVelocity;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FRotator TargetRotation;
-
+	
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
 
@@ -125,4 +115,11 @@ private:
 	UPROPERTY()
 	AActor* Focus;
 	bool LeftFire = false;
+	int TickCount = 0;
+	const int TickInterval = 10;
+	
+	FRotator MovementDirection;
+	FVector Destination;
+	FVector TargetVelocity;
+	FRotator TargetRotation;
 };
