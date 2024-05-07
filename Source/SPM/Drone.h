@@ -78,9 +78,9 @@ public:
 	float AttackSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float ReloadSpeed = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	int AttackRange = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	int KiteRange = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AccuracyMargin = 0;

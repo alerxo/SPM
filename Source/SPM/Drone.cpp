@@ -167,7 +167,7 @@ FVector ADrone::GetKiteLocation() const
 	Location.Z = Player->GetActorLocation().Z;
 	Location += FVector(FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
 	                    FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
-	                    FMath::RandRange(50, 300));
+	                    FMath::RandRange(50, KiteRange));
 	return Location;
 }
 
@@ -208,7 +208,10 @@ void ADrone::Shoot()
 
 void ADrone::Reload()
 {
-	AmmoCount = Ammo;
+	if(AmmoCount < Ammo)
+	{
+		AmmoCount = Ammo;
+	}
 }
 
 float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
