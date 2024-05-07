@@ -24,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void Fire(TSubclassOf<class ASpiderbotProjectile> ProjectileClass);
+	void Fire(TSubclassOf<class ASpiderbotProjectile> ProjectileClass, USoundBase* FiringSound);
 
 
 private:
@@ -36,9 +36,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	USoundAttenuation* Attenuation;
-
-	UPROPERTY(EditDefaultsOnly)
-	USoundBase* FiringSound;
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
