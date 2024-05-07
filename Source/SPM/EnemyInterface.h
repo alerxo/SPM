@@ -25,6 +25,6 @@ public:
 	bool IsDead() const;
 
 
-	//UFUNCTION(BlueprintCallable)
-	//void Investiaget(); 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void Investigate(FVector Location); 
 };
