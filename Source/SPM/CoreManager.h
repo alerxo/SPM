@@ -8,6 +8,8 @@
 
 class AInteractableCoreTerminal;
 class ABaseCore;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllCoresDestroy);
 UCLASS()
 class SPM_API ACoreManager : public AActor
 {
@@ -36,6 +38,9 @@ public:
 	//GameInstanceSubSystem
 	UPROPERTY()
 	class USPMGameInstanceSubsystem* GameInstanceSubsystem;
+
+	UPROPERTY(BlueprintCallable, BlueprintAssignable)
+	FOnAllCoresDestroy OnAllCoresDestroy;
 	
 	//Function to check a core and remove from array
 	UFUNCTION()

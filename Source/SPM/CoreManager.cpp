@@ -52,7 +52,8 @@ void ACoreManager::CheckCores(ABaseCore* Core)
 	//if null then Terminal is active
 	if(Cores.Num() == 0)
 	{
-		CoreTerminal->SetIsActive(true);
+		//CoreTerminal->SetIsActive(true);
+		OnAllCoresDestroy.Broadcast();
 	}
 }
 
