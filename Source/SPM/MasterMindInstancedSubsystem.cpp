@@ -21,9 +21,8 @@ UMasterMindInstancedSubsystem* UMasterMindInstancedSubsystem::GetMasterMindInsta
 	return this;
 }
 
-bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
+bool UMasterMindInstancedSubsystem::RequestToken()
 {
-	
 	if(Tokens > 0)
 	{
 		Tokens--;
