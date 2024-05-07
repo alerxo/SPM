@@ -52,8 +52,8 @@ void ADrone::Tick(const float DeltaTime)
 
 	CheckLineOfSightAtPlayer();
 	Rotate();
-	GetMovementDirection();
-	Movement(DeltaTime);
+	GetTargetVelocity();
+	Move(DeltaTime);
 }
 
 void ADrone::CheckLineOfSightAtPlayer() const
@@ -74,22 +74,19 @@ void ADrone::CheckLineOfSightAtPlayer() const
 
 void ADrone::Rotate()
 {
-	if(Focus)
+	if (FVector::Distance(Root->GetComponentLocation(), Destination) > StopDistance)
 	{
-		TargetRotation = (Focus->GetActorLocation() - GetActorLocation()).Rotation();
+		MovementDirection = (Destination - GetActorLocation()).Rotation();
 	}
-
-	else if(FVector::Distance(Root->GetComponentLocation(), Destination) > StopDistance)
-	{
-		TargetRotation = (Destination - GetActorLocation()).Rotation();
-	}
+	
+	Focus ? TargetRotation = (Focus->GetActorLocation() - GetActorLocation()).Rotation() : MovementDirection;
 	
 	FRotator Rotation = TargetRotation;
 	Rotation.Pitch = 0;
 	Root->SetWorldRotation(Rotation);
 }
 
-void ADrone::GetMovementDirection()
+void ADrone::GetTargetVelocity()
 {
 	TargetVelocity = FVector::Zero();
 
@@ -97,8 +94,15 @@ void ADrone::GetMovementDirection()
 	{
 		for (const FRotator Direction : LidarDirections)
 		{
-			CheckLidarDirection(TargetRotation + Direction);
+			CheckLidarDirection(MovementDirection + Direction);
 		}
+
+		HasDestination = true;
+	}
+
+	else
+	{
+		HasDestination = false;
 	}
 
 	GetGravity();
@@ -133,13 +137,13 @@ void ADrone::GetGravity()
 	CollisionQueryParams.AddIgnoredActor(this);
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
 
-	if(!Result.bBlockingHit)
+	if (!Result.bBlockingHit)
 	{
 		TargetVelocity.Z += Gravity;
 	}
 }
 
-void ADrone::Movement(const float DeltaTime)
+void ADrone::Move(const float DeltaTime)
 {
 	TargetVelocity.Normalize();
 	TargetVelocity *= MovementSpeed;
@@ -148,7 +152,7 @@ void ADrone::Movement(const float DeltaTime)
 	{
 		Velocity += Step * (Acceleration * DeltaTime);
 	}
-	
+
 	Root->AddWorldOffset(Velocity * DeltaTime, true);
 }
 
@@ -179,9 +183,9 @@ void ADrone::Shoot()
 		                       ? ProjectileOriginLeft->GetComponentLocation()
 		                       : ProjectileOriginRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
-	Rotation += FRotator(FMath::RandRange(-AccuracyMargin, AccuracyMargin),
-	                     FMath::RandRange(-AccuracyMargin, AccuracyMargin),
-	                     FMath::RandRange(-AccuracyMargin, AccuracyMargin));
+	Rotation.Add(FMath::RandRange(-AccuracyMargin, AccuracyMargin),
+	             FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? 4 : -4),
+	             FMath::RandRange(-AccuracyMargin, AccuracyMargin));
 	ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
 	NewProjectile->SetOwner(this);
 	NewProjectile->SetDamage(Damage);
