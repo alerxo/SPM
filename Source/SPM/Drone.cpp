@@ -4,6 +4,7 @@
 #include "Drone.h"
 
 #include "DroneProjectile.h"
+#include "MasterMindInstancedSubsystem.h"
 #include "SPMCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
@@ -76,12 +77,11 @@ void ADrone::CheckLineOfSightAtPlayer()
 	CollisionQueryParams.AddIgnoredActor(this);
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_GameTraceChannel2, CollisionQueryParams);
 	BlackboardComponent->SetValueAsFloat("DistanceToTarget", Result.Distance);
-
-	AActor* HitActor = Cast<ASPMCharacter>(Result.GetActor());
-
-	if (HitActor && IsInCombat ? true : Result.Distance <= AttackRange + KiteRange)
+	
+	if (Result.GetActor() && Cast<ASPMCharacter>(Result.GetActor()) && IsInCombat ? true : Result.Distance <= AttackRange + KiteRange)
 	{
-		BlackboardComponent->SetValueAsObject("Target", HitActor);
+		BlackboardComponent->SetValueAsObject("Target", Result.GetActor());
+		GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->OnPlayerSeen.Broadcast(GetActorLocation());
 	}
 
 	else
@@ -165,11 +165,11 @@ FVector ADrone::GetKiteLocation() const
 {
 	if (!Player) return GetActorLocation();
 
-	FVector Location = (GetActorLocation() - Player->GetActorLocation()).GetSafeNormal() * AttackRange;
+	FVector Location = (GetActorLocation() - Player->GetActorLocation()).GetSafeNormal() * (AttackRange - KiteRange);
 	Location += Player->GetActorLocation();
 	Location.Z = Player->GetActorLocation().Z;
-	Location += FVector(FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
-	                    FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
+	Location += FVector(FMath::RandRange(-KiteRange, KiteRange),
+	                    FMath::RandRange(-KiteRange, KiteRange),
 	                    FMath::RandRange(50, KiteRange));
 	return Location;
 }
@@ -194,7 +194,7 @@ void ADrone::Aim(const FVector Position) const
 
 void ADrone::Shoot()
 {
-	IsInCombat = true;
+	EnterCombat();
 	LeftFire = !LeftFire;
 	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
@@ -219,7 +219,7 @@ void ADrone::Reload()
 
 float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	IsInCombat = true;
+	EnterCombat();
 	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
 	
 	if ((Health -= TakenDamage) <= 0)
@@ -229,6 +229,11 @@ float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEve
 	}
 
 	return TakenDamage;
+}
+
+void ADrone::EnterCombat()
+{
+	IsInCombat = true;
 }
 
 void ADrone::OnShoot_Implementation(bool IsLeftFire)

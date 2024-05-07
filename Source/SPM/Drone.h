@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnemyInterface.h"
 #include "GameFramework/Character.h"
 #include "Drone.generated.h"
 
 UCLASS()
-class SPM_API ADrone : public APawn
+class SPM_API ADrone : public APawn, public IEnemyInterface
 {
 	GENERATED_BODY()
 
@@ -38,7 +39,9 @@ public:
 	void SetFocus(AActor* Target);
 	UFUNCTION(BlueprintCallable)
 	void ClearFocus();
-
+	UFUNCTION(BlueprintCallable)
+	void EnterCombat();
+	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Meta = (AllowPrivateAccess = true))
 	void OnShoot(bool IsLeftFire);
 
@@ -52,7 +55,7 @@ private:
 public:
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* Root;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponBaseLeft;
