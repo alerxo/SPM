@@ -235,11 +235,11 @@ void UTP_WeaponComponent::ShootElectricity()
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<AElectricProjectile>(ElectricityClass, SpawnLocation, SpawnRotation, ActorSpawnParams);*/
 
-			if(ManaComponent->GetMana() < ElectricManaCost)
+			if(ManaComponent->GetElectricMana() < ElectricManaCost)
 			{
 				return;
 			}
-			ManaComponent->DecreaseMana(ElectricManaCost);
+			ManaComponent->DecreaseElectricMana(ElectricManaCost);
 			FHitResult OutHit;
 
 			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());

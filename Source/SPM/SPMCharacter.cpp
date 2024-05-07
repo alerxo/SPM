@@ -174,3 +174,9 @@ float ASPMCharacter::GetMana() const
 {
 	return  ManaComponent->GetMana();
 }
+
+float ASPMCharacter::GetElectricMana() const
+{
+	return ManaComponent->GetElectricMana();
+}
+
