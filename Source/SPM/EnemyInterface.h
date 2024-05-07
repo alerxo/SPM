@@ -23,8 +23,7 @@ public:
 	bool CheckToSpawnPickup() const;
 
 	bool IsDead() const;
-
-
+	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void Investigate(FVector Location); 
 };
