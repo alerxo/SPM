@@ -167,7 +167,7 @@ FVector ADrone::GetKiteLocation() const
 {
 	if (!Player) return GetActorLocation();
 
-	FVector Location = (GetActorLocation() - Player->GetActorLocation()).GetSafeNormal() * AttackRange;
+	FVector Location = (GetActorLocation() - Player->GetActorLocation()).GetSafeNormal() * (AttackRange - KiteRange);
 	Location += Player->GetActorLocation();
 	Location.Z = Player->GetActorLocation().Z;
 	Location += FVector(FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),

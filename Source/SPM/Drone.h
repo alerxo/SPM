@@ -45,8 +45,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Meta = (AllowPrivateAccess = true))
 	void OnShoot(bool IsLeftFire);
 
-	void Investigate_Implementation(FVector Location);
-
 private:
 	void CheckLineOfSightAtPlayer();
 	void Rotate();
