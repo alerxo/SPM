@@ -14,7 +14,6 @@ UCLASS()
 class SPM_API AEnemyBaseClass : public ACharacter, public IEnemyInterface
 {
 	GENERATED_BODY()
-
 public:
 	// Sets default values for this character's properties
 	AEnemyBaseClass();
