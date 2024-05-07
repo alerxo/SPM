@@ -24,12 +24,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void Fire();
+	void Fire(TSubclassOf<class ASpiderbotProjectile> ProjectileClass);
 
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class ASpiderbotProjectile> ProjectileClass;
+	TSubclassOf<class ASpiderbotProjectile> PrimaryFireProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<ASpiderbotProjectile> AlternateFireProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	USoundAttenuation* Attenuation;
@@ -42,5 +45,4 @@ private:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };

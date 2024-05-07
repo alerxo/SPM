@@ -12,6 +12,7 @@ UManaComponent::UManaComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	Mana = DefaultMana;
+	ElectricMana = DefaultMana;
 
 
 	// ...
@@ -42,8 +43,10 @@ void UManaComponent::BeginPlay()
 	}
 	//Set float in Timer 
 	Timer = DefaultTimer;
+	ElectricTimer = DefaultTimer;
 	//Set float in Mana
 	Mana = DefaultMana;
+	ElectricMana = DefaultMana;
 
 
 	
@@ -69,6 +72,11 @@ void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		RechargeMana(DeltaTime);
 	}
 
+	if(bElectricCanRecharge)
+	{
+		RechargeElectricMana(DeltaTime);
+	}
+
 	// ...
 }
 
@@ -91,6 +99,20 @@ void UManaComponent::RechargeMana(float DeltaTime)
 	//UE_LOG(LogTemp, Warning, TEXT("%f"), Timer);
 }
 
+void UManaComponent::RechargeElectricMana(float DeltaTime)
+{
+	if(ElectricTimer <= 0)
+	{
+		ElectricMana += 1;
+		if(ElectricMana >= DefaultMana)
+		{
+			ElectricMana;
+			bElectricCanRecharge = false;
+		}
+	}
+	ElectricTimer -= DeltaTime;
+}
+
 
 //Decrease mana When called
 void UManaComponent::DecreaseMana(float Amount)
@@ -110,9 +132,31 @@ void UManaComponent::DecreaseMana(float Amount)
 	
 }
 
+void UManaComponent::DecreaseElectricMana(float Amount)
+{
+	if(Amount <= 0)
+	{
+		return;
+	}
+	bElectricCanRecharge = true;
+	ElectricTimer = DefaultTimer;
+	if((ElectricMana -= Amount) <= 0)
+	{
+		ElectricMana = 0;
+	}
+}
+
+
 //Getter float of mana percentage
 float UManaComponent::GetManaPercent() const
 {
 	return Mana / DefaultMana;
 }
+
+float UManaComponent::GetElectricManaPercent() const
+{
+	return ElectricMana / DefaultMana;
+}
+
+
 
