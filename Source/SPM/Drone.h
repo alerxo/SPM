@@ -22,8 +22,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	                         AActor* DamageCauser) override;
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
 	void Aim(const FVector Position) const;
@@ -34,6 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MoveTo(const FVector Position);
 	UFUNCTION(BlueprintCallable)
+	FVector GetKiteLocation() const;
+	UFUNCTION(BlueprintCallable)
 	void SetFocus(AActor* Target);
 	UFUNCTION(BlueprintCallable)
 	void ClearFocus();
@@ -42,7 +43,7 @@ public:
 	void OnShoot(bool IsLeftFire);
 
 private:
-	void CheckLineOfSightAtPlayer() const;
+	void CheckLineOfSightAtPlayer();
 	void Rotate();
 	void GetTargetVelocity();
 	void CheckLidarDirection(FRotator);
@@ -56,11 +57,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponBaseLeft;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USceneComponent* ProjectileOriginLeft;
+	USceneComponent* WeaponLookAtLeft;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponBaseRight;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USceneComponent* ProjectileOriginRight;
+	USceneComponent* WeaponLookAtRight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
@@ -70,45 +71,38 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
 	float Damage = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float Ammo = 0;
+	int Ammo = 0;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int AmmoCount = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AttackSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float ReloadSpeed = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float AttackRange = 0;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	int AttackRange = 0;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	int KiteRange = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AccuracyMargin = 0;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float MovementSpeed = 0;
+	int MovementSpeed = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float Acceleration = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float StopDistance = 0;
+	int StopDistance = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float ObstacleAvoidanceDistance = 0;
+	int ObstacleAvoidanceDistance = 0;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float ObstacleAvoidanceForce = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	TArray<FRotator> LidarDirections = {};
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool HasDestination;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FRotator MovementDirection;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FVector Destination;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FVector TargetVelocity;
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	FRotator TargetRotation;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	TArray<FRotator> LidarDirections = {};
-
+	
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
 
@@ -119,5 +113,12 @@ private:
 	class UBlackboardComponent* BlackboardComponent;
 	UPROPERTY()
 	AActor* Focus;
+	FRotator MovementDirection;
+	FVector Destination;
+	FVector TargetVelocity;
+	FRotator TargetRotation;
+	bool IsInCombat = false;
 	bool LeftFire = false;
+	int TickCount = 0;
+	const int TickInterval = 10;
 };

@@ -9,6 +9,7 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ADrone::ADrone()
 {
@@ -20,12 +21,12 @@ ADrone::ADrone()
 	Mesh->SetupAttachment(RootComponent);
 	WeaponBaseLeft = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseLeft"));
 	WeaponBaseLeft->SetupAttachment(RootComponent);
-	ProjectileOriginLeft = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginLeft"));
-	ProjectileOriginLeft->SetupAttachment(WeaponBaseLeft);
+	WeaponLookAtLeft = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLookAtLeft"));
+	WeaponLookAtLeft->SetupAttachment(WeaponBaseLeft);
 	WeaponBaseRight = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseRight"));
 	WeaponBaseRight->SetupAttachment(RootComponent);
-	ProjectileOriginRight = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileOriginRight"));
-	ProjectileOriginRight->SetupAttachment(WeaponBaseRight);
+	WeaponLookAtRight = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLookAtRight"));
+	WeaponLookAtRight->SetupAttachment(WeaponBaseRight);
 }
 
 void ADrone::BeginPlay()
@@ -34,11 +35,14 @@ void ADrone::BeginPlay()
 
 	Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	MoveTo(GetActorLocation());
-	AmmoCount = Ammo;
-
+	Reload();
 	BlackboardComponent = UAIBlueprintHelperLibrary::GetBlackboard(this);
-	BlackboardComponent->SetValueAsFloat("AttackSpeed", AttackSpeed);
-	BlackboardComponent->SetValueAsFloat("ReloadSpeed", ReloadSpeed);
+	
+	if(BlackboardComponent)
+	{
+		BlackboardComponent->SetValueAsFloat("AttackSpeed", AttackSpeed);
+		BlackboardComponent->SetValueAsFloat("ReloadSpeed", ReloadSpeed);
+	}
 }
 
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -50,13 +54,18 @@ void ADrone::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CheckLineOfSightAtPlayer();
-	Rotate();
-	GetTargetVelocity();
+	if(++TickCount == TickInterval)
+	{
+		CheckLineOfSightAtPlayer();
+		Rotate();
+		GetTargetVelocity();
+		TickCount = 0;
+	}
+
 	Move(DeltaTime);
 }
 
-void ADrone::CheckLineOfSightAtPlayer() const
+void ADrone::CheckLineOfSightAtPlayer()
 {
 	if (!Player) return;
 
@@ -67,19 +76,29 @@ void ADrone::CheckLineOfSightAtPlayer() const
 	CollisionQueryParams.AddIgnoredActor(this);
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_GameTraceChannel2, CollisionQueryParams);
 	BlackboardComponent->SetValueAsFloat("DistanceToTarget", Result.Distance);
-	BlackboardComponent->SetValueAsObject(
-		"Target",
-		Cast<ASPMCharacter>(Result.GetActor()) != nullptr && Result.Distance <= AttackRange ? Player : nullptr);
+
+	AActor* HitActor = Cast<ASPMCharacter>(Result.GetActor());
+
+	if (HitActor && IsInCombat ? true : Result.Distance <= AttackRange + KiteRange)
+	{
+		BlackboardComponent->SetValueAsObject("Target", HitActor);
+	}
+
+	else
+	{
+		BlackboardComponent->SetValueAsObject("Target", nullptr);
+		IsInCombat = false;
+	}
 }
 
 void ADrone::Rotate()
 {
 	if (FVector::Distance(Root->GetComponentLocation(), Destination) > StopDistance)
 	{
-		MovementDirection = (Destination - GetActorLocation()).Rotation();
+		MovementDirection = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Destination);
 	}
 
-	TargetRotation = Focus ? (Focus->GetActorLocation() - GetActorLocation()).Rotation() : MovementDirection;
+	TargetRotation = Focus ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Focus->GetActorLocation()) : MovementDirection;
 
 	FRotator Rotation = TargetRotation;
 	Rotation.Pitch = 0;
@@ -121,7 +140,7 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 	}
 
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
-	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
+	TargetVelocity += FMath::Lerp(Direction, -Direction * ObstacleAvoidanceForce, Result.Distance / ObstacleAvoidanceDistance);
 }
 
 void ADrone::Move(const float DeltaTime)
@@ -142,6 +161,19 @@ void ADrone::MoveTo(const FVector Position)
 	Destination = Position;
 }
 
+FVector ADrone::GetKiteLocation() const
+{
+	if (!Player) return GetActorLocation();
+
+	FVector Location = (GetActorLocation() - Player->GetActorLocation()).GetSafeNormal() * AttackRange;
+	Location += Player->GetActorLocation();
+	Location.Z = Player->GetActorLocation().Z;
+	Location += FVector(FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
+	                    FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
+	                    FMath::RandRange(50, KiteRange));
+	return Location;
+}
+
 void ADrone::SetFocus(AActor* Target)
 {
 	Focus = Target;
@@ -154,15 +186,17 @@ void ADrone::ClearFocus()
 
 void ADrone::Aim(const FVector Position) const
 {
-	//TODO: Move from blueprint into c++
+	float Pitch = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Position).Pitch;
+	Pitch = FMath::Clamp(Pitch, -25, 25);
+	WeaponBaseLeft->SetRelativeRotation(FRotator(Pitch, 0, 0));
+	WeaponBaseRight->SetRelativeRotation(FRotator(Pitch, 0, 0));
 }
 
 void ADrone::Shoot()
 {
+	IsInCombat = true;
 	LeftFire = !LeftFire;
-	const FVector Origin = LeftFire
-		                       ? ProjectileOriginLeft->GetComponentLocation()
-		                       : ProjectileOriginRight->GetComponentLocation();
+	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
 	Rotation.Add(FMath::RandRange(-AccuracyMargin, AccuracyMargin),
 	             FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? 4 : -4),
@@ -177,15 +211,17 @@ void ADrone::Shoot()
 
 void ADrone::Reload()
 {
-	AmmoCount = Ammo;
+	if(AmmoCount < Ammo)
+	{
+		AmmoCount = Ammo;
+	}
 }
 
-float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-                         AActor* DamageCauser)
+float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float const TakenDamage = FMath::Min(
-		Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));;
-
+	IsInCombat = true;
+	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
+	
 	if ((Health -= TakenDamage) <= 0)
 	{
 		GetController()->Destroy();
