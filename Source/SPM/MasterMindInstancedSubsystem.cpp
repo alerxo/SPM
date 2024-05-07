@@ -42,5 +42,15 @@ void UMasterMindInstancedSubsystem::SetTokens(float Amount)
 	Tokens = Amount;
 }
 
+FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const 
+{
+	return  InvestigationLocation;
+}
+
+void UMasterMindInstancedSubsystem::SetInvestigationLocation(FVector Vector)
+{
+	InvestigationLocation = Vector;
+}
+
 
 
