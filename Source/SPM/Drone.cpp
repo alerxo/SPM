@@ -35,11 +35,14 @@ void ADrone::BeginPlay()
 
 	Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	MoveTo(GetActorLocation());
-	AmmoCount = Ammo;
-
+	Reload();
 	BlackboardComponent = UAIBlueprintHelperLibrary::GetBlackboard(this);
-	BlackboardComponent->SetValueAsFloat("AttackSpeed", AttackSpeed);
-	BlackboardComponent->SetValueAsFloat("ReloadSpeed", ReloadSpeed);
+	
+	if(BlackboardComponent)
+	{
+		BlackboardComponent->SetValueAsFloat("AttackSpeed", AttackSpeed);
+		BlackboardComponent->SetValueAsFloat("ReloadSpeed", ReloadSpeed);
+	}
 }
 
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
