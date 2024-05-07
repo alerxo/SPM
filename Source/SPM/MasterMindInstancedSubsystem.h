@@ -25,7 +25,6 @@ public:
 
 	//Declare Delegate for sending Info to master mind 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-
 	FOnSoundMade OnSoundMade;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
