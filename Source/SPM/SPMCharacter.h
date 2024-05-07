@@ -108,6 +108,9 @@ public:
 	//Getter for float
 	UFUNCTION(BlueprintCallable)
 	float GetMana() const;
+
+	UFUNCTION(BlueprintCallable)
+	float GetElectricMana() const;
 	
 protected:
 	/** Called for movement input */

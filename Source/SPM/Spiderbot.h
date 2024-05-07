@@ -23,18 +23,26 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Fire();
+	UFUNCTION(BlueprintCallable)
+	void Fire(TSubclassOf<class ASpiderbotProjectile> ProjectileClass);
 
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class ASpiderbotProjectile> ProjectileClass;
+	TSubclassOf<class ASpiderbotProjectile> PrimaryFireProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<ASpiderbotProjectile> AlternateFireProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundAttenuation* Attenuation;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* FiringSound;
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };

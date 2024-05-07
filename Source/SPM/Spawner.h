@@ -9,7 +9,7 @@
 
 class ASpawnPoints;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SPM_API USpawner : public UActorComponent
 {
 	GENERATED_BODY()

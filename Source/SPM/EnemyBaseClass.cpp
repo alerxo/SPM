@@ -4,13 +4,15 @@
 #include "EnemyBaseClass.h"
 #include "Kismet/GameplayStatics.h"
 #include "HealthComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 AEnemyBaseClass::AEnemyBaseClass()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -25,9 +27,13 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if (IsDead())
+	if (IsDead_Implementation())
 	{
-		SpawnHealthPickup();
+		if (DeathNiagara != nullptr)
+		{
+			GetWorld()->SpawnActor<AActor>(DeathNiagara, GetActorLocation(), GetActorRotation());
+		}
+		SpawnHealthPickup_Implementation();
 		GetController()->Destroy();
 		Destroy();
 	}
@@ -40,21 +46,13 @@ void AEnemyBaseClass::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
-bool AEnemyBaseClass::IsDead() const
+bool AEnemyBaseClass::IsDead_Implementation() const
 {
 	UHealthComponent* HealthComponent = GetComponentByClass<UHealthComponent>();
 	return HealthComponent->GetHealth() <= 0;
 }
 
-void AEnemyBaseClass::SpawnHealthPickup()
-{
-	if (CheckToSpawnPickup())
-	{
-		GetWorld()->SpawnActor<AHealthPickup>(HealthPickupClass, GetActorLocation(), FRotator::ZeroRotator);
-	}
-}
-
-bool AEnemyBaseClass::CheckToSpawnPickup() const
+bool AEnemyBaseClass::CheckToSpawnPickup_Implementation() const
 {
 	const UHealthComponent* HealthComponent =  UGameplayStatics::GetPlayerCharacter(this, 0)->GetComponentByClass<UHealthComponent>();
 
@@ -81,3 +79,10 @@ bool AEnemyBaseClass::CheckToSpawnPickup() const
 	return false;
 }
 
+void AEnemyBaseClass::SpawnHealthPickup_Implementation()
+{
+	if (CheckToSpawnPickup_Implementation())
+	{
+		GetWorld()->SpawnActor<AHealthPickup>(HealthPickupClass, GetActorLocation(), FRotator::ZeroRotator);
+	}
+}

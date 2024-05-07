@@ -3,13 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnemyInterface.h"
 #include "GameFramework/Character.h"
 #include "HealthPickup.h"
+#include "NiagaraSystem.h"
 #include "EnemyBaseClass.generated.h"
 
 
 UCLASS()
-class SPM_API AEnemyBaseClass : public ACharacter
+class SPM_API AEnemyBaseClass : public ACharacter, public IEnemyInterface
 {
 	GENERATED_BODY()
 
@@ -29,12 +31,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	bool IsDead() const;
+	bool IsDead_Implementation() const;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AHealthPickup> HealthPickupClass;
-	
-	void SpawnHealthPickup();
 
 	UPROPERTY(EditDefaultsOnly)
 	float ChanceToSpawnPickup;
@@ -45,6 +45,11 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float LowHealthThreshold;
 
-	bool CheckToSpawnPickup() const;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AActor> DeathNiagara;
+
+	bool CheckToSpawnPickup_Implementation() const;
+
+	void SpawnHealthPickup_Implementation();
 
 };

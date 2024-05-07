@@ -23,9 +23,14 @@ void AInteractableTerminal::BeginPlay()
 		FInputActionBinding InputActionBinding = PlayerInput->BindAction(TEXT("Interact"), IE_Pressed, this, &AInteractable::Interact);
 	}
 	SetUpCollision();
-	
+
+
+
 	
 }
+
+
+
 //Called When Player Interacts
 void AInteractableTerminal::Interact()
 {
@@ -35,7 +40,7 @@ void AInteractableTerminal::Interact()
 		{
 			//Core is Activated
 			Core->SetCanBeActivated(true);
-			OnScreenChange.Broadcast();
+			OnCoreDisabled.Broadcast();
 			SetIsInteractable(false);
 			UE_LOG(LogTemp, Warning, TEXT("Interact Terminal"));
 		}
@@ -45,4 +50,15 @@ void AInteractableTerminal::Interact()
 		}
 	}
 	
+}
+
+void AInteractableTerminal::SetInteractableOnDisable()
+{
+	UE_LOG(LogTemp, Warning, TEXT("SetInteractableOnDisable"))
+	if(Core)
+	{
+		
+		SetIsInteractable(true);
+		Core->SetCanBeActivated(false);
+	}
 }

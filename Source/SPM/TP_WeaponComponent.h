@@ -86,6 +86,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bElectricActive;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float FireBallCooldown = 2.0f;
+
+	/*UPROPERTY(EditAnywhere)
+	class UMaterial* BasicMaterial;
+
+	UPROPERTY(EditAnywhere)
+	class UMaterial* FireMaterial;
+
+	UPROPERTY(EditAnywhere)
+	class UMaterial* ElectricMaterial;*/
+	
+
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
@@ -111,6 +124,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void ShootHold();
+	
 
 	//UFUNCTION(BlueprintCallable)
 	//bool TurnOffElectric();
