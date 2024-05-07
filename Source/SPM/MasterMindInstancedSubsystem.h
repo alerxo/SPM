@@ -13,6 +13,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundMade, FVector, Info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, FVector, info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDisengage, AEnemyBaseClass*, Sender);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Sender, FVector, Info);
 UCLASS()
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
 {
@@ -24,6 +25,7 @@ public:
 
 	//Declare Delegate for sending Info to master mind 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+
 	FOnSoundMade OnSoundMade;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
@@ -31,6 +33,8 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnPlayerSeen OnPlayerSeen;
+
+	FOnSentInfo OnSentInfo;
 
 	UFUNCTION(BlueprintCallable)
 	bool RequestToken();
