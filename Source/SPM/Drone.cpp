@@ -4,6 +4,7 @@
 #include "Drone.h"
 
 #include "DroneProjectile.h"
+#include "MasterMindInstancedSubsystem.h"
 #include "SPMCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
@@ -82,6 +83,7 @@ void ADrone::CheckLineOfSightAtPlayer()
 	if (HitActor && IsInCombat ? true : Result.Distance <= AttackRange + KiteRange)
 	{
 		BlackboardComponent->SetValueAsObject("Target", HitActor);
+		GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->OnPlayerSeen.Broadcast(GetActorLocation());
 	}
 
 	else
@@ -194,7 +196,7 @@ void ADrone::Aim(const FVector Position) const
 
 void ADrone::Shoot()
 {
-	IsInCombat = true;
+	EnterCombat();
 	LeftFire = !LeftFire;
 	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
@@ -219,7 +221,7 @@ void ADrone::Reload()
 
 float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	IsInCombat = true;
+	EnterCombat();
 	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
 	
 	if ((Health -= TakenDamage) <= 0)
@@ -229,6 +231,11 @@ float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEve
 	}
 
 	return TakenDamage;
+}
+
+void ADrone::EnterCombat()
+{
+	IsInCombat = true;
 }
 
 void ADrone::OnShoot_Implementation(bool IsLeftFire)
