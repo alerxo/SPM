@@ -30,7 +30,7 @@ public:
 	FOnDisengage OnDisengage;
 	
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FOnPlayerSeen OnPlayerSeens;
+	FOnPlayerSeen OnPlayerSeen;
 
 	UFUNCTION(BlueprintCallable)
 	bool RequestToken();
