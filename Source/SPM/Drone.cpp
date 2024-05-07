@@ -77,12 +77,10 @@ void ADrone::CheckLineOfSightAtPlayer()
 	CollisionQueryParams.AddIgnoredActor(this);
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_GameTraceChannel2, CollisionQueryParams);
 	BlackboardComponent->SetValueAsFloat("DistanceToTarget", Result.Distance);
-
-	AActor* HitActor = Cast<ASPMCharacter>(Result.GetActor());
-
-	if (HitActor && IsInCombat ? true : Result.Distance <= AttackRange + KiteRange)
+	
+	if (Result.GetActor() && Cast<ASPMCharacter>(Result.GetActor()) && IsInCombat ? true : Result.Distance <= AttackRange + KiteRange)
 	{
-		BlackboardComponent->SetValueAsObject("Target", HitActor);
+		BlackboardComponent->SetValueAsObject("Target", Result.GetActor());
 		GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->OnPlayerSeen.Broadcast(GetActorLocation());
 	}
 
@@ -170,8 +168,8 @@ FVector ADrone::GetKiteLocation() const
 	FVector Location = (GetActorLocation() - Player->GetActorLocation()).GetSafeNormal() * (AttackRange - KiteRange);
 	Location += Player->GetActorLocation();
 	Location.Z = Player->GetActorLocation().Z;
-	Location += FVector(FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
-	                    FMath::RandRange(KiteRange / 2, KiteRange) * (FMath::RandBool() ? -1 : 1),
+	Location += FVector(FMath::RandRange(-KiteRange, KiteRange),
+	                    FMath::RandRange(-KiteRange, KiteRange),
 	                    FMath::RandRange(50, KiteRange));
 	return Location;
 }
