@@ -36,7 +36,7 @@ public:
 	FOnSentInfo OnSentInfo;
 
 	UFUNCTION(BlueprintCallable)
-	bool RequestToken();
+	bool RequestToken(APawn* Pawn);
 
 	//getters and setters
 	UFUNCTION(BlueprintCallable)
