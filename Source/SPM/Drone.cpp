@@ -165,13 +165,12 @@ FVector ADrone::GetKiteLocation() const
 {
 	if (!Player) return GetActorLocation();
 
-	FVector Location = (GetActorLocation() - Player->GetActorLocation()).GetSafeNormal() * (AttackRange - KiteRange);
-	Location += Player->GetActorLocation();
-	Location.Z = Player->GetActorLocation().Z;
-	Location += FVector(FMath::RandRange(-KiteRange, KiteRange),
-	                    FMath::RandRange(-KiteRange, KiteRange),
-	                    FMath::RandRange(50, KiteRange));
-	return Location;
+	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Player->GetActorLocation(), GetActorLocation());
+	Rotation.Pitch = FMath::RandRange(0, 20),
+	Rotation.Yaw = Rotation.Yaw + FMath::RandRange(-40, 40);
+	const FVector Direction = Rotation.RotateVector(FVector::ForwardVector);
+
+	return Player->GetActorLocation() + Direction * (AttackRange - FMath::RandRange(0, KiteRange));;
 }
 
 void ADrone::SetFocus(AActor* Target)
@@ -199,7 +198,7 @@ void ADrone::Shoot()
 	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
 	Rotation.Add(FMath::RandRange(-AccuracyMargin, AccuracyMargin),
-	             FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? 4 : -4),
+	             FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? 3 : -3),
 	             FMath::RandRange(-AccuracyMargin, AccuracyMargin));
 	ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
 	NewProjectile->SetOwner(this);
