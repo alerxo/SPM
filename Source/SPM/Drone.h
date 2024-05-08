@@ -45,7 +45,7 @@ public:
 
 private:
 	void CheckLineOfSightAtPlayer();
-	void Rotate();
+	void Rotate(float);
 	void GetTargetVelocity();
 	void CheckLidarDirection(FRotator);
 	void Move(const float);
@@ -104,6 +104,7 @@ private:
 	const int StopDistance = 100;
 	const int ObstacleAvoidanceDistance = 300;
 	const float ObstacleAvoidanceForce = 2.0f;
+	const float RotationSpeed = 2.0f;
 	const float PatrolPitch = 10.0f;
 	const float PatrolYaw = 180.0f;
 	const TArray<FRotator> LidarDirections =
