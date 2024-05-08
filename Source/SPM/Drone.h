@@ -35,12 +35,6 @@ public:
 	void MoveTo(const FVector Position);
 	UFUNCTION(BlueprintCallable)
 	FVector GetKiteLocation() const;
-	UFUNCTION(BlueprintCallable)
-	void SetFocus(AActor* Target);
-	UFUNCTION(BlueprintCallable)
-	void ClearFocus();
-	UFUNCTION(BlueprintCallable)
-	void EnterCombat();
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Meta = (AllowPrivateAccess = true))
 	void OnShoot(bool IsLeftFire);
@@ -57,53 +51,33 @@ public:
 	UCapsuleComponent* Root;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponBaseLeft;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponLookAtLeft;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponBaseRight;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponLookAtRight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float Health = 0;
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
-	float Damage = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int Ammo = 0;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int AmmoCount = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float AttackSpeed = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float ReloadSpeed = 0;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
-	int AttackRange = 0;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
-	int KiteRange = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float AccuracyMargin = 0;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	int MovementSpeed = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float Acceleration = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	int StopDistance = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	int ObstacleAvoidanceDistance = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float ObstacleAvoidanceForce = 0;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	TArray<FRotator> LidarDirections = {};
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	bool HasDestination;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	int AttackRange = 1500;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	int KiteRange = 250;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	int ChaseRange = 3500;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float DistanceToTarget = 0.0f;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	AActor* Target;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	bool HasDestination = false;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
 	
 	UPROPERTY(EditAnywhere)
@@ -112,16 +86,39 @@ public:
 private:
 	UPROPERTY()
 	AActor* Player;
-	UPROPERTY()
-	class UBlackboardComponent* BlackboardComponent;
-	UPROPERTY()
-	AActor* Focus;
-	FRotator MovementDirection;
-	FVector Destination;
-	FVector TargetVelocity;
-	FRotator TargetRotation;
 	bool IsInCombat = false;
 	bool LeftFire = false;
 	int TickCount = 0;
 	const int TickInterval = 10;
+
+	FRotator MovementDirection;
+	FVector Destination;
+	FVector TargetVelocity;
+	FRotator TargetRotation;
+	const int MovementSpeed = 700;
+	const float Acceleration = 0.6f;
+	const int StopDistance = 100;
+	const int ObstacleAvoidanceDistance = 200;
+	const float ObstacleAvoidanceForce = 2.0f;
+	const TArray<FRotator> LidarDirections =
+	{
+		FRotator(0, 0,0),
+		FRotator(30, 30,0),
+		FRotator(30, -30,0),
+		FRotator(-30, 30,0),
+		FRotator(-30, -30,0),
+		FRotator(90, 0,0),
+		FRotator(-90, 0,0)
+	};
+
+	float Health = 0.0f;
+	const float MaxHealth = 10.0f;
+	const float Damage = 0.5f;
+	const int MaxAmmo = 4;
+	const float AttackSpeed = 0.1f;
+	const float ReloadSpeed = 1.0f;
+	const float AccuracyMargin = 3.0f;
+	const int AimPitch = 25;
+	const float AimYawCorrection = 3.0f;
+	const int KiteYawDegree = 40;
 };
