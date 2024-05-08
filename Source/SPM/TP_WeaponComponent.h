@@ -87,7 +87,10 @@ public:
 	bool bElectricActive;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float FireBallCooldown = 2.0f;
+	float FireBallCooldown = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCanShootFireBall;
 
 	/*UPROPERTY(EditAnywhere)
 	class UMaterial* BasicMaterial;
