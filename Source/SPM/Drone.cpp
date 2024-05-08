@@ -35,8 +35,9 @@ void ADrone::BeginPlay()
 	Super::BeginPlay();
 
 	Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	MoveTo(GetActorLocation());
-	Reload();
+	Destination = GetActorLocation();
+	AmmoCount = MaxAmmo;
+	Health = MaxHealth;
 	BlackboardComponent = UAIBlueprintHelperLibrary::GetBlackboard(this);
 	
 	if(BlackboardComponent)
@@ -99,7 +100,6 @@ void ADrone::Rotate()
 	}
 
 	TargetRotation = Focus ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Focus->GetActorLocation()) : MovementDirection;
-
 	FRotator Rotation = TargetRotation;
 	Rotation.Pitch = 0;
 	Root->SetWorldRotation(Rotation);
@@ -140,7 +140,7 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 	}
 
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
-	TargetVelocity += FMath::Lerp(Direction, -Direction * ObstacleAvoidanceForce, Result.Distance / ObstacleAvoidanceDistance);
+	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
 }
 
 void ADrone::Move(const float DeltaTime)
@@ -166,8 +166,8 @@ FVector ADrone::GetKiteLocation() const
 	if (!Player) return GetActorLocation();
 
 	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Player->GetActorLocation(), GetActorLocation());
-	Rotation.Pitch = FMath::RandRange(0, 20),
-	Rotation.Yaw = Rotation.Yaw + FMath::RandRange(-40, 40);
+	Rotation.Pitch = FMath::RandRange(0, AimPitch),
+	Rotation.Yaw = Rotation.Yaw + FMath::RandRange(-KiteYawDegree, KiteYawDegree);
 	const FVector Direction = Rotation.RotateVector(FVector::ForwardVector);
 
 	return Player->GetActorLocation() + Direction * (AttackRange - FMath::RandRange(0, KiteRange));;
@@ -186,7 +186,7 @@ void ADrone::ClearFocus()
 void ADrone::Aim(const FVector Position) const
 {
 	float Pitch = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Position).Pitch;
-	Pitch = FMath::Clamp(Pitch, -25, 25);
+	Pitch = FMath::Clamp(Pitch, -AimPitch, AimPitch);
 	WeaponBaseLeft->SetRelativeRotation(FRotator(Pitch, 0, 0));
 	WeaponBaseRight->SetRelativeRotation(FRotator(Pitch, 0, 0));
 }
@@ -198,7 +198,7 @@ void ADrone::Shoot()
 	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
 	Rotation.Add(FMath::RandRange(-AccuracyMargin, AccuracyMargin),
-	             FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? 3 : -3),
+	             FMath::RandRange(-AccuracyMargin, AccuracyMargin) + (LeftFire ? AimYawCorrection : -AimYawCorrection),
 	             FMath::RandRange(-AccuracyMargin, AccuracyMargin));
 	ADroneProjectile* NewProjectile = GetWorld()->SpawnActor<ADroneProjectile>(Projectile, Origin, Rotation);
 	NewProjectile->SetOwner(this);
@@ -210,9 +210,9 @@ void ADrone::Shoot()
 
 void ADrone::Reload()
 {
-	if(AmmoCount < Ammo)
+	if(AmmoCount < MaxAmmo)
 	{
-		AmmoCount = Ammo;
+		AmmoCount = MaxAmmo;
 	}
 }
 
