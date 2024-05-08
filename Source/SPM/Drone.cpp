@@ -87,7 +87,7 @@ void ADrone::CheckLineOfSightAtPlayer()
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_GameTraceChannel2, CollisionQueryParams);
 	DistanceToTarget = Result.Distance;
 	
-	if (Result.bBlockingHit && Cast<ASPMCharacter>(Result.GetActor()) && IsInCombat ? true : Result.Distance <= AttackRange)
+	if (Result.bBlockingHit && Cast<ASPMCharacter>(Result.GetActor()) &&  Result.Distance <= ChaseRange)
 	{
 		Target = Result.GetActor();
 		GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->OnPlayerSeen.Broadcast(GetActorLocation());
@@ -185,8 +185,26 @@ FVector ADrone::GetPatrolLocation() const
 {
 	const FRotator Rotation = FRotator(FMath::RandRange(-10, 10),FMath::RandRange(-180, 180), 0);
 	const FVector Direction = Rotation.RotateVector(FVector::ForwardVector);
+	FVector Position = GetActorLocation() + Direction * FMath::RandRange(500, 1000);
 
-	return GetActorLocation() + Direction * 500;
+	FHitResult Result;
+	FVector Start = Position;
+	FVector End = Start - FVector::UpVector * ObstacleAvoidanceDistance;
+	FCollisionQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddIgnoredActor(this);
+
+	if (Debug)
+	{
+		const FName TraceTag("DronePatrolLineTrace");
+		GetWorld()->DebugDrawTraceTag = TraceTag;
+		CollisionQueryParams.TraceTag = TraceTag;
+	}
+
+	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
+
+	if(Result.bBlockingHit) Position.Z += Result.Distance + ObstacleAvoidanceDistance;
+	
+	return Position;
 }
 
 void ADrone::Aim(const FVector Position) const
@@ -234,6 +252,11 @@ float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEve
 	}
 
 	return TakenDamage;
+}
+
+bool ADrone::HasTarget() const
+{
+	return Target != nullptr;
 }
 
 void ADrone::OnShoot_Implementation(bool IsLeftFire)

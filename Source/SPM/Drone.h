@@ -37,6 +37,8 @@ public:
 	FVector GetKiteLocation() const;
 	UFUNCTION(BlueprintCallable)
 	FVector GetPatrolLocation()const;
+	UFUNCTION(BlueprintCallable)
+	bool HasTarget() const;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnShoot(bool IsLeftFire);
@@ -76,8 +78,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float DistanceToTarget = 0.0f;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	AActor* Target;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool HasDestination = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
@@ -88,6 +88,8 @@ public:
 private:
 	UPROPERTY()
 	AActor* Player;
+	UPROPERTY()
+	AActor* Target;
 	bool IsInCombat = false;
 	bool LeftFire = false;
 	int TickCount = 0;
@@ -98,7 +100,7 @@ private:
 	FVector TargetVelocity;
 	FRotator TargetRotation;
 	const int MovementSpeed = 700;
-	const float Acceleration = 0.6f;
+	const float Acceleration = 0.8f;
 	const int StopDistance = 100;
 	const int ObstacleAvoidanceDistance = 200;
 	const float ObstacleAvoidanceForce = 2.0f;
