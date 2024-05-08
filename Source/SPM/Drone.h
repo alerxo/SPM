@@ -35,12 +35,6 @@ public:
 	void MoveTo(const FVector Position);
 	UFUNCTION(BlueprintCallable)
 	FVector GetKiteLocation() const;
-	UFUNCTION(BlueprintCallable)
-	void SetFocus(AActor* Target);
-	UFUNCTION(BlueprintCallable)
-	void ClearFocus();
-	UFUNCTION(BlueprintCallable)
-	void EnterCombat();
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Meta = (AllowPrivateAccess = true))
 	void OnShoot(bool IsLeftFire);
@@ -57,26 +51,32 @@ public:
 	UCapsuleComponent* Root;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponBaseLeft;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponLookAtLeft;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponBaseRight;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponLookAtRight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
 	
-	UPROPERTY(BlueprintReadOnly)
-	int AmmoCount = 0;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	int Ammo = 0;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int AttackRange = 1500;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int KiteRange = 250;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	int ChaseRange = 3500;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float DistanceToTarget = 0.0f;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	AActor* Target;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
-	bool HasDestination;
+	bool HasDestination = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
 	
@@ -86,10 +86,6 @@ public:
 private:
 	UPROPERTY()
 	AActor* Player;
-	UPROPERTY()
-	class UBlackboardComponent* BlackboardComponent;
-	UPROPERTY()
-	AActor* Focus;
 	bool IsInCombat = false;
 	bool LeftFire = false;
 	int TickCount = 0;
