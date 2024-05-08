@@ -35,8 +35,10 @@ public:
 	void MoveTo(const FVector Position);
 	UFUNCTION(BlueprintCallable)
 	FVector GetKiteLocation() const;
+	UFUNCTION(BlueprintCallable)
+	FVector GetPatrolLocation()const;
 	
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Meta = (AllowPrivateAccess = true))
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnShoot(bool IsLeftFire);
 
 private:
@@ -75,7 +77,7 @@ public:
 	float DistanceToTarget = 0.0f;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	AActor* Target;
-	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool HasDestination = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
@@ -89,7 +91,7 @@ private:
 	bool IsInCombat = false;
 	bool LeftFire = false;
 	int TickCount = 0;
-	const int TickInterval = 10;
+	const int TickInterval = 20;
 
 	FRotator MovementDirection;
 	FVector Destination;
