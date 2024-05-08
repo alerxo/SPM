@@ -42,7 +42,7 @@ void ASpiderbot::Tick(float DeltaTime)
 }
 
 //shoots projectile
-void ASpiderbot::Fire(TSubclassOf<ASpiderbotProjectile> ProjectileClass)
+void ASpiderbot::Fire(TSubclassOf<ASpiderbotProjectile> ProjectileClass, USoundBase* FiringSound)
 {
 	UGameplayStatics::PlaySoundAtLocation(this, FiringSound, GetActorLocation(), GetActorRotation(), 1, 1, 0, Attenuation);
 	ASpiderbotProjectile* Projectile = GetWorld()->SpawnActor<ASpiderbotProjectile>(
