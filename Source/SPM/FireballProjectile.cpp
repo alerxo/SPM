@@ -5,7 +5,9 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "DrawDebugHelpers.h"
+#include "EnemyInterface.h"
 #include "MasterMindInstancedSubsystem.h"
+#include "Wallbreaker.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -90,7 +92,14 @@ void AFireballProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 	//UE_LOG(LogTemp, Warning, TEXT("FireHit"));
 	Explode();
 	Destroy();
-	GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->OnSoundMade.Broadcast(Hit.Location);
+	UMasterMindInstancedSubsystem* MasterMind = GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>();
+	MasterMind->OnSoundMade.Broadcast(Hit.Location);
+
+	AWallbreaker* Enemy = Cast<AWallbreaker>(OtherActor);
+	if(Enemy)
+	{
+		MasterMind->OnEnemyHit.Broadcast(OtherActor->GetActorLocation(), OtherActor);
+	}
 	// Only add impulse and destroy projectile if we hit a physics
 	/*if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
