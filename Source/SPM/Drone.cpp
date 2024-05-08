@@ -108,8 +108,13 @@ void ADrone::Rotate()
 	}
 
 	TargetRotation = Target ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation()) : MovementDirection;
-	FRotator Rotation = TargetRotation;
+	
+	FRotator Difference = TargetRotation - GetActorRotation();
+	Difference *= 0.1f;
+	FRotator Rotation = GetActorRotation();
+	Rotation += Difference;
 	Rotation.Pitch = 0;
+	Rotation.Roll = 0;
 	Root->SetWorldRotation(Rotation);
 }
 
@@ -154,13 +159,8 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 void ADrone::Move(const float DeltaTime)
 {
 	TargetVelocity.Normalize();
-	TargetVelocity *= MovementSpeed;
-
-	if (const FVector Step = TargetVelocity - Velocity; Step.Length() > 1)
-	{
-		Velocity += Step * (Acceleration * DeltaTime);
-	}
-
+	TargetVelocity *= (DistanceToTarget > MovementSpeed ? MovementSpeed : DistanceToTarget);
+	Velocity += (TargetVelocity - Velocity) * (Acceleration * DeltaTime);
 	Root->AddWorldOffset(Velocity * DeltaTime, true);
 }
 
@@ -183,7 +183,9 @@ FVector ADrone::GetKiteLocation() const
 
 FVector ADrone::GetPatrolLocation() const
 {
-	const FRotator Rotation = FRotator(FMath::RandRange(-10, 10),FMath::RandRange(-180, 180), 0);
+	const FRotator Rotation = FRotator(FMath::RandRange(-PatrolPitch, PatrolPitch),
+		FMath::RandRange(-PatrolYaw, PatrolYaw),
+		0);
 	const FVector Direction = Rotation.RotateVector(FVector::ForwardVector);
 	FVector Position = GetActorLocation() + Direction * FMath::RandRange(500, 1000);
 
@@ -234,10 +236,7 @@ void ADrone::Shoot()
 
 void ADrone::Reload()
 {
-	if(Ammo < MaxAmmo)
-	{
-		Ammo = MaxAmmo;
-	}
+	Ammo = MaxAmmo;
 }
 
 float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

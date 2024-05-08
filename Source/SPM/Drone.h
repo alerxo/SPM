@@ -100,10 +100,12 @@ private:
 	FVector TargetVelocity;
 	FRotator TargetRotation;
 	const int MovementSpeed = 700;
-	const float Acceleration = 0.8f;
+	const float Acceleration = 1.5f;
 	const int StopDistance = 100;
-	const int ObstacleAvoidanceDistance = 200;
+	const int ObstacleAvoidanceDistance = 300;
 	const float ObstacleAvoidanceForce = 2.0f;
+	const float PatrolPitch = 10.0f;
+	const float PatrolYaw = 180.0f;
 	const TArray<FRotator> LidarDirections =
 	{
 		FRotator(0, 0,0),
@@ -117,7 +119,7 @@ private:
 
 	float Health = 0.0f;
 	const float MaxHealth = 10.0f;
-	const float Damage = 0.5f;
+	const float Damage = 1.0f;
 	const int MaxAmmo = 4;
 	const float AttackSpeed = 0.1f;
 	const float ReloadSpeed = 1.0f;
