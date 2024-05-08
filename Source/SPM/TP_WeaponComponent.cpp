@@ -33,11 +33,11 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 
 void UTP_WeaponComponent::ShootPressed()
 {
-	/*if(bBasicActive == true)
+	if(bBasicActive == true)
 	{
 		Fire();
-	}*/
-	if(bFireActive == true)
+	}
+	else if(bFireActive == true)
 	{
 		ShootFireball();
 	}
@@ -49,10 +49,6 @@ void UTP_WeaponComponent::ShootHold()
 	if(bElectricActive == true)
 	{
 		ShootElectricity();
-	}
-	if(bBasicActive == true)
-	{
-		//Fire();
 	}
 }
 
