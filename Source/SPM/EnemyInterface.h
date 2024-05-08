@@ -25,5 +25,8 @@ public:
 	bool IsDead() const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void Investigate(FVector Location); 
+	void Investigate(FVector Location);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void PlayerSeen();
 };
