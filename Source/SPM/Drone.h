@@ -95,8 +95,8 @@ private:
 	FVector Destination;
 	FVector TargetVelocity;
 	FRotator TargetRotation;
-	const int MovementSpeed = 500;
-	const float Acceleration = 2.0f;
+	const int MovementSpeed = 700;
+	const float Acceleration = 0.6f;
 	const int StopDistance = 100;
 	const int ObstacleAvoidanceDistance = 200;
 	const float ObstacleAvoidanceForce = 2.0f;
