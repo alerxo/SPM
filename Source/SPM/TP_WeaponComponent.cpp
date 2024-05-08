@@ -27,6 +27,7 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	bBasicActive = true;
 	bFireActive = false;
 	bElectricActive = false;
+	bCanShootFireBall = true;
 	
 }
 
@@ -109,9 +110,15 @@ void UTP_WeaponComponent::ShootFireball()
 		return;
 	}
 
+	if(!bCanShootFireBall)
+	{
+		return;
+	}
+
 	// Try and fire a projectile
 	if (FireballClass != nullptr)
 	{
+		bCanShootFireBall = false;
 		if(ManaComponent->GetMana() < ManaCost)
 		{
 			return;
