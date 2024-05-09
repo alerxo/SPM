@@ -73,7 +73,7 @@ void ABaseCore::DestroyCore()
 void ABaseCore::SetCanBeActivated(bool Value)
 {
 	bCanBeActivated = true;
-	HealthComponent->SetHealth(HealthComponent->Health);
+	//HealthComponent->SetHealth(HealthComponent->Health);
 }
 
 
