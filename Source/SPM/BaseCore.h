@@ -14,6 +14,8 @@ class USphereComponent;
 
 //Delegate Declaration for FOnCoreActivate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCoreActivate);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCoreDeactivated);
+
 UCLASS()
 
 class SPM_API ABaseCore : public AActor
@@ -31,8 +33,12 @@ protected:
 public:
 
 	//Delegate for OnCoreActivate
+
 	FOnCoreActivate OnCoreActivate;
-	
+	/*
+	UFUNCTION(BlueprintCallable)
+	FOnCoreDeactivated OnCoreDeactivated;
+	*/
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -47,7 +53,7 @@ public:
 	void DamageCore(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	//HealthComponent
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UHealthComponent* HealthComponent;
 
 	//MeshComponent
