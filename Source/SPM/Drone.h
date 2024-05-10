@@ -122,8 +122,6 @@ private:
 	const float MaxHealth = 10.0f;
 	const float Damage = 1.0f;
 	const int MaxAmmo = 4;
-	const float AttackSpeed = 0.1f;
-	const float ReloadSpeed = 1.0f;
 	const float AccuracyMargin = 3.0f;
 	const int AimPitch = 25;
 	const float AimYawCorrection = 3.0f;

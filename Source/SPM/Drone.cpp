@@ -38,12 +38,6 @@ void ADrone::BeginPlay()
 	Destination = GetActorLocation();
 	Ammo = MaxAmmo;
 	Health = MaxHealth;
-
-	if(UBlackboardComponent* BlackboardComponent = UAIBlueprintHelperLibrary::GetBlackboard(this))
-	{
-		BlackboardComponent->SetValueAsFloat("AttackSpeed", AttackSpeed);
-		BlackboardComponent->SetValueAsFloat("ReloadSpeed", ReloadSpeed);
-	}
 }
 
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
