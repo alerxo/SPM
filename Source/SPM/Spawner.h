@@ -35,6 +35,29 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int SpawnAtLocation(int TotalTokens);
 
+	UFUNCTION(BlueprintCallable)
+	ASpawnPoints* BestSpawnByRange(float Range, TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree, AActor* Owner);
+
+
+
+	
+	
+
+	//constant values of diffrent spawn ranges
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Diffrent Ranges")
+	float DroneSpawnRange = 1000;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Diffrent Ranges")
+	float SpiderSpawnRange = 5000;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Diffrent Ranges")
+	float WallbreakerSpawnRange = 100; 
+
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Spawn Chances")
+	float SpiderSpawnChance;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Spawn Chances")
+	float DroneSpawnChance;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Spawn Chances")
+	float WallbreakerSpawnChance;
 
 	UPROPERTY()
 	int CurrentObjPoolPosition;
@@ -49,4 +72,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float YOffset;
+private:
+	void SpawnAI(APawn* Enemy, UBehaviorTree* BehaviourTree);
 };

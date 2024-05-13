@@ -63,4 +63,17 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="MySubSystem")
 	UMasterMindInstancedSubsystem* GetMasterMindInstancedSubsystem();
+
+	//Nummber of enemies killed
+	int SpidersKilled = 0;
+	int DronesKilled = 0;
+	int WallbreakersKilled = 0;
+
+	//The amount for each Enemy
+	UPROPERTY(BlueprintReadWrite)
+	int SpiderAmount = 0;
+	UPROPERTY(BlueprintReadWrite)
+	int DroneAmount = 0;
+	UPROPERTY(BlueprintReadWrite)
+	int WallbreakerAmount = 0; 
 };
