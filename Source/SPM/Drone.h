@@ -70,6 +70,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int Ammo = 0;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float AttackSpeed = 0.15f;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float ReloadSpeed = 1.2f;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int AttackRange = 1500;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int KiteRange = 150;
@@ -100,11 +104,14 @@ private:
 	FVector TargetVelocity;
 	FRotator TargetRotation;
 	const int MovementSpeed = 600;
+	const float TargetEaseDistance = 200.0f;
+	const float TargetEaseMargin = 20.0f;
+	const float TargetEaseBlend = 5.0f;
 	const float Acceleration = 1.5f;
 	const float Deceleration = 2.5f;
 	const int StopDistance = 100;
 	const int ObstacleAvoidanceDistance = 200;
-	const float ObstacleAvoidanceForce = 2.0f;
+	const float ObstacleAvoidanceForce = 100.0f;
 	const float RotationSpeed = 2.0f;
 	const float PatrolPitch = 10.0f;
 	const float PatrolYaw = 180.0f;
