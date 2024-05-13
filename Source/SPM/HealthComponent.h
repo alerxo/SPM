@@ -44,6 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPercentage() const;
 
+	UFUNCTION(BlueprintCallable)
+	void SetHealthNew(float NewHealth);
 
 	UFUNCTION(BlueprintCallable)
 	void ActivateTakeDamage();
