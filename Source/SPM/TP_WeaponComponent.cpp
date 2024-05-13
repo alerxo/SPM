@@ -21,7 +21,7 @@
 UTP_WeaponComponent::UTP_WeaponComponent()
 {
 	// Default offset from the character location for projectiles to spawn
-	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
+	MuzzleOffset = FVector(0.0f, 0.0f, 0.0f);
 	ElectricOffset = FVector(40.0f, 0.0f, 15.0f);
 
 	bBasicActive = true;
@@ -365,7 +365,7 @@ void UTP_WeaponComponent::AttachWeapon(ASPMCharacter* TargetCharacter)
 
 	// Attach the weapon to the First Person Character
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-	AttachToComponent(Character->GetMesh1P(), AttachmentRules, FName(TEXT("GripPoint")));
+	AttachToComponent(Character->GetMesh1P(), AttachmentRules, FName(TEXT("AttackPoint")));
 	
 	// switch bHasRifle so the animation blueprint can switch to another animation set
 	Character->SetHasRifle(true);
