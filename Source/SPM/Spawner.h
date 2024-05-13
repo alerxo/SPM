@@ -7,6 +7,9 @@
 #include "Spawner.generated.h"
 
 
+class EnemyObjectPool;
+class ADrone;
+class ASpiderbot;
 class ASpawnPoints;
 class UBehaviorTree;
 
@@ -23,21 +26,24 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
+	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<ASpawnPoints*> SpawnLocations;
-
-	UPROPERTY(EditAnywhere)
-	TArray<AActor*> EnemyObjectPool;
+	
+	EnemyObjectPool* Pool;
 	
 	UFUNCTION(BlueprintCallable)
 	int SpawnAtLocation(int TotalTokens);
 
 	UFUNCTION(BlueprintCallable)
 	ASpawnPoints* BestSpawnByRange(float Range, TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree, AActor* Owner);
+
+	APawn* Spawn(TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree);
 
 	//constant values of diffrent spawn ranges
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Diffrent Ranges")
@@ -57,17 +63,38 @@ public:
 
 	UPROPERTY()
 	int CurrentObjPoolPosition;
-
 	
 	//Time to Spawn enemy
 	UPROPERTY(EditAnywhere)
 	float DefaultTime;
-
 	float Time;
-
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float YOffset;
+	
+	UFUNCTION(CallInEditor, Category="Spawning")
+	void RunSpawning();
+
+	UFUNCTION(CallInEditor, Category="Spawning")
+	void RunDelete();
+
+	UPROPERTY(EditAnywhere, Category="Spawning")
+	TSubclassOf<APawn> SpiderBot;
+	UPROPERTY(EditAnywhere, Category="Spawning")
+	UBehaviorTree* SpiderBT;
+	
+	UPROPERTY(EditAnywhere, Category="Spawning")
+	TSubclassOf<APawn> Drone;
+	UPROPERTY(EditAnywhere, Category="Spawning")
+	UBehaviorTree* DroneBT;
+	
+
+	UPROPERTY(EditAnywhere, Category="Spawning")
+	TSubclassOf<APawn> Wallbreaker;
+	UPROPERTY(EditAnywhere, Category="Spawning")
+	UBehaviorTree* WallbreakerBT;
+	
+
 private:
 	void SpawnAI(APawn* Enemy, UBehaviorTree* BehaviourTree);
 };

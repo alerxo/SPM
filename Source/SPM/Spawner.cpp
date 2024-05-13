@@ -4,6 +4,7 @@
 #include "Spawner.h"
 
 #include "AIController.h"
+#include "EnemyObjectPool.h"
 #include "SpawnPoints.h"
 #include "Spiderbot.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -17,7 +18,8 @@ USpawner::USpawner()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	Pool = new EnemyObjectPool();
+	
 }
 
 
@@ -107,5 +109,43 @@ int USpawner::SpawnAtLocation(int TotalTokens)
 {
 	return 0;
 }
+
+void USpawner::RunSpawning()
+{
+	for(int i = 0; i < 10; i++)
+	{
+		Pool->SpiderBot.Add(Spawn(SpiderBot, SpiderBT));
+	}
+}
+
+APawn* USpawner::Spawn(TSubclassOf<AActor> ActorToSpawn, UBehaviorTree* BehaviourTree)
+{
+	//Create Rotator 
+	FRotator const Rotator = FRotator::ZeroRotator;
+	FVector const Location = FVector::ZeroVector;
+	//Params for the spawning
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = nullptr;
+	SpawnParameters.SpawnCollisionHandlingOverride = false ? ESpawnActorCollisionHandlingMethod::AlwaysSpawn : ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	
+	APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
+	//Set a AI controller and behaviour tree to the enemy
+	SpawnAI(Enemy, BehaviourTree);
+
+	return Enemy;
+}
+
+void USpawner::RunDelete()
+{
+	
+	for(APawn* Spider: Pool->SpiderBot)
+	{
+		Pool->SpiderBot.Remove(Spider);
+		Spider->Destroy();
+	}
+}
+
+
+
 
 
