@@ -108,18 +108,17 @@ void ADrone::GetTargetVelocity()
 {
 	TargetVelocity = FVector::Zero();
 
-	if (FVector::Distance(GetActorLocation(), Destination) > StopDistance)
+	for (const FRotator Direction : LidarDirections)
 	{
-		for (const FRotator Direction : LidarDirections)
-		{
-			CheckLidarDirection(MovementDirection + Direction);
-		}
-
-		HasDestination = true;
-		return;
+		CheckLidarDirection(MovementDirection + Direction);
 	}
 
-	HasDestination = false;
+	HasDestination = FVector::Distance(GetActorLocation(), Destination) > StopDistance;
+
+	if(Debug && HasDestination)
+	{
+		DrawDebugSphere(GetWorld(), Destination, 50, 8, FColor::Red, true, 1);
+	}
 }
 
 void ADrone::CheckLidarDirection(FRotator Rotation)
@@ -145,8 +144,8 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 void ADrone::Move(const float DeltaTime)
 {
 	TargetVelocity.Normalize();
-	TargetVelocity *= (DistanceToTarget > MovementSpeed ? MovementSpeed : DistanceToTarget);
-	Velocity += (TargetVelocity - Velocity) * (Acceleration * DeltaTime);
+	TargetVelocity *= FMath::Lerp(0, MovementSpeed, FMath::Clamp((FVector::Distance(GetActorLocation(), Destination) - 20.0f )/ 400.0f, 0.0f, 1.0f));
+	Velocity += (TargetVelocity - Velocity) * (FVector::DotProduct(TargetVelocity, Velocity) > 0.0f ? Acceleration : Deceleration)  * DeltaTime;
 	Root->AddWorldOffset(Velocity * DeltaTime, true);
 }
 

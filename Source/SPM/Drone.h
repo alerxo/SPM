@@ -93,14 +93,15 @@ private:
 	bool IsInCombat = false;
 	bool LeftFire = false;
 	int TickCount = 0;
-	const int TickInterval = 20;
+	const int TickInterval = 10;
 
 	FRotator MovementDirection;
 	FVector Destination;
 	FVector TargetVelocity;
 	FRotator TargetRotation;
-	const int MovementSpeed = 800;
+	const int MovementSpeed = 600;
 	const float Acceleration = 1.5f;
+	const float Deceleration = 2.5f;
 	const int StopDistance = 100;
 	const int ObstacleAvoidanceDistance = 200;
 	const float ObstacleAvoidanceForce = 2.0f;
