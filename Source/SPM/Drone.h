@@ -72,9 +72,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int AttackRange = 1500;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	int KiteRange = 250;
+	int KiteRange = 150;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	int ChaseRange = 3500;
+	int ChaseRange = 4000;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float DistanceToTarget = 0.0f;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
@@ -99,10 +99,10 @@ private:
 	FVector Destination;
 	FVector TargetVelocity;
 	FRotator TargetRotation;
-	const int MovementSpeed = 700;
+	const int MovementSpeed = 800;
 	const float Acceleration = 1.5f;
 	const int StopDistance = 100;
-	const int ObstacleAvoidanceDistance = 300;
+	const int ObstacleAvoidanceDistance = 200;
 	const float ObstacleAvoidanceForce = 2.0f;
 	const float RotationSpeed = 2.0f;
 	const float PatrolPitch = 10.0f;
@@ -117,13 +117,11 @@ private:
 		FRotator(90, 0,0),
 		FRotator(-90, 0,0)
 	};
-
+	
 	float Health = 0.0f;
 	const float MaxHealth = 10.0f;
 	const float Damage = 1.0f;
 	const int MaxAmmo = 4;
-	const float AttackSpeed = 0.1f;
-	const float ReloadSpeed = 1.0f;
 	const float AccuracyMargin = 3.0f;
 	const int AimPitch = 25;
 	const float AimYawCorrection = 3.0f;

@@ -6,8 +6,6 @@
 #include "DroneProjectile.h"
 #include "MasterMindInstancedSubsystem.h"
 #include "SPMCharacter.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -38,12 +36,6 @@ void ADrone::BeginPlay()
 	Destination = GetActorLocation();
 	Ammo = MaxAmmo;
 	Health = MaxHealth;
-
-	if(UBlackboardComponent* BlackboardComponent = UAIBlueprintHelperLibrary::GetBlackboard(this))
-	{
-		BlackboardComponent->SetValueAsFloat("AttackSpeed", AttackSpeed);
-		BlackboardComponent->SetValueAsFloat("ReloadSpeed", ReloadSpeed);
-	}
 }
 
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -100,7 +92,7 @@ void ADrone::CheckLineOfSightAtPlayer()
 	}
 }
 
-void ADrone::Rotate(float DeltaTime)
+void ADrone::Rotate(const float DeltaTime)
 {
 	if (FVector::Distance(GetActorLocation(), Destination) > StopDistance)
 	{
