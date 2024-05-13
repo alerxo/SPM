@@ -8,6 +8,7 @@
 
 
 class ASpawnPoints;
+class UBehaviorTree;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SPM_API USpawner : public UActorComponent
@@ -38,11 +39,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ASpawnPoints* BestSpawnByRange(float Range, TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree, AActor* Owner);
 
-
-
-	
-	
-
 	//constant values of diffrent spawn ranges
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Diffrent Ranges")
 	float DroneSpawnRange = 1000;
@@ -51,7 +47,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Diffrent Ranges")
 	float WallbreakerSpawnRange = 100; 
 
-
+	//values of diffrent spawn  chances
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Spawn Chances")
 	float SpiderSpawnChance;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Spawn Chances")

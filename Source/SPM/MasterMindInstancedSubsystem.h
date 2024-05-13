@@ -65,8 +65,11 @@ public:
 	UMasterMindInstancedSubsystem* GetMasterMindInstancedSubsystem();
 
 	//Nummber of enemies killed
+	UPROPERTY(BlueprintReadWrite)
 	int SpidersKilled = 0;
+	UPROPERTY(BlueprintReadWrite)
 	int DronesKilled = 0;
+	UPROPERTY(BlueprintReadWrite)
 	int WallbreakersKilled = 0;
 
 	//The amount for each Enemy
