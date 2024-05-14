@@ -210,17 +210,10 @@ void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<TEnumAsByte<EEnem
 	
 	int i = 0;
 	int ChanceIndex = 0;
-	UE_LOG(LogTemp, Warning, TEXT("In Spawn Chances"));
-
-	
-	
 	for (TEnumAsByte<EEnemies> Type : Enemies)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%d   %i"), Type.GetValue(), static_cast<int>(Chances[ChanceIndex] * 10));
 		for(int j = 0; j <= static_cast<int>(Chances[ChanceIndex] * 10) - 1; j++)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%d"), Type.GetValue());
-			//ListRandom->RandomListChance.EmplaceAt(i++, Type)	;
 			if(ListRandom->RandomListChance.IsValidIndex(i))
 			{
 				ListRandom->RandomListChance[i++] = Type.GetValue();
@@ -229,12 +222,7 @@ void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<TEnumAsByte<EEnem
 		}
 		ChanceIndex++;
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("      "));
-	for (TEnumAsByte<EEnemies> Element : ListRandom->RandomListChance)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ITEM: %d"), Element.GetValue());
-	}
+	
 	
 }
 
