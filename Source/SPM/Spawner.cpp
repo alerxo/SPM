@@ -25,11 +25,9 @@ USpawner::USpawner()
 
 	ListRandom = NewObject<URandomList>();
 	//Set Spawn Chance on Construktion
-	/*
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
 	TArray<TEnumAsByte<EEnemies>>Enemies{ESpider, EDrone, EWallbreaker};
 	ChangeSpawnChance(Chance, Enemies);
-	*/
 }
 
 
@@ -38,14 +36,15 @@ void USpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	MasterMind = GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>();
+
+	//Add all enemies to weight list
+	WeightList={SpiderWeight, DroneWeight, WallBreakerWeight};
 	
 	Time = DefaultTime;
 	CurrentObjPoolPosition = 0;
-	
-	for (TEnumAsByte<EEnemies> Element : ListRandom->RandomListChance)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ITEM: %d"), Element.GetValue());
-	}
+	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
+	TArray<TEnumAsByte<EEnemies>>Enemies{ESpider, EDrone, EWallbreaker};
+	ChangeSpawnChance(Chance, Enemies);
 }
 
 
@@ -164,10 +163,23 @@ void USpawner::RunDelete()
 
 
 //Randomly pick and enemy from a list and return a behaviour tree 
-UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range)
+UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, TEnumAsByte<EEnemies> OverrideEnemy )
 {
-	const int32 Index = FMath::RandRange(0, ListRandom->Size - 1);
-	const TEnumAsByte<EEnemies> Chosen = ListRandom->RandomListChance[Index];
+	const int32 Index = FMath::RandRange(0, ListRandom->Length() - 1);
+	TEnumAsByte<EEnemies> Chosen;
+	if(ListRandom->RandomListChance.IsValidIndex(Index))
+	{
+		Chosen = ListRandom->RandomListChance[Index];
+	}
+	else
+	{
+		
+	}
+	if(OverrideChance)
+	{
+		Chosen = OverrideEnemy;	
+	}
+	
 
 	UE_LOG(LogTemp, Warning, TEXT("%d"), Chosen.GetValue())
 	switch (Chosen)
@@ -196,9 +208,35 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range)
 }
 
 
+UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChance, FEnemyWeight OverrideEnemy)
+{
+	int Weight = TotalWeight;
+	if(OverrideChance)
+	{
+		Enemy = OverrideEnemy;
+		return Enemy.BehaviorTree;
+	}
+	int num = FMath::RandRange(0, Weight);
+	UE_LOG(LogTemp, Warning, TEXT("Random Num:  %i"),num);
+	for(FEnemyWeight Type : WeightList)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Total Weight %i - %i = %i"), num, Type.Weight, num -= Type.Weight);
+		UE_LOG(LogTemp, Warning, TEXT("Random Num:  %i"),num);
+		if(num <= 0)
+		{
+			Enemy = Type;
+			return Type.BehaviorTree;
+		}
+		
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Spawner::RandomWithWeight outside For loop"));
+	Enemy = SpiderWeight;
+	return SpiderWeight.BehaviorTree;
+}
+
+
 void USpawner::SetSpawnChances()
 {
-	ListRandom->RandomListChance;
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
 	TArray<TEnumAsByte<EEnemies>>Enemies{ESpider, EDrone, EWallbreaker};
 	ChangeSpawnChance(Chance, Enemies);
@@ -222,7 +260,5 @@ void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<TEnumAsByte<EEnem
 		}
 		ChanceIndex++;
 	}
-	
-	
 }
 

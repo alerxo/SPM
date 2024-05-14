@@ -17,14 +17,18 @@ public:
 	~URandomList();
 
 
-	const int8 Size = 10;
-
+private:
+	int8 Size = 10;
+public:
 	UPROPERTY()
 	TArray<TEnumAsByte<EEnemies>> RandomListChance;
 
-	TEnumAsByte<EEnemies> List[10]{ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider};
+	TEnumAsByte<EEnemies> List[10];
 		
 	int8 SpiderLastIndex;
 	int8 DroneLastIndex; 
 	int8 WallbreakerLastIndex;
+
+	void SetSize(int Amount){Size = Amount;};
+	int Length(){return Size;};
 };

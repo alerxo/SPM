@@ -16,6 +16,19 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, FVector, info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDisengage, AEnemyBaseClass*, Sender);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Sender, FVector, Info);
 
+USTRUCT(Blueprintable)
+struct FEnemyStats
+{
+	GENERATED_BODY()
+	UPROPERTY(BlueprintReadWrite)
+	int Killed;
+	UPROPERTY(BlueprintReadWrite)
+	int Amount;
+	
+	void IncrementKilled(){Killed++;};
+	void IncrementAmount(){Amount++;};
+};
+
 UCLASS()
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
 {
@@ -78,5 +91,19 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int DroneAmount = 0;
 	UPROPERTY(BlueprintReadWrite)
-	int WallbreakerAmount = 0; 
+	int WallbreakerAmount = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	FEnemyStats SpiderStats;
+	UPROPERTY(BlueprintReadWrite)
+	FEnemyStats DroneStats;
+	UPROPERTY(BlueprintReadWrite)
+	FEnemyStats WallBreakerStats;
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FEnemyStats> GetArrayOfStats();
+	
+
+	UFUNCTION(BlueprintCallable)
+	float DivisionKilledAmount(float Killed ,float Amount){return Killed/Amount;}
 };

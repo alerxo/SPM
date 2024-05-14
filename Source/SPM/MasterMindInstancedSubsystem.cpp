@@ -29,7 +29,6 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 		Tokens--;
 		return  true;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Tokens Have Run Out"));
 	return false;
 }
 
@@ -51,6 +50,14 @@ FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const
 void UMasterMindInstancedSubsystem::SetInvestigationLocation(FVector Vector)
 {
 	InvestigationLocation = Vector;
+
+	
+}
+
+
+TArray<FEnemyStats> UMasterMindInstancedSubsystem::GetArrayOfStats()
+{
+	return TArray<FEnemyStats>{SpiderStats, DroneStats, WallBreakerStats};
 }
 
 

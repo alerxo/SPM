@@ -5,7 +5,8 @@
 
 URandomList::URandomList()
 {
-	RandomListChance={ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider};
+	RandomListChance={ESpider, ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider, ESpider};
+	
 }
 
 URandomList::~URandomList()

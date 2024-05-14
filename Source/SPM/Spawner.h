@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "EnemieEnum.h"
+#include "MasterMindInstancedSubsystem.h"
 #include "RandomList.h"
 #include "Spawner.generated.h"
 
@@ -18,7 +19,22 @@ class UBehaviorTree;
 
 
 
-
+USTRUCT(BlueprintType)
+struct FEnemyWeight{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	TSubclassOf<APawn> Enemy;
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	UBehaviorTree* BehaviorTree;
+	UPROPERTY(VisibleAnywhere, Category="Spawning", BlueprintReadWrite)
+	int Weight;
+	UPROPERTY(VisibleAnywhere, Category="Spawning", BlueprintReadWrite)
+	float Range;
+	
+	FEnemyStats* EnemyStats;
+};
+	
 
 
 
@@ -31,8 +47,6 @@ class SPM_API USpawner : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	USpawner();
-	
-private:
 
 
 protected:
@@ -93,6 +107,25 @@ public:
 	UFUNCTION(CallInEditor, Category="Spawning")
 	void RunDelete();
 
+
+	//Weight Random System
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	FEnemyWeight SpiderWeight;
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	FEnemyWeight DroneWeight;
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	FEnemyWeight WallBreakerWeight;
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	int TotalWeight = 10;
+
+	UPROPERTY()
+	TArray<FEnemyWeight> WeightList;
+	
+	UFUNCTION(BlueprintCallable)
+	UBehaviorTree* RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChance, FEnemyWeight OverrideEnemy );
+
+
+	//Used for random with list
 	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	TSubclassOf<APawn> SpiderBot;
 	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
@@ -111,7 +144,7 @@ public:
 	
 
 	UFUNCTION(BlueprintCallable)
-	UBehaviorTree* RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range);
+	UBehaviorTree* RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, TEnumAsByte<EEnemies> OverrideEnemy);
 
 
 	UFUNCTION(CallInEditor, Category="Spawn Chances")
