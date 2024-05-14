@@ -4,14 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "EnemieEnum.h"
+#include "RandomList.h"
 #include "Spawner.generated.h"
 
 
+class UMasterMindInstancedSubsystem;
 class EnemyObjectPool;
 class ADrone;
 class ASpiderbot;
 class ASpawnPoints;
 class UBehaviorTree;
+
+
+
+
+
+
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SPM_API USpawner : public UActorComponent
@@ -21,6 +31,9 @@ class SPM_API USpawner : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	USpawner();
+	
+private:
+
 
 protected:
 	// Called when the game starts
@@ -28,6 +41,8 @@ protected:
 
 public:
 
+	UPROPERTY()
+	UMasterMindInstancedSubsystem* MasterMind; 
 	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -78,23 +93,43 @@ public:
 	UFUNCTION(CallInEditor, Category="Spawning")
 	void RunDelete();
 
-	UPROPERTY(EditAnywhere, Category="Spawning")
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	TSubclassOf<APawn> SpiderBot;
-	UPROPERTY(EditAnywhere, Category="Spawning")
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	UBehaviorTree* SpiderBT;
 	
-	UPROPERTY(EditAnywhere, Category="Spawning")
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	TSubclassOf<APawn> Drone;
-	UPROPERTY(EditAnywhere, Category="Spawning")
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	UBehaviorTree* DroneBT;
 	
 
-	UPROPERTY(EditAnywhere, Category="Spawning")
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	TSubclassOf<APawn> Wallbreaker;
-	UPROPERTY(EditAnywhere, Category="Spawning")
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	UBehaviorTree* WallbreakerBT;
 	
 
+	UFUNCTION(BlueprintCallable)
+	UBehaviorTree* RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range);
+
+
+	UFUNCTION(CallInEditor, Category="Spawn Chances")
+	void SetSpawnChances();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeSpawnChance(TArray<float> Chances, TArray<TEnumAsByte<EEnemies>> Enemies);
+	
 private:
+	//Enum for all the types of enemies
+
+
+	//Data structure to hold a list of EEnemies
+
+	UPROPERTY()
+	URandomList* ListRandom;
+
+	//spawnes an AI;
 	void SpawnAI(APawn* Enemy, UBehaviorTree* BehaviourTree);
 };
+

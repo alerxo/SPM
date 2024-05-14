@@ -8,7 +8,10 @@
 #include "SpawnPoints.h"
 #include "Spiderbot.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "MasterMindInstancedSubsystem.h"
 #include "Kismet/GameplayStatics.h"
+
+
 
 // Sets default values for this component's properties
 USpawner::USpawner()
@@ -17,9 +20,16 @@ USpawner::USpawner()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
 	Pool = new EnemyObjectPool();
-	
+
+
+	ListRandom = NewObject<URandomList>();
+	//Set Spawn Chance on Construktion
+	/*
+	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
+	TArray<TEnumAsByte<EEnemies>>Enemies{ESpider, EDrone, EWallbreaker};
+	ChangeSpawnChance(Chance, Enemies);
+	*/
 }
 
 
@@ -27,10 +37,15 @@ USpawner::USpawner()
 void USpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	MasterMind = GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>();
 	
 	Time = DefaultTime;
-	CurrentObjPoolPosition = 0; 
+	CurrentObjPoolPosition = 0;
+	
+	for (TEnumAsByte<EEnemies> Element : ListRandom->RandomListChance)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ITEM: %d"), Element.GetValue());
+	}
 }
 
 
@@ -38,6 +53,8 @@ void USpawner::BeginPlay()
 void USpawner::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
+
 
 	// ...
 }
@@ -123,7 +140,7 @@ APawn* USpawner::Spawn(TSubclassOf<AActor> ActorToSpawn, UBehaviorTree* Behaviou
 	//Create Rotator 
 	FRotator const Rotator = FRotator::ZeroRotator;
 	FVector const Location = FVector::ZeroVector;
-	//Params for the spawning
+	//Params for the spawning<
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.Owner = nullptr;
 	SpawnParameters.SpawnCollisionHandlingOverride = false ? ESpawnActorCollisionHandlingMethod::AlwaysSpawn : ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
@@ -146,6 +163,78 @@ void USpawner::RunDelete()
 }
 
 
+//Randomly pick and enemy from a list and return a behaviour tree 
+UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range)
+{
+	const int32 Index = FMath::RandRange(0, ListRandom->Size - 1);
+	const TEnumAsByte<EEnemies> Chosen = ListRandom->RandomListChance[Index];
+
+	UE_LOG(LogTemp, Warning, TEXT("%d"), Chosen.GetValue())
+	switch (Chosen)
+	{
+		case 0:
+			Enemy = SpiderBot;
+			Range = SpiderSpawnRange;
+			MasterMind->SpiderAmount++;
+			return SpiderBT;
+			break;
+		case 1:
+			Enemy = Drone;
+			Range = DroneSpawnRange;
+			MasterMind->DroneAmount++;
+			return DroneBT;
+			break;
+		case 2:
+			Enemy = Wallbreaker;
+			Range = WallbreakerSpawnRange;
+			MasterMind->WallbreakerAmount++;
+			return WallbreakerBT;
+			break;
+	}
+	UE_LOG(LogTemp, Error, TEXT("No Enemy Found in Spawner::RandomEnemy"))
+	return nullptr;
+}
 
 
+void USpawner::SetSpawnChances()
+{
+	ListRandom->RandomListChance;
+	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
+	TArray<TEnumAsByte<EEnemies>>Enemies{ESpider, EDrone, EWallbreaker};
+	ChangeSpawnChance(Chance, Enemies);
+}
+
+
+void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<TEnumAsByte<EEnemies>> Enemies)
+{
+	
+	int i = 0;
+	int ChanceIndex = 0;
+	UE_LOG(LogTemp, Warning, TEXT("In Spawn Chances"));
+
+	
+	
+	for (TEnumAsByte<EEnemies> Type : Enemies)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%d   %i"), Type.GetValue(), static_cast<int>(Chances[ChanceIndex] * 10));
+		for(int j = 0; j <= static_cast<int>(Chances[ChanceIndex] * 10) - 1; j++)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%d"), Type.GetValue());
+			//ListRandom->RandomListChance.EmplaceAt(i++, Type)	;
+			if(ListRandom->RandomListChance.IsValidIndex(i))
+			{
+				ListRandom->RandomListChance[i++] = Type.GetValue();
+			}
+			
+		}
+		ChanceIndex++;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("      "));
+	for (TEnumAsByte<EEnemies> Element : ListRandom->RandomListChance)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ITEM: %d"), Element.GetValue());
+	}
+	
+}
 

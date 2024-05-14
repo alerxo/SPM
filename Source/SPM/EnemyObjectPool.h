@@ -15,6 +15,6 @@ public:
 	~EnemyObjectPool();
 
 	TArray<APawn*> SpiderBot;
-	TArray<TSubclassOf<APawn>> Drone;
-	TArray<TSubclassOf<APawn>> Wallbreaker;
+	TArray<APawn*> Drone;
+	TArray<APawn*> Wallbreaker;
 };
