@@ -84,6 +84,8 @@ public:
 	int ChaseRange = 4000;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float DistanceToTarget = 0.0f;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	bool IsInCombat = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool HasDestination = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
@@ -97,7 +99,6 @@ private:
 	AActor* Player;
 	UPROPERTY()
 	AActor* Target;
-	bool IsInCombat = false;
 	bool LeftFire = false;
 
 	FRotator MovementDirection;

@@ -51,6 +51,32 @@ void ADrone::Tick(const float DeltaTime)
 	Move(DeltaTime);
 }
 
+void ADrone::Rotate(const float DeltaTime)
+{
+	if (FVector::Distance(GetActorLocation(), Destination) > StopDistance)
+	{
+		MovementDirection = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Destination);
+	}
+
+	TargetRotation = Target ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation()) : MovementDirection;
+	const FRotator Rotation = UKismetMathLibrary::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, RotationSpeed);
+	Root->SetWorldRotation(FRotator(0, Rotation.Yaw, 0));
+}
+
+void ADrone::Move(const float DeltaTime)
+{
+	TargetVelocity.Normalize();
+	const float Alpha = (FVector::Distance(GetActorLocation(), Destination) - TargetEaseMargin) / TargetEaseDistance;
+	TargetVelocity *= FMath::InterpEaseInOut(0, MovementSpeed, FMath::Clamp(Alpha, 0.0f, 1.0f), TargetEaseBlend);
+	Velocity += (TargetVelocity - Velocity) * (FVector::DotProduct(TargetVelocity, Velocity) > 0.0f ? Acceleration : Deceleration) * DeltaTime;
+	Root->AddWorldOffset(Velocity * DeltaTime, true);
+}
+
+void ADrone::MoveTo(const FVector Position)
+{
+	Destination = Position;
+}
+
 void ADrone::CheckLineOfSightAtPlayer()
 {
 	if (!Player) return;
@@ -82,18 +108,6 @@ void ADrone::CheckLineOfSightAtPlayer()
 		Target = nullptr;
 		IsInCombat = false;
 	}
-}
-
-void ADrone::Rotate(const float DeltaTime)
-{
-	if (FVector::Distance(GetActorLocation(), Destination) > StopDistance)
-	{
-		MovementDirection = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Destination);
-	}
-
-	TargetRotation = Target ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation()) : MovementDirection;
-	const FRotator Rotation = UKismetMathLibrary::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, RotationSpeed);
-	Root->SetWorldRotation(FRotator(0, Rotation.Yaw, 0));
 }
 
 void ADrone::GetTargetVelocity()
@@ -131,20 +145,6 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
 	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
-}
-
-void ADrone::Move(const float DeltaTime)
-{
-	TargetVelocity.Normalize();
-	const float Alpha = (FVector::Distance(GetActorLocation(), Destination) - TargetEaseMargin) / TargetEaseDistance;
-	TargetVelocity *= FMath::InterpEaseInOut(0, MovementSpeed, FMath::Clamp(Alpha, 0.0f, 1.0f), TargetEaseBlend);
-	Velocity += (TargetVelocity - Velocity) * (FVector::DotProduct(TargetVelocity, Velocity) > 0.0f ? Acceleration : Deceleration) * DeltaTime;
-	Root->AddWorldOffset(Velocity * DeltaTime, true);
-}
-
-void ADrone::MoveTo(const FVector Position)
-{
-	Destination = Position;
 }
 
 FVector ADrone::GetKiteLocation() const
