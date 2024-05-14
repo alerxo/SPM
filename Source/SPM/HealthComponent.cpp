@@ -37,7 +37,17 @@ void UHealthComponent::ActivateTakeDamage()
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
 }
 
-
+void UHealthComponent::SetHealthNew(float NewHealth)
+{
+	if (NewHealth >= Health)
+	{
+		Health = DefaultHealth;
+	}
+	else
+	{
+		DefaultHealth = NewHealth;
+	}
+}
 
 // Called when the event for Taking Damage OnTakeAnyDamage Delegate
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
