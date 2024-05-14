@@ -81,7 +81,7 @@ public:
 	int ChaseRange = 4000;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float DistanceToTarget = 0.0f;
-	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool HasDestination = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
