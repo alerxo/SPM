@@ -48,14 +48,6 @@ void ADrone::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Rotate(DeltaTime);
-
-	if (++TickCount == TickInterval)
-	{
-		CheckLineOfSightAtPlayer();
-		GetTargetVelocity();
-		TickCount = 0;
-	}
-
 	Move(DeltaTime);
 }
 

@@ -36,17 +36,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector GetKiteLocation() const;
 	UFUNCTION(BlueprintCallable)
-	FVector GetPatrolLocation()const;
+	FVector GetPatrolLocation() const;
 	UFUNCTION(BlueprintCallable)
 	bool HasTarget() const;
-	
+
+	UFUNCTION(BlueprintCallable)
+	void CheckLineOfSightAtPlayer();
+	UFUNCTION(BlueprintCallable)
+	void GetTargetVelocity();
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnShoot(bool IsLeftFire);
 
 private:
-	void CheckLineOfSightAtPlayer();
 	void Rotate(float);
-	void GetTargetVelocity();
 	void CheckLidarDirection(FRotator);
 	void Move(const float);
 
@@ -66,7 +69,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int Ammo = 0;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
@@ -85,7 +88,7 @@ public:
 	bool HasDestination = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
-	
+
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
 
@@ -96,8 +99,6 @@ private:
 	AActor* Target;
 	bool IsInCombat = false;
 	bool LeftFire = false;
-	int TickCount = 0;
-	const int TickInterval = 10;
 
 	FRotator MovementDirection;
 	FVector Destination;
@@ -117,15 +118,15 @@ private:
 	const float PatrolYaw = 180.0f;
 	const TArray<FRotator> LidarDirections =
 	{
-		FRotator(0, 0,0),
-		FRotator(30, 30,0),
-		FRotator(30, -30,0),
-		FRotator(-30, 30,0),
-		FRotator(-30, -30,0),
-		FRotator(90, 0,0),
-		FRotator(-90, 0,0)
+		FRotator(0, 0, 0),
+		FRotator(30, 30, 0),
+		FRotator(30, -30, 0),
+		FRotator(-30, 30, 0),
+		FRotator(-30, -30, 0),
+		FRotator(90, 0, 0),
+		FRotator(-90, 0, 0)
 	};
-	
+
 	float Health = 0.0f;
 	const float MaxHealth = 10.0f;
 	const float Damage = 1.0f;
