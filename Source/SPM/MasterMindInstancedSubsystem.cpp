@@ -9,12 +9,32 @@
 void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+	/*
+	SpiderEnum = UEnemiesEnum::Instiantiate(ESpider);
+	DroneEnum = UEnemiesEnum::Instiantiate(EDrone);
+	WallBreakerEnum = UEnemiesEnum::Instiantiate(EWallbreaker);
+	*/
+}
+
+void UMasterMindInstancedSubsystem::SetUp()
+{
+	/*
+	SpiderEnum = NewObject<UEnemiesEnum>();
+	SpiderEnum->Enemy = ESpider;
+	SpiderEnum->MostTotalHits = 0;
+	ListOfAllEnemieEnum.AddUnique(SpiderEnum);
+	*/
 }
 
 //Deinitialize SubSystem
 void UMasterMindInstancedSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
+	/*
+	delete SpiderEnum;
+	delete DroneEnum;
+	delete WallBreakerEnum;
+	*/
 }
 
 //Getter for USPMGameInstanceSubsystem 
@@ -56,22 +76,23 @@ void UMasterMindInstancedSubsystem::SetInvestigationLocation(FVector Vector)
 	
 }
 
+/*
 TArray<FEnemyStats> UMasterMindInstancedSubsystem::GetArrayOfStats()
 {
 	return TArray<FEnemyStats>{SpiderStats, DroneStats, WallBreakerStats};
 }
-
+*/
 void UMasterMindInstancedSubsystem::Hit(UEnemiesEnum* Enemy)
 {
 	Enemy->MostTotalHits++; 
 }
 
-/*
-EEnemies UMasterMindInstancedSubsystem::GetEnemyType(IEnemyInterface* GeneralEnemy)
+
+EEnemies UMasterMindInstancedSubsystem::GetEnemyType( TScriptInterface<IEnemyInterface> GeneralEnemy)
 {
-	return GeneralEnemy->EnemyType;
+	return GeneralEnemy.GetInterface()->EnemyType;
 }
-*/
+
 
 
 

@@ -12,7 +12,7 @@ enum EEnemies
 };
 
 //Class to Create the Enemy Enums
-UCLASS()
+UCLASS(BlueprintType)
 class UEnemiesEnum : public UObject
 {
 	GENERATED_BODY()
@@ -20,13 +20,24 @@ public:
 	//UEnemiesEnum(const UEnemiesEnum& other);
 	UEnemiesEnum();
 	UEnemiesEnum(TEnumAsByte<EEnemies> EnemyType);
+
+	static UEnemiesEnum* Instiantiate(TEnumAsByte<EEnemies> EnemyType);
 	~UEnemiesEnum();
 
-	EEnemies Enemy;
-	int MostTotalHits; 
-
+	UPROPERTY()
+	TEnumAsByte<EEnemies> Enemy;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int MostTotalHits;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Weight;
+	UFUNCTION()
 	TEnumAsByte<EEnemies>  GetValue();
 	
+	/*
+	UPROPERTY()
+	TArray<UEnemiesEnum*> ListOfAllEnemieEnum; 
+	*/
 };
 
-inline TArray<TEnumAsByte<EEnemies>> ListOfAllEnemieEnum; 
+
+
