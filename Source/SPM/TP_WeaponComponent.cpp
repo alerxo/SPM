@@ -242,7 +242,7 @@ void UTP_WeaponComponent::ShootElectricity()
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<AElectricProjectile>(ElectricityClass, SpawnLocation, SpawnRotation, ActorSpawnParams);*/
 
-			if(ManaComponent->GetElectricMana() < ElectricManaCost)
+			if(ManaComponent->GetElectricMana() < ElectricManaCost * GetWorld()->GetDeltaSeconds())
 			{
 				return;
 			}

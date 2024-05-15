@@ -73,6 +73,7 @@ public:
 	bool GetIsInteractable(){return bIsInteractable;}
 
 	//Setter for Interactable can be interacted with
+	UFUNCTION(BlueprintCallable)
 	void SetIsInteractable(bool Value){bIsInteractable = Value;}
 private:
 

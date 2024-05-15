@@ -106,7 +106,7 @@ void UManaComponent::RechargeElectricMana(float DeltaTime)
 		ElectricMana += 1;
 		if(ElectricMana >= DefaultMana)
 		{
-			ElectricMana;
+			ElectricMana = DefaultMana;
 			bElectricCanRecharge = false;
 		}
 	}
@@ -125,7 +125,7 @@ void UManaComponent::DecreaseMana(float Amount)
 	//UE_LOG(LogTemp, Warning, TEXT("Decrease Mana %f"), Mana);
 	bCanRecharge = true;
 	Timer = DefaultTimer;
-	if( ( Mana -= Amount ) <= 0)
+	if( ( Mana -= Amount) <= 0)
 	{
 		Mana = 0;
 	}
@@ -140,7 +140,7 @@ void UManaComponent::DecreaseElectricMana(float Amount)
 	}
 	bElectricCanRecharge = true;
 	ElectricTimer = DefaultTimer;
-	if((ElectricMana -= Amount) <= 0)
+	if((ElectricMana -= Amount * GetWorld()->GetDeltaSeconds()) <= 0)
 	{
 		ElectricMana = 0;
 	}
