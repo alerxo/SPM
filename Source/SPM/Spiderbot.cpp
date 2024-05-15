@@ -2,7 +2,7 @@
 
 
 #include "Spiderbot.h"
-
+#include "EnemieEnum.h"
 #include "SpiderbotProjectile.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -15,6 +15,7 @@ ASpiderbot::ASpiderbot()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
 	ProjectileSpawnPoint->SetupAttachment(RootComponent);
 
+	EnemyType = ESpider;
 }
 
 // Called when the game starts or when spawned
