@@ -17,6 +17,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -39,7 +40,12 @@ public:
 	FVector GetPatrolLocation() const;
 	UFUNCTION(BlueprintCallable)
 	bool HasTarget() const;
-
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerTrail(FVector Position);
+	UFUNCTION(BlueprintCallable)
+	bool HasPlayerTrail() const;
+	UFUNCTION(BlueprintCallable)
+	void ConsumePlayerTrail();
 	UFUNCTION(BlueprintCallable)
 	void CheckLineOfSightAtPlayer();
 	UFUNCTION(BlueprintCallable)
@@ -84,8 +90,6 @@ public:
 	int ChaseRange = 4000;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float DistanceToTarget = 0.0f;
-	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	bool IsInCombat = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool HasDestination = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
@@ -99,18 +103,19 @@ private:
 	AActor* Player;
 	UPROPERTY()
 	AActor* Target;
+	FVector* PlayerTrail;
 	bool LeftFire = false;
 
 	FRotator MovementDirection;
 	FVector Destination;
 	FVector TargetVelocity;
 	FRotator TargetRotation;
-	const int MovementSpeed = 600;
+	const int MovementSpeed = 700;
 	const float TargetEaseDistance = 200.0f;
-	const float TargetEaseMargin = 20.0f;
+	const float TargetEaseMargin = 10.0f;
 	const float TargetEaseBlend = 5.0f;
-	const float Acceleration = 1.5f;
-	const float Deceleration = 2.5f;
+	const float Acceleration = 0.5f;
+	const float Deceleration = 1.5f;
 	const int StopDistance = 100;
 	const int ObstacleAvoidanceDistance = 200;
 	const float ObstacleAvoidanceForce = 100.0f;

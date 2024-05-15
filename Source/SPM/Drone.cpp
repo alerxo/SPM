@@ -38,6 +38,13 @@ void ADrone::BeginPlay()
 	Health = MaxHealth;
 }
 
+void ADrone::Destroyed()
+{
+	Super::Destroyed();
+
+	delete PlayerTrail;
+}
+
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -101,12 +108,12 @@ void ADrone::CheckLineOfSightAtPlayer()
 	{
 		Target = Result.GetActor();
 		GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->OnPlayerSeen.Broadcast(GetActorLocation());
+		SetPlayerTrail(Result.ImpactPoint + FVector(0, 0, 100));
 	}
 
 	else
 	{
 		Target = nullptr;
-		IsInCombat = false;
 	}
 }
 
@@ -179,7 +186,6 @@ void ADrone::Aim(const FVector Position) const
 
 void ADrone::Shoot()
 {
-	IsInCombat = true;
 	LeftFire = !LeftFire;
 	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
@@ -201,7 +207,8 @@ void ADrone::Reload()
 
 float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	IsInCombat = true;
+	if (DamageCauser) SetPlayerTrail(DamageCauser->GetActorLocation());
+
 	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
 
 	if ((Health -= TakenDamage) <= 0)
@@ -216,6 +223,28 @@ float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEve
 bool ADrone::HasTarget() const
 {
 	return Target != nullptr;
+}
+
+void ADrone::SetPlayerTrail(const FVector Position)
+{
+	if (PlayerTrail) *PlayerTrail = Position;
+	else PlayerTrail = new FVector(Position);
+}
+
+bool ADrone::HasPlayerTrail() const
+{
+	return PlayerTrail != nullptr;
+}
+
+void ADrone::ConsumePlayerTrail()
+{
+	if (PlayerTrail)
+	{
+		const FVector Position = FVector(*PlayerTrail);
+		MoveTo(Position);
+		delete PlayerTrail;
+		PlayerTrail = nullptr;
+	}
 }
 
 void ADrone::OnShoot_Implementation(bool IsLeftFire)
