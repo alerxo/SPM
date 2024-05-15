@@ -66,11 +66,12 @@ void UMasterMindInstancedSubsystem::Hit(UEnemiesEnum* Enemy)
 	Enemy->MostTotalHits++; 
 }
 
+/*
 EEnemies UMasterMindInstancedSubsystem::GetEnemyType(IEnemyInterface* GeneralEnemy)
 {
 	return GeneralEnemy->EnemyType;
 }
-
+*/
 
 
 

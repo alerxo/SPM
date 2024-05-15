@@ -115,6 +115,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float DivisionKilledAmount(float Killed ,float Amount){return Killed/Amount;}
 
+	/*
 	UFUNCTION(BlueprintCallable)
 	EEnemies GetEnemyType(IEnemyInterface* GeneralEnemy);
+	*/
 };
