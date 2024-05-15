@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "EnemieEnum.h"
 #include "MasterMindInstancedSubsystem.generated.h"
 
+class IEnemyInterface;
 /**
  * 
  */
@@ -15,6 +17,19 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEnemyHit, FVector, Info, AActor*
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, FVector, info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDisengage, AEnemyBaseClass*, Sender);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Sender, FVector, Info);
+
+USTRUCT(Blueprintable)
+struct FEnemyStats
+{
+	GENERATED_BODY()
+	UPROPERTY(BlueprintReadWrite)
+	int Killed;
+	UPROPERTY(BlueprintReadWrite)
+	int Amount;
+	
+	void IncrementKilled(){Killed++;};
+	void IncrementAmount(){Amount++;};
+};
 
 UCLASS()
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
@@ -63,4 +78,45 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="MySubSystem")
 	UMasterMindInstancedSubsystem* GetMasterMindInstancedSubsystem();
+
+	//Nummber of enemies killed
+	UPROPERTY(BlueprintReadWrite)
+	int SpidersKilled = 0;
+	UPROPERTY(BlueprintReadWrite)
+	int DronesKilled = 0;
+	UPROPERTY(BlueprintReadWrite)
+	int WallbreakersKilled = 0;
+
+	//The amount for each Enemy
+	UPROPERTY(BlueprintReadWrite)
+	int SpiderAmount = 0;
+	UPROPERTY(BlueprintReadWrite)
+	int DroneAmount = 0;
+	UPROPERTY(BlueprintReadWrite)
+	int WallbreakerAmount = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	FEnemyStats SpiderStats;
+	UPROPERTY(BlueprintReadWrite)
+	FEnemyStats DroneStats;
+	UPROPERTY(BlueprintReadWrite)
+	FEnemyStats WallBreakerStats;
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FEnemyStats> GetArrayOfStats();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<TEnumAsByte<EEnemies>>& GetListOfAllEnemiesTypes(){return ListOfAllEnemieEnum;}
+
+
+	UFUNCTION(BlueprintCallable)
+	void Hit(UEnemiesEnum* Enemy);
+
+	UFUNCTION(BlueprintCallable)
+	float DivisionKilledAmount(float Killed ,float Amount){return Killed/Amount;}
+
+	/*
+	UFUNCTION(BlueprintCallable)
+	EEnemies GetEnemyType(IEnemyInterface* GeneralEnemy);
+	*/
 };
