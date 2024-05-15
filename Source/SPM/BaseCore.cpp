@@ -40,15 +40,15 @@ void ABaseCore::BeginPlay()
 void ABaseCore::DamageCore(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	//Checks if it can take Damage
-	if(bCanBeActivated && HealthComponent->GetHealth() <= 0)
+	if(HealthComponent->GetHealth() <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Core Destroyed"));
 		DestroyCore();
-	}else if(bCanBeActivated)
-	{
+		Destroy();
+		return;
+	}
 		UE_LOG(LogTemp, Warning, TEXT("ApplyDamage"));
 		HealthComponent->TakeDamage(this, Damage,DamageType, InstigatedBy,this);
-	}
 }
 
 
