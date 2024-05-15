@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+//Give interface an EnemyType
+//Each Enemy Give it self the Enum it is in
 #include "MasterMindInstancedSubsystem.h"
+#include "EnemyInterface.h"
 
 //Initialize SubSystem
 void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -54,11 +56,22 @@ void UMasterMindInstancedSubsystem::SetInvestigationLocation(FVector Vector)
 	
 }
 
-
 TArray<FEnemyStats> UMasterMindInstancedSubsystem::GetArrayOfStats()
 {
 	return TArray<FEnemyStats>{SpiderStats, DroneStats, WallBreakerStats};
 }
+
+void UMasterMindInstancedSubsystem::Hit(UEnemiesEnum* Enemy)
+{
+	Enemy->MostTotalHits++; 
+}
+
+EEnemies UMasterMindInstancedSubsystem::GetEnemyType(IEnemyInterface* GeneralEnemy)
+{
+	return GeneralEnemy->EnemyType;
+}
+
+
 
 
 

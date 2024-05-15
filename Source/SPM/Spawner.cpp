@@ -25,9 +25,11 @@ USpawner::USpawner()
 
 	ListRandom = NewObject<URandomList>();
 	//Set Spawn Chance on Construktion
+	/*
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
-	TArray<TEnumAsByte<EEnemies>>Enemies{ESpider, EDrone, EWallbreaker};
+	TArray<UEnemiesEnum*>Enemies={SpiderEnum, DroneEnum, WallBreakerEnum};
 	ChangeSpawnChance(Chance, Enemies);
+	*/
 }
 
 
@@ -42,9 +44,11 @@ void USpawner::BeginPlay()
 	
 	Time = DefaultTime;
 	CurrentObjPoolPosition = 0;
+	/*
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
-	TArray<TEnumAsByte<EEnemies>>Enemies{ESpider, EDrone, EWallbreaker};
+	TArray<UEnemiesEnum*>Enemies = {SpiderEnum,DroneEnum, WallBreakerEnum};
 	ChangeSpawnChance(Chance, Enemies);
+	*/
 }
 
 
@@ -163,10 +167,10 @@ void USpawner::RunDelete()
 
 
 //Randomly pick and enemy from a list and return a behaviour tree 
-UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, TEnumAsByte<EEnemies> OverrideEnemy )
+UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, UEnemiesEnum* OverrideEnemy )
 {
 	const int32 Index = FMath::RandRange(0, ListRandom->Length() - 1);
-	TEnumAsByte<EEnemies> Chosen;
+	UEnemiesEnum* Chosen = nullptr;
 	if(ListRandom->RandomListChance.IsValidIndex(Index))
 	{
 		Chosen = ListRandom->RandomListChance[Index];
@@ -180,26 +184,27 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bo
 		Chosen = OverrideEnemy;	
 	}
 	
-
-	UE_LOG(LogTemp, Warning, TEXT("%d"), Chosen.GetValue())
-	switch (Chosen)
+	switch(Chosen->GetValue())
 	{
 		case 0:
 			Enemy = SpiderBot;
 			Range = SpiderSpawnRange;
 			MasterMind->SpiderAmount++;
+		delete Chosen;
 			return SpiderBT;
 			break;
 		case 1:
 			Enemy = Drone;
 			Range = DroneSpawnRange;
 			MasterMind->DroneAmount++;
+		delete Chosen;
 			return DroneBT;
 			break;
 		case 2:
 			Enemy = Wallbreaker;
 			Range = WallbreakerSpawnRange;
 			MasterMind->WallbreakerAmount++;
+		delete Chosen;
 			return WallbreakerBT;
 			break;
 	}
@@ -216,6 +221,8 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 		Enemy = OverrideEnemy;
 		return Enemy.BehaviorTree;
 	}
+
+	
 	int num = FMath::RandRange(0, Weight);
 	UE_LOG(LogTemp, Warning, TEXT("Random Num:  %i"),num);
 	for(FEnemyWeight Type : WeightList)
@@ -229,7 +236,6 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 		}
 		
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Spawner::RandomWithWeight outside For loop"));
 	Enemy = SpiderWeight;
 	return SpiderWeight.BehaviorTree;
 }
@@ -238,23 +244,23 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 void USpawner::SetSpawnChances()
 {
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
-	TArray<TEnumAsByte<EEnemies>>Enemies{ESpider, EDrone, EWallbreaker};
+	TArray<UEnemiesEnum*>Enemies{SpiderEnum, DroneEnum, WallBreakerEnum};
 	ChangeSpawnChance(Chance, Enemies);
 }
 
 
-void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<TEnumAsByte<EEnemies>> Enemies)
+void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<UEnemiesEnum*> Enemies)
 {
 	
 	int i = 0;
 	int ChanceIndex = 0;
-	for (TEnumAsByte<EEnemies> Type : Enemies)
+	for (UEnemiesEnum* Type : Enemies)
 	{
 		for(int j = 0; j <= static_cast<int>(Chances[ChanceIndex] * 10) - 1; j++)
 		{
 			if(ListRandom->RandomListChance.IsValidIndex(i))
 			{
-				ListRandom->RandomListChance[i++] = Type.GetValue();
+				ListRandom->RandomListChance[i++] = Type;
 			}
 			
 		}

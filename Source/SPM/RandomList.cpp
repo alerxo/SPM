@@ -5,7 +5,7 @@
 
 URandomList::URandomList()
 {
-	RandomListChance={ESpider, ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider,ESpider, ESpider};
+	RandomListChance.Reserve(Size);
 	
 }
 

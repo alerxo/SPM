@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "EnemieEnum.h"
 #include "MasterMindInstancedSubsystem.generated.h"
 
+class IEnemyInterface;
 /**
  * 
  */
@@ -102,8 +104,17 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FEnemyStats> GetArrayOfStats();
-	
+
+	UFUNCTION(BlueprintCallable)
+	TArray<TEnumAsByte<EEnemies>>& GetListOfAllEnemiesTypes(){return ListOfAllEnemieEnum;}
+
+
+	UFUNCTION(BlueprintCallable)
+	void Hit(UEnemiesEnum* Enemy);
 
 	UFUNCTION(BlueprintCallable)
 	float DivisionKilledAmount(float Killed ,float Amount){return Killed/Amount;}
+
+	UFUNCTION(BlueprintCallable)
+	EEnemies GetEnemyType(IEnemyInterface* GeneralEnemy);
 };

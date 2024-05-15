@@ -10,3 +10,23 @@ enum EEnemies
 	EDrone = 1 ,
 	EWallbreaker = 2,
 };
+
+//Class to Create the Enemy Enums
+UCLASS()
+class UEnemiesEnum : public UObject
+{
+	GENERATED_BODY()
+public:
+	//UEnemiesEnum(const UEnemiesEnum& other);
+	UEnemiesEnum();
+	UEnemiesEnum(TEnumAsByte<EEnemies> EnemyType);
+	~UEnemiesEnum();
+
+	EEnemies Enemy;
+	int MostTotalHits; 
+
+	TEnumAsByte<EEnemies>  GetValue();
+	
+};
+
+inline TArray<TEnumAsByte<EEnemies>> ListOfAllEnemieEnum; 

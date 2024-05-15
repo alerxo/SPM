@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnemieEnum.h"
 #include "EnemyInterface.generated.h"
 
 /**
@@ -24,9 +25,14 @@ public:
 
 	bool IsDead() const;
 	
+	EEnemies EnemyType;
+	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void Investigate(FVector Location);
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	EEnemies GetEnemyType();
+	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void PlayerSeen();
 };

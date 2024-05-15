@@ -17,8 +17,6 @@ class ASpiderbot;
 class ASpawnPoints;
 class UBehaviorTree;
 
-
-
 USTRUCT(BlueprintType)
 struct FEnemyWeight{
 	GENERATED_BODY()
@@ -56,7 +54,15 @@ protected:
 public:
 
 	UPROPERTY()
-	UMasterMindInstancedSubsystem* MasterMind; 
+	UMasterMindInstancedSubsystem* MasterMind;
+
+
+	UPROPERTY()
+	UEnemiesEnum*  SpiderEnum;
+	UPROPERTY()
+	UEnemiesEnum*   DroneEnum;
+	UPROPERTY()
+	UEnemiesEnum*  WallBreakerEnum;
 	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -144,14 +150,14 @@ public:
 	
 
 	UFUNCTION(BlueprintCallable)
-	UBehaviorTree* RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, TEnumAsByte<EEnemies> OverrideEnemy);
+	UBehaviorTree* RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, UEnemiesEnum* OverrideEnemy);
 
 
 	UFUNCTION(CallInEditor, Category="Spawn Chances")
 	void SetSpawnChances();
 
 	UFUNCTION(BlueprintCallable)
-	void ChangeSpawnChance(TArray<float> Chances, TArray<TEnumAsByte<EEnemies>> Enemies);
+	void ChangeSpawnChance(TArray<float> Chances, TArray<UEnemiesEnum*> Enemies);
 	
 private:
 	//Enum for all the types of enemies
