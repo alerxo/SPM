@@ -18,6 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, FVector, info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDisengage, AEnemyBaseClass*, Sender);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Sender, FVector, Info);
 
+/*
 USTRUCT(Blueprintable)
 struct FEnemyStats
 {
@@ -30,6 +31,7 @@ struct FEnemyStats
 	void IncrementKilled(){Killed++;};
 	void IncrementAmount(){Amount++;};
 };
+*/
 
 UCLASS()
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
@@ -95,6 +97,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int WallbreakerAmount = 0;
 
+	/*
 	UPROPERTY(BlueprintReadWrite)
 	FEnemyStats SpiderStats;
 	UPROPERTY(BlueprintReadWrite)
@@ -104,10 +107,22 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FEnemyStats> GetArrayOfStats();
+	*/
 
 	UFUNCTION(BlueprintCallable)
-	TArray<TEnumAsByte<EEnemies>>& GetListOfAllEnemiesTypes(){return ListOfAllEnemieEnum;}
+	void SetUp();
 
+	UPROPERTY()
+	UEnemiesEnum*  SpiderEnum;
+	UPROPERTY()
+	UEnemiesEnum*   DroneEnum;
+	UPROPERTY()
+	UEnemiesEnum*  WallBreakerEnum;
+
+	/*
+	UFUNCTION(BlueprintCallable)
+	TArray<UEnemiesEnum*> GetListOfAllEnemiesTypes(){return ListOfAllEnemieEnum;}
+	*/
 
 	UFUNCTION(BlueprintCallable)
 	void Hit(UEnemiesEnum* Enemy);
@@ -115,8 +130,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float DivisionKilledAmount(float Killed ,float Amount){return Killed/Amount;}
 
-	/*
+	
 	UFUNCTION(BlueprintCallable)
-	EEnemies GetEnemyType(IEnemyInterface* GeneralEnemy);
-	*/
+	EEnemies GetEnemyType(TScriptInterface<IEnemyInterface> GeneralEnemy);
+	
 };
