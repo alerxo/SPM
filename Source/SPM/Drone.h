@@ -118,7 +118,7 @@ private:
 	const float Deceleration = 1.5f;
 	const int StopDistance = 100;
 	const int ObstacleAvoidanceDistance = 200;
-	const float ObstacleAvoidanceForce = 100.0f;
+	const float ObstacleAvoidanceForce = 20.0f;
 	const float RotationSpeed = 2.0f;
 	const float PatrolPitch = 10.0f;
 	const float PatrolYaw = 180.0f;
