@@ -17,6 +17,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -36,17 +37,25 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector GetKiteLocation() const;
 	UFUNCTION(BlueprintCallable)
-	FVector GetPatrolLocation()const;
+	FVector GetPatrolLocation() const;
 	UFUNCTION(BlueprintCallable)
 	bool HasTarget() const;
-	
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerTrail(FVector Position);
+	UFUNCTION(BlueprintCallable)
+	bool HasPlayerTrail() const;
+	UFUNCTION(BlueprintCallable)
+	void ConsumePlayerTrail();
+	UFUNCTION(BlueprintCallable)
+	void CheckLineOfSightAtPlayer();
+	UFUNCTION(BlueprintCallable)
+	void GetTargetVelocity();
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnShoot(bool IsLeftFire);
 
 private:
-	void CheckLineOfSightAtPlayer();
 	void Rotate(float);
-	void GetTargetVelocity();
 	void CheckLidarDirection(FRotator);
 	void Move(const float);
 
@@ -66,22 +75,26 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int Ammo = 0;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float AttackSpeed = 0.15f;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float ReloadSpeed = 1.2f;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int AttackRange = 1500;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	int KiteRange = 250;
+	int KiteRange = 150;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	int ChaseRange = 3500;
+	int ChaseRange = 4000;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float DistanceToTarget = 0.0f;
-	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool HasDestination = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
-	
+
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
 
@@ -90,32 +103,34 @@ private:
 	AActor* Player;
 	UPROPERTY()
 	AActor* Target;
-	bool IsInCombat = false;
+	FVector* PlayerTrail;
 	bool LeftFire = false;
-	int TickCount = 0;
-	const int TickInterval = 20;
 
 	FRotator MovementDirection;
 	FVector Destination;
 	FVector TargetVelocity;
 	FRotator TargetRotation;
 	const int MovementSpeed = 700;
-	const float Acceleration = 1.5f;
+	const float TargetEaseDistance = 200.0f;
+	const float TargetEaseMargin = 10.0f;
+	const float TargetEaseBlend = 5.0f;
+	const float Acceleration = 0.5f;
+	const float Deceleration = 1.5f;
 	const int StopDistance = 100;
-	const int ObstacleAvoidanceDistance = 300;
-	const float ObstacleAvoidanceForce = 2.0f;
+	const int ObstacleAvoidanceDistance = 200;
+	const float ObstacleAvoidanceForce = 20.0f;
 	const float RotationSpeed = 2.0f;
 	const float PatrolPitch = 10.0f;
 	const float PatrolYaw = 180.0f;
 	const TArray<FRotator> LidarDirections =
 	{
-		FRotator(0, 0,0),
-		FRotator(30, 30,0),
-		FRotator(30, -30,0),
-		FRotator(-30, 30,0),
-		FRotator(-30, -30,0),
-		FRotator(90, 0,0),
-		FRotator(-90, 0,0)
+		FRotator(0, 0, 0),
+		FRotator(30, 30, 0),
+		FRotator(30, -30, 0),
+		FRotator(-30, 30, 0),
+		FRotator(-30, -30, 0),
+		FRotator(90, 0, 0),
+		FRotator(-90, 0, 0)
 	};
 
 	float Health = 0.0f;

@@ -6,8 +6,6 @@
 #include "DroneProjectile.h"
 #include "MasterMindInstancedSubsystem.h"
 #include "SPMCharacter.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -40,6 +38,13 @@ void ADrone::BeginPlay()
 	Health = MaxHealth;
 }
 
+void ADrone::Destroyed()
+{
+	Super::Destroyed();
+
+	delete PlayerTrail;
+}
+
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -50,15 +55,33 @@ void ADrone::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Rotate(DeltaTime);
-	
-	if(++TickCount == TickInterval)
+	Move(DeltaTime);
+}
+
+void ADrone::Rotate(const float DeltaTime)
+{
+	if (FVector::Distance(GetActorLocation(), Destination) > StopDistance)
 	{
-		CheckLineOfSightAtPlayer();
-		GetTargetVelocity();
-		TickCount = 0;
+		MovementDirection = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Destination);
 	}
 
-	Move(DeltaTime);
+	TargetRotation = Target ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation()) : MovementDirection;
+	const FRotator Rotation = UKismetMathLibrary::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, RotationSpeed);
+	Root->SetWorldRotation(FRotator(0, Rotation.Yaw, 0));
+}
+
+void ADrone::Move(const float DeltaTime)
+{
+	TargetVelocity.Normalize();
+	const float Alpha = (FVector::Distance(GetActorLocation(), Destination) - TargetEaseMargin) / TargetEaseDistance;
+	TargetVelocity *= FMath::InterpEaseInOut(0, MovementSpeed, FMath::Clamp(Alpha, 0.0f, 1.0f), TargetEaseBlend);
+	Velocity += (TargetVelocity - Velocity) * (FVector::DotProduct(TargetVelocity, Velocity) > 0.0f ? Acceleration : Deceleration) * DeltaTime;
+	Root->AddWorldOffset(Velocity * DeltaTime, true);
+}
+
+void ADrone::MoveTo(const FVector Position)
+{
+	Destination = Position;
 }
 
 void ADrone::CheckLineOfSightAtPlayer()
@@ -77,51 +100,38 @@ void ADrone::CheckLineOfSightAtPlayer()
 		GetWorld()->DebugDrawTraceTag = TraceTag;
 		CollisionQueryParams.TraceTag = TraceTag;
 	}
-	
+
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_GameTraceChannel2, CollisionQueryParams);
 	DistanceToTarget = Result.Distance;
-	
-	if (Result.bBlockingHit && Cast<ASPMCharacter>(Result.GetActor()) &&  Result.Distance <= ChaseRange)
+
+	if (Result.bBlockingHit && Cast<ASPMCharacter>(Result.GetActor()) && Result.Distance <= ChaseRange)
 	{
 		Target = Result.GetActor();
 		GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->OnPlayerSeen.Broadcast(GetActorLocation());
+		SetPlayerTrail(Result.ImpactPoint + FVector(0, 0, 100));
 	}
 
 	else
 	{
 		Target = nullptr;
-		IsInCombat = false;
 	}
-}
-
-void ADrone::Rotate(float DeltaTime)
-{
-	if (FVector::Distance(GetActorLocation(), Destination) > StopDistance)
-	{
-		MovementDirection = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Destination);
-	}
-
-	TargetRotation = Target ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation()) : MovementDirection;
-	const FRotator Rotation = UKismetMathLibrary::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, RotationSpeed);
-	Root->SetWorldRotation(FRotator(0, Rotation.Yaw, 0));
 }
 
 void ADrone::GetTargetVelocity()
 {
 	TargetVelocity = FVector::Zero();
 
-	if (FVector::Distance(GetActorLocation(), Destination) > StopDistance)
+	for (const FRotator Direction : LidarDirections)
 	{
-		for (const FRotator Direction : LidarDirections)
-		{
-			CheckLidarDirection(MovementDirection + Direction);
-		}
-
-		HasDestination = true;
-		return;
+		CheckLidarDirection(MovementDirection + Direction);
 	}
 
-	HasDestination = false;
+	HasDestination = FVector::Distance(GetActorLocation(), Destination) > StopDistance;
+
+	if (Debug && HasDestination)
+	{
+		DrawDebugSphere(GetWorld(), Destination, 50, 8, FColor::Red, false, 1.0f);
+	}
 }
 
 void ADrone::CheckLidarDirection(FRotator Rotation)
@@ -144,26 +154,13 @@ void ADrone::CheckLidarDirection(FRotator Rotation)
 	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
 }
 
-void ADrone::Move(const float DeltaTime)
-{
-	TargetVelocity.Normalize();
-	TargetVelocity *= (DistanceToTarget > MovementSpeed ? MovementSpeed : DistanceToTarget);
-	Velocity += (TargetVelocity - Velocity) * (Acceleration * DeltaTime);
-	Root->AddWorldOffset(Velocity * DeltaTime, true);
-}
-
-void ADrone::MoveTo(const FVector Position)
-{
-	Destination = Position;
-}
-
 FVector ADrone::GetKiteLocation() const
 {
 	if (!Player) return GetActorLocation();
 
 	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Player->GetActorLocation(), GetActorLocation());
 	Rotation.Pitch = FMath::RandRange(0, AimPitch),
-	Rotation.Yaw = Rotation.Yaw + FMath::RandRange(-KiteYawDegree, KiteYawDegree);
+		Rotation.Yaw = Rotation.Yaw + FMath::RandRange(-KiteYawDegree, KiteYawDegree);
 	const FVector Direction = Rotation.RotateVector(FVector::ForwardVector);
 
 	return Player->GetActorLocation() + Direction * (AttackRange - FMath::RandRange(0, KiteRange));;
@@ -172,8 +169,8 @@ FVector ADrone::GetKiteLocation() const
 FVector ADrone::GetPatrolLocation() const
 {
 	const FRotator Rotation = FRotator(FMath::RandRange(-PatrolPitch, PatrolPitch),
-		FMath::RandRange(-PatrolYaw, PatrolYaw),
-		0);
+	                                   FMath::RandRange(-PatrolYaw, PatrolYaw),
+	                                   0);
 	const FVector Direction = Rotation.RotateVector(FVector::ForwardVector);
 
 	return GetActorLocation() + Direction * FMath::RandRange(500, 1000);;
@@ -189,7 +186,6 @@ void ADrone::Aim(const FVector Position) const
 
 void ADrone::Shoot()
 {
-	IsInCombat = true;
 	LeftFire = !LeftFire;
 	const FVector Origin = LeftFire ? WeaponLookAtLeft->GetComponentLocation() : WeaponLookAtRight->GetComponentLocation();
 	FRotator Rotation = LeftFire ? WeaponBaseLeft->GetComponentRotation() : WeaponBaseRight->GetComponentRotation();
@@ -211,9 +207,10 @@ void ADrone::Reload()
 
 float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	IsInCombat = true;
+	if (DamageCauser) SetPlayerTrail(DamageCauser->GetActorLocation());
+
 	float const TakenDamage = FMath::Min(Health, Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser));
-	
+
 	if ((Health -= TakenDamage) <= 0)
 	{
 		GetController()->Destroy();
@@ -226,6 +223,28 @@ float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEve
 bool ADrone::HasTarget() const
 {
 	return Target != nullptr;
+}
+
+void ADrone::SetPlayerTrail(const FVector Position)
+{
+	if (PlayerTrail) *PlayerTrail = Position;
+	else PlayerTrail = new FVector(Position);
+}
+
+bool ADrone::HasPlayerTrail() const
+{
+	return PlayerTrail != nullptr;
+}
+
+void ADrone::ConsumePlayerTrail()
+{
+	if (PlayerTrail)
+	{
+		const FVector Position = FVector(*PlayerTrail);
+		MoveTo(Position);
+		delete PlayerTrail;
+		PlayerTrail = nullptr;
+	}
 }
 
 void ADrone::OnShoot_Implementation(bool IsLeftFire)
