@@ -17,6 +17,14 @@
 USpawner::USpawner()
 {
 
+	//Setup all the Enemies
+
+	/*
+	SpiderWeight.EnemyType = ListOfAllEnemieEnum[ESpider];
+	DroneWeight.EnemyType = ListOfAllEnemieEnum[EDrone];
+	WallBreakerWeight.EnemyType = ListOfAllEnemieEnum[EWallbreaker];
+	*/
+	
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
@@ -49,6 +57,10 @@ void USpawner::BeginPlay()
 	TArray<UEnemiesEnum*>Enemies = {SpiderEnum,DroneEnum, WallBreakerEnum};
 	ChangeSpawnChance(Chance, Enemies);
 	*/
+	
+	SpiderWeight.EnemyEnum = ESpider;
+	DroneWeight.EnemyEnum = EDrone;
+	WallBreakerWeight.EnemyEnum = EWallbreaker;
 }
 
 
@@ -86,8 +98,14 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, TSubclassOf<AActor> ActorT
 		if(Range < Dist)
 		{
 			//Create Enemy And set the Ai behaviour on it
-			FVector const Location = SpawnPoint->GetActorLocation() + ( YOffset * SpawnPoint->GetActorForwardVector());
+
+			FVector Forward = SpawnPoint->GetActorForwardVector();
+			Forward.X = +Forward.X;
+			FVector const Location = SpawnPoint->GetActorLocation() + (YOffset * Forward);
+			UE_LOG(LogTemp, Warning, TEXT("Location %s"), *SpawnPoint->GetActorLocation().ToString());
 			APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
+			UE_LOG(LogTemp, Warning, TEXT("Forward %s"), *Forward.ToString());
+			UE_LOG(LogTemp, Warning, TEXT("Location %s"), *Location.ToString());
 			//Set a AI controller and behaviour tree to the enemy
 			SpawnAI(Enemy, BehaviourTree);
 			
@@ -221,14 +239,12 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 		Enemy = OverrideEnemy;
 		return Enemy.BehaviorTree;
 	}
-
-	
 	int num = FMath::RandRange(0, Weight);
-	UE_LOG(LogTemp, Warning, TEXT("Random Num:  %i"),num);
 	for(FEnemyWeight Type : WeightList)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Total Weight %i - %i = %i"), num, Type.Weight, num -= Type.Weight);
-		UE_LOG(LogTemp, Warning, TEXT("Random Num:  %i"),num);
+		int index = Type.EnemyEnum.GetValue();
+		//UEnemiesEnum* temp = ListOfAllEnemieEnum[index];
+		num -= Type.Weight;
 		if(num <= 0)
 		{
 			Enemy = Type;
@@ -236,6 +252,7 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 		}
 		
 	}
+	
 	Enemy = SpiderWeight;
 	return SpiderWeight.BehaviorTree;
 }

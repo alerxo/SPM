@@ -25,12 +25,15 @@ struct FEnemyWeight{
 	TSubclassOf<APawn> Enemy;
 	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	UBehaviorTree* BehaviorTree;
+	
 	UPROPERTY(VisibleAnywhere, Category="Spawning", BlueprintReadWrite)
 	int Weight;
+	
 	UPROPERTY(VisibleAnywhere, Category="Spawning", BlueprintReadWrite)
 	float Range;
 	
-	FEnemyStats* EnemyStats;
+	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	TEnumAsByte<EEnemies> EnemyEnum; 
 };
 	
 
@@ -124,7 +127,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	int TotalWeight = 10;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TArray<FEnemyWeight> WeightList;
 	
 	UFUNCTION(BlueprintCallable)
