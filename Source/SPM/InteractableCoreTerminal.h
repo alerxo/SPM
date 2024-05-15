@@ -11,6 +11,7 @@ class USPMGameInstanceSubsystem;
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSave);
 
 UCLASS()
 class SPM_API AInteractableCoreTerminal : public AInteractable
@@ -24,6 +25,9 @@ protected:
 
 	
 public:
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSave OnSave;
 	//Terminal is active
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsActive;
