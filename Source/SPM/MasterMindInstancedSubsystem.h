@@ -28,7 +28,9 @@ struct FEnemyStats
 	UPROPERTY(BlueprintReadWrite)
 	int Amount;
 	UPROPERTY(BlueprintReadWrite)
-	int TotalHits; 
+	int TotalHits;
+	UPROPERTY(BlueprintReadWrite)
+	int Weight; 
 	
 };
 
