@@ -252,7 +252,6 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 		}
 		
 	}
-	
 	Enemy = SpiderWeight;
 	return SpiderWeight.BehaviorTree;
 }
