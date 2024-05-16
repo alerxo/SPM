@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API UHealthComponent : public UActorComponent
 {
@@ -21,7 +20,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-
 	//Setter float that sets health
 	void SetHealth(float Value){ DefaultHealth = Value;}
 
