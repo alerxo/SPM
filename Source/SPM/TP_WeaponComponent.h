@@ -92,6 +92,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCanShootFireBall;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon")
+	float ManaCost = 10.f;
+
 	/*UPROPERTY(EditAnywhere)
 	class UMaterial* BasicMaterial;
 
@@ -155,11 +158,7 @@ private:
 
 	//UPROPERTY(EditAnywhere)
 	//UCameraComponent* CameraComponent;
-
 	
-
-	UPROPERTY(EditAnywhere, Category="Weapon")
-	float ManaCost = 10.f;
 
 	UPROPERTY(EditAnywhere, Category="Weapon")
 	float ElectricManaCost = 0.5f;
