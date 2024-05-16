@@ -11,6 +11,13 @@
 #include "MasterMindInstancedSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
+//varje Enemy när den skadar spelaren bestämer vilken Enum som den är i, Spider väljer ESpider
+//Med Detta 
+
+//I mastermind hämta en lista som har alla enemy types
+// Genom en Enum som är då sig själv index till listan
+
+//
 
 
 // Sets default values for this component's properties

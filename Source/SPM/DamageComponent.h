@@ -7,6 +7,8 @@
 #include "DamageComponent.generated.h"
 
 
+enum EEnemies : int;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API UDamageComponent : public UActorComponent
 {
@@ -27,10 +29,12 @@ private:
 	float Damage = 1;
 
 	//DamageType Property
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UDamageType> DamageType;
+
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UDamageType> DamageType;
+	
 	//Getter Return float of Damage
 	float GetDamage() const;
 	//Getter Return DamageType
