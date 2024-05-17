@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void DestroyWithFireball();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void DealDamage(FVector Location);
+
 	/** Returns CollisionComp subobject **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	/** Returns ProjectileMovement subobject **/
