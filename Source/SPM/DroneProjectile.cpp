@@ -3,6 +3,8 @@
 
 #include "DroneProjectile.h"
 
+#include "NiagaraFunctionLibrary.h"
+#include "SPMCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 ADroneProjectile::ADroneProjectile()
@@ -11,7 +13,6 @@ ADroneProjectile::ADroneProjectile()
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	RootComponent = ProjectileMesh;
-
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 
 	InitialLifeSpan = 5;
@@ -25,15 +26,21 @@ void ADroneProjectile::BeginPlay()
 }
 
 void ADroneProjectile::Tick(const float DeltaTime)
+
 {
 	Super::Tick(DeltaTime);
 }
 
 void ADroneProjectile::OnCollision(const FHitResult& Result)
 {
-	if(Result.GetActor())
+	if (Result.GetActor())
 	{
-		UGameplayStatics::ApplyDamage(Result.GetActor(), Damage, GetInstigatorController(), this, nullptr);
+		UGameplayStatics::ApplyDamage(Result.GetActor(), Damage, GetInstigatorController(), this, DamageType);
+
+		if (!Cast<ASPMCharacter>(Result.GetActor()))
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitParticle, Result.Location, Result.Normal.Rotation());
+		}
 	}
 
 	Destroy();
