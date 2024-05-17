@@ -87,12 +87,23 @@ void UMasterMindInstancedSubsystem::Hit(UEnemiesEnum* Enemy)
 	Enemy->MostTotalHits++; 
 }
 
-
-EEnemies UMasterMindInstancedSubsystem::GetEnemyType( TScriptInterface<IEnemyInterface> GeneralEnemy)
+//Get the Enemy Type of the Enemy
+TEnumAsByte<EEnemies> UMasterMindInstancedSubsystem::GetEnemyType( TScriptInterface<IEnemyInterface> GeneralEnemy)
 {
 	return GeneralEnemy.GetInterface()->EnemyType;
 }
 
+void UMasterMindInstancedSubsystem::IncreaseWeight(TEnumAsByte<EEnemies> Enemy)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Before Weight Increase %i"),AllEnemyStats[Enemy].Weight);
+	AllEnemyStats[Enemy].Weight++;
+	UE_LOG(LogTemp, Warning, TEXT("Enemy After Weight Increase %i"), AllEnemyStats[Enemy].Weight);
+}
+void UMasterMindInstancedSubsystem::IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount)
+{
+	AllEnemyStats[Enemy].DamageAmount += Amount;
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Damage Amount %f"),AllEnemyStats[Enemy].DamageAmount);
+}
 
 
 
