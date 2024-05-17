@@ -51,6 +51,7 @@ void AFireballProjectile::BeginPlay()
 void AFireballProjectile::Explode()
 {
 	TArray<FHitResult> OutHits;
+	TArray<AActor*> DamageTarget;
 
 	FVector HitLocation = GetActorLocation();
 		
@@ -63,11 +64,12 @@ void AFireballProjectile::Explode()
 	{
 		for(FHitResult& Hit : OutHits)
 		{
+			DamageTarget.AddUnique(Hit.GetActor());
 			if(Hit.GetActor() != nullptr)
 			{
 				DisablePlayerCollision(Hit);
 				UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
-				UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), UGameplayStatics::GetPlayerPawn(this, 0), DamageComponent->GetDamageType());
+				//UGameplayStatics::ApplyDamage(Hit.GetActor(), DamageComponent->GetDamage(), this->GetInstigatorController(), UGameplayStatics::GetPlayerPawn(this, 0), DamageComponent->GetDamageType());
 				if(MeshComponent)
 				{
 					MeshComponent->AddRadialImpulse(HitLocation, ExplosiveRadius, ExplosiveImpulseStrength, RIF_Constant, true);
@@ -76,6 +78,11 @@ void AFireballProjectile::Explode()
 				DestroyWithFireball();	
 			}
 		}
+		for(AActor* HitActor : DamageTarget)
+		{
+			UGameplayStatics::ApplyDamage(HitActor, DamageComponent->GetDamage(), this->GetInstigatorController(), UGameplayStatics::GetPlayerPawn(this, 0), DamageComponent->GetDamageType());
+		}
+		
 		
 	}
 		

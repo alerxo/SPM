@@ -64,6 +64,7 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 		if((DefaultHealth -= Damage) <= 0)
 		{
 			DefaultHealth = 0;
+			OnDead.Broadcast();
 		}
 	}
 }
@@ -87,3 +88,8 @@ void UHealthComponent::RestoreHealth(float HealthToRestore)
 		DefaultHealth = Health;
 	}
 }
+
+float  UHealthComponent::GetDefaultHealth()const
+{
+	return Health;
+};

@@ -49,7 +49,7 @@ public:
 	USphereComponent* GetSphereComponent() const {return SphereComponent;}
 
 	//Function to Damage Core
-	UFUNCTION()
+	
 	void DamageCore(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	//HealthComponent
@@ -75,6 +75,7 @@ private:
 	//Bool if Core is active or not
 	bool bCanBeActivated;
 
+	UFUNCTION(BlueprintCallable)
 	//Destroy the core
 	void DestroyCore();
 

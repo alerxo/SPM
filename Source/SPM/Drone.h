@@ -21,23 +21,28 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
+
 	UFUNCTION(BlueprintCallable)
-	void Aim(const FVector Position) const;
+	void AimAtPosition(const FVector Position) const;
 	UFUNCTION(BlueprintCallable)
-	void Shoot();
+	void SetAimPitch(const float Pitch) const;
+	UFUNCTION(BlueprintCallable)
+	void Shoot(const bool UseNormalDamage);
 	UFUNCTION(BlueprintCallable)
 	void Reload();
 	UFUNCTION(BlueprintCallable)
-	void MoveTo(const FVector Position);
+	void MoveTo(const FVector Position, const int Speed = -1, const int Stop = -1);
 	UFUNCTION(BlueprintCallable)
 	FVector GetKiteLocation() const;
 	UFUNCTION(BlueprintCallable)
 	FVector GetPatrolLocation() const;
+	UFUNCTION(BlueprintCallable)
+	FVector GetStrafeLocation(const int State) const;
 	UFUNCTION(BlueprintCallable)
 	bool HasTarget() const;
 	UFUNCTION(BlueprintCallable)
@@ -66,11 +71,11 @@ public:
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponBaseLeft;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponLookAtLeft;
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponBaseRight;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponLookAtRight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -95,6 +100,13 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool CanKite = true;
+	UPROPERTY(BlueprintReadWrite)
+	bool CanStrafe = true;
+	UPROPERTY(BlueprintReadWrite)
+	bool IsStrafing = false;
+
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
 
@@ -110,18 +122,23 @@ private:
 	FVector Destination;
 	FVector TargetVelocity;
 	FRotator TargetRotation;
-	const int MovementSpeed = 700;
+
+	const int DefaultMovementSpeed = 700;
+	int MovementSpeed = DefaultMovementSpeed;
 	const float TargetEaseDistance = 200.0f;
 	const float TargetEaseMargin = 10.0f;
 	const float TargetEaseBlend = 5.0f;
-	const float Acceleration = 0.5f;
-	const float Deceleration = 1.5f;
-	const int StopDistance = 100;
+	const float Acceleration = 1.0f;
+	const float Deceleration = 2.0f;
+	const int DefaultStopDistance = 100;
+	int StopDistance = DefaultStopDistance;
 	const int ObstacleAvoidanceDistance = 200;
 	const float ObstacleAvoidanceForce = 20.0f;
-	const float RotationSpeed = 2.0f;
+	const float RotationSpeed = 4.0f;
 	const float PatrolPitch = 10.0f;
 	const float PatrolYaw = 180.0f;
+	const int PatrolMin = 500;
+	const int PatrolMax = 1000;
 	const TArray<FRotator> LidarDirections =
 	{
 		FRotator(0, 0, 0),
@@ -134,11 +151,15 @@ private:
 	};
 
 	float Health = 0.0f;
-	const float MaxHealth = 10.0f;
-	const float Damage = 1.0f;
+	const float MaxHealth = 14.0f;
+	const float Damage = 2.0f;
+	const float StrafeDamage = 3.0f;
 	const int MaxAmmo = 4;
 	const float AccuracyMargin = 3.0f;
 	const int AimPitch = 25;
 	const float AimYawCorrection = 3.0f;
-	const int KiteYawDegree = 40;
+	const int KiteYaw = 40;
+	const int StrafeDistance = 1800;
+	const int StrafePitch = 12;
+	const int StrafeOffset = 400;
 };
