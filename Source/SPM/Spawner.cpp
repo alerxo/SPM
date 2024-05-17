@@ -249,6 +249,31 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 	int num = FMath::RandRange(0, Weight);
 	for(FEnemyWeight Type : WeightList)
 	{
+		FEnemyStats& EnemyStats = MasterMind->AllEnemyStats[Type.EnemyEnum.GetValue()];
+		int index = Type.EnemyEnum.GetValue();
+		num -= EnemyStats.Weight;
+		if(num <= 0)
+		{
+			Enemy = Type;
+			return Type.BehaviorTree;
+		}
+		
+	}
+	Enemy = SpiderWeight;
+	return SpiderWeight.BehaviorTree;
+
+
+/*
+	int Weight = TotalWeight;
+	if(OverrideChance)
+	{
+		Enemy = OverrideEnemy;
+		return Enemy.BehaviorTree;
+	}
+	int num = FMath::RandRange(0, Weight);
+	for(FEnemyWeight Type : WeightList)
+	{
+		FEnemyStats& EnemyStats = MasterMind->AllEnemyStats[Type.EnemyEnum.GetValue()];
 		int index = Type.EnemyEnum.GetValue();
 		//UEnemiesEnum* temp = ListOfAllEnemieEnum[index];
 		num -= Type.Weight;
@@ -261,6 +286,7 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 	}
 	Enemy = SpiderWeight;
 	return SpiderWeight.BehaviorTree;
+	*/
 }
 
 

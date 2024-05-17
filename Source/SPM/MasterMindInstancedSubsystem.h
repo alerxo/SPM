@@ -18,7 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, FVector, info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDisengage, AEnemyBaseClass*, Sender);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Sender, FVector, Info);
 
-/*
+
 USTRUCT(Blueprintable)
 struct FEnemyStats
 {
@@ -27,11 +27,14 @@ struct FEnemyStats
 	int Killed;
 	UPROPERTY(BlueprintReadWrite)
 	int Amount;
-	
-	void IncrementKilled(){Killed++;};
-	void IncrementAmount(){Amount++;};
+	UPROPERTY(BlueprintReadWrite)
+	int TotalHits;
+	UPROPERTY(BlueprintReadWrite)
+	int Weight;
+	UPROPERTY(BlueprintReadWrite)
+	float DamageAmount;
 };
-*/
+
 
 UCLASS()
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
@@ -132,6 +135,14 @@ public:
 
 	
 	UFUNCTION(BlueprintCallable)
-	EEnemies GetEnemyType(TScriptInterface<IEnemyInterface> GeneralEnemy);
-	
+	TEnumAsByte<EEnemies> GetEnemyType(TScriptInterface<IEnemyInterface> GeneralEnemy);
+
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FEnemyStats> AllEnemyStats;
+
+
+	UFUNCTION(BlueprintCallable)
+	void IncreaseWeight(TEnumAsByte<EEnemies> Enemy);
+	UFUNCTION(BlueprintCallable)
+	void IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount);
 };

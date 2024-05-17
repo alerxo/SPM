@@ -25,13 +25,14 @@ public:
 
 	bool IsDead() const;
 	
-	EEnemies EnemyType;
+	TEnumAsByte<EEnemies> EnemyType; 
 	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void Investigate(FVector Location);
 
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	EEnemies GetEnemyType();
+	EEnemies GetEnemyTyp();
 	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void PlayerSeen();
