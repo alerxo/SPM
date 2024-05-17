@@ -248,7 +248,7 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChan
 		Enemy = OverrideEnemy;
 		return Enemy.BehaviorTree;
 	}
-	int num = FMath::RandRange(0, Weight);
+	float num = FMath::RandRange(0, Weight);
 	for(FEnemyWeight Type : WeightList)
 	{
 		FEnemyStats& EnemyStats = MasterMind->AllEnemyStats[Type.EnemyEnum.GetValue()];

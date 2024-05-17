@@ -30,7 +30,7 @@ struct FEnemyStats
 	UPROPERTY(BlueprintReadWrite)
 	int TotalHits;
 	UPROPERTY(BlueprintReadWrite)
-	int Weight;
+	double Weight;
 	UPROPERTY(BlueprintReadWrite)
 	float DamageAmount;
 };
@@ -74,14 +74,14 @@ public:
 	float Tokens;
 
 	UPROPERTY(BlueprintReadOnly)
-	int TotalEnemyWeight;
+	double TotalEnemyWeight;
 	UPROPERTY(BlueprintReadOnly)
 	int TotalEnemyAmount;
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateWeightAllAtOnce();
 	UFUNCTION(BlueprintCallable)
-	void UpdateWeight(int Amount);
+	void UpdateWeight(double Amount);
 	
 	UFUNCTION(BlueprintCallable)
 	FVector GetInvestigationLocation() const;
@@ -171,7 +171,7 @@ public:
 	 * @param Amount
 	 */
 	UFUNCTION(BlueprintCallable)
-	void IncreaseWeight(TEnumAsByte<EEnemies> Enemy, int Amount);
+	void IncreaseWeight(TEnumAsByte<EEnemies> Enemy, double Amount);
 	/**
 	 * Increase The Total Damage Amount for the Enemy Type
 	 * @param Enemy 
@@ -179,11 +179,15 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount);
-	UFUNCTION(BlueprintCallable)
-	void IncreasEnemyAmount(TEnumAsByte<EEnemies> Enemy);
 
 	UFUNCTION(BlueprintCallable)
+	void IncreasEnemyAmount(TEnumAsByte<EEnemies> Enemy);
+	UFUNCTION(BlueprintCallable)
+	void IncreasaEnemyAmount(FEnemyStats& EnemyStats);
+	UFUNCTION(BlueprintCallable)
 	void IncreaseEnemyKilled(TEnumAsByte<EEnemies> Enemy);
+	UFUNCTION(BlueprintCallable)
+	FEnemyStats CreateEnemyStats(double Weight);
 
 	/**
 	 * Takes the Enemy Type and changes The Weight Bassed on Killed And Damage
