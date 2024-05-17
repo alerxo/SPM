@@ -99,6 +99,11 @@ void UMasterMindInstancedSubsystem::IncreaseWeight(TEnumAsByte<EEnemies> Enemy)
 	AllEnemyStats[Enemy].Weight++;
 	UE_LOG(LogTemp, Warning, TEXT("Enemy After Weight Increase %i"), AllEnemyStats[Enemy].Weight);
 }
+void UMasterMindInstancedSubsystem::IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount)
+{
+	AllEnemyStats[Enemy].DamageAmount += Amount;
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Damage Amount %f"),AllEnemyStats[Enemy].DamageAmount);
+}
 
 
 
