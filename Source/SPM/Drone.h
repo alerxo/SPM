@@ -21,7 +21,7 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
@@ -71,11 +71,11 @@ public:
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponBaseLeft;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponLookAtLeft;
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* WeaponBaseRight;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponLookAtRight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -100,6 +100,13 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	FVector Velocity;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool CanKite = true;
+	UPROPERTY(BlueprintReadWrite)
+	bool CanStrafe = true;
+	UPROPERTY(BlueprintReadWrite)
+	bool IsStrafing = false;
+
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
 
@@ -118,11 +125,11 @@ private:
 
 	const int DefaultMovementSpeed = 700;
 	int MovementSpeed = DefaultMovementSpeed;
-	const float TargetEaseDistance = 150.0f;
-	const float TargetEaseMargin = 5.0f;
+	const float TargetEaseDistance = 200.0f;
+	const float TargetEaseMargin = 10.0f;
 	const float TargetEaseBlend = 5.0f;
-	const float Acceleration = 0.5f;
-	const float Deceleration = 1.5f;
+	const float Acceleration = 1.0f;
+	const float Deceleration = 2.0f;
 	const int DefaultStopDistance = 100;
 	int StopDistance = DefaultStopDistance;
 	const int ObstacleAvoidanceDistance = 200;
@@ -151,5 +158,8 @@ private:
 	const float AccuracyMargin = 3.0f;
 	const int AimPitch = 25;
 	const float AimYawCorrection = 3.0f;
-	const int KiteYaw = 55;
+	const int KiteYaw = 40;
+	const int StrafeDistance = 1800;
+	const int StrafePitch = 12;
+	const int StrafeOffset = 400;
 };

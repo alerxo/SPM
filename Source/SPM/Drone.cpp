@@ -26,6 +26,8 @@ ADrone::ADrone()
 	WeaponBaseRight->SetupAttachment(RootComponent);
 	WeaponLookAtRight = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLookAtRight"));
 	WeaponLookAtRight->SetupAttachment(WeaponBaseRight);
+
+	EnemyType = EDrone;
 }
 
 void ADrone::BeginPlay()
@@ -65,7 +67,7 @@ void ADrone::Rotate(const float DeltaTime)
 		MovementDirection = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Destination);
 	}
 
-	TargetRotation = Target ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation()) : MovementDirection;
+	TargetRotation = Target && !IsStrafing ? UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation()) : MovementDirection;
 	const FRotator Rotation = UKismetMathLibrary::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, RotationSpeed);
 	Root->SetWorldRotation(FRotator(0, Rotation.Yaw, 0));
 }
@@ -163,7 +165,7 @@ FVector ADrone::GetKiteLocation() const
 
 	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Player->GetActorLocation(), GetActorLocation());
 	Rotation.Pitch = FMath::RandRange(0, AimPitch);
-	Rotation.Yaw = Rotation.Yaw + FMath::RandRange(-KiteYaw, KiteYaw);
+	Rotation.Yaw = Rotation.Yaw + (FMath::RandRange(KiteYaw / 2, KiteYaw) * (FMath::RandBool() ? -1 : 1));
 	const FVector Direction = Rotation.RotateVector(FVector::ForwardVector);
 
 	return Player->GetActorLocation() + Direction * (AttackRange - FMath::RandRange(0, KiteRange));
@@ -189,12 +191,13 @@ FVector ADrone::GetStrafeLocation(const int State) const
 	{
 	case 0:
 		Rotation = UKismetMathLibrary::FindLookAtRotation(Player->GetActorLocation(), GetActorLocation());
-		Rotation.Pitch = AimPitch;
-		return Player->GetActorLocation() + Rotation.RotateVector(FVector::ForwardVector) * (AttackRange + KiteRange);
+		Rotation.Pitch = StrafePitch;
+		return Player->GetActorLocation() + Rotation.RotateVector(FVector::ForwardVector) * StrafeDistance;
 
 	case 1:
 		Rotation = UKismetMathLibrary::FindLookAtRotation(Player->GetActorLocation(), GetActorLocation());
-		return Player->GetActorLocation() + FVector(0, 0, 400) + Rotation.RotateVector(FVector::ForwardVector) * -300;
+		Rotation.Pitch = 0;
+		return Player->GetActorLocation() + FVector(0, 0, StrafeOffset) + Rotation.RotateVector(FVector::ForwardVector) * -StrafeOffset;
 
 	case 2:
 		return GetKiteLocation();
