@@ -134,8 +134,12 @@ public:
 
 	
 	UFUNCTION(BlueprintCallable)
-	EEnemies GetEnemyType(TScriptInterface<IEnemyInterface> GeneralEnemy);
+	TEnumAsByte<EEnemies> GetEnemyType(TScriptInterface<IEnemyInterface> GeneralEnemy);
 
 	UPROPERTY(BlueprintReadWrite)
-	TArray<FEnemyStats> AllEnemyStats; 
+	TArray<FEnemyStats> AllEnemyStats;
+
+
+	UFUNCTION(BlueprintCallable)
+	void IncreaseWeight(TEnumAsByte<EEnemies> Enemy);
 };
