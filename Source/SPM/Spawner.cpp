@@ -208,7 +208,7 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bo
 	{
 		Chosen = OverrideEnemy;	
 	}
-	
+	/*
 	switch(Chosen->GetValue())
 	{
 		case 0:
@@ -234,13 +234,15 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bo
 			break;
 	}
 	UE_LOG(LogTemp, Error, TEXT("No Enemy Found in Spawner::RandomEnemy"))
+	*/
 	return nullptr;
+	
 }
 
 
 UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChance, FEnemyWeight OverrideEnemy)
 {
-	int Weight = TotalWeight;
+	int const Weight = MasterMind->TotalEnemyWeight;
 	if(OverrideChance)
 	{
 		Enemy = OverrideEnemy;
