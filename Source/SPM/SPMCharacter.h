@@ -59,8 +59,7 @@ class ASPMCharacter : public ACharacter
 	UPROPERTY(EditAnywhere)
 	class UManaComponent* ManaComponent;
 
-	UPROPERTY(EditAnywhere)
-	class UHealthComponent* HealthComponent;
+	
 	/** Dash max count */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	int DashMaxCount = 1;
@@ -88,6 +87,8 @@ protected:
 	virtual void BeginPlay();
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UHealthComponent* HealthComponent;
 		
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
