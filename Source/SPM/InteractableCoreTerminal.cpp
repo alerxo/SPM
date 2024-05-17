@@ -6,6 +6,7 @@
 #include "BaseCore.h"
 #include "InteractableTerminal.h"
 #include "SPMGameInstanceSubsystem.h"
+#include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 
 // Called when the game starts or when spawned
@@ -46,6 +47,7 @@ void AInteractableCoreTerminal::Interact()
 	{
 		
 		UE_LOG(LogTemp, Warning, TEXT("Ainteractable Core Terminal"));
+		OnSave.Broadcast();
 		UGameplayStatics::OpenLevel(GetWorld(), LevelName);
 	}
 }
