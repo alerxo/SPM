@@ -30,8 +30,9 @@ struct FEnemyStats
 	UPROPERTY(BlueprintReadWrite)
 	int TotalHits;
 	UPROPERTY(BlueprintReadWrite)
-	int Weight; 
-	
+	int Weight;
+	UPROPERTY(BlueprintReadWrite)
+	float DamageAmount;
 };
 
 
@@ -142,4 +143,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void IncreaseWeight(TEnumAsByte<EEnemies> Enemy);
+	UFUNCTION(BlueprintCallable)
+	void IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount);
 };
