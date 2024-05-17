@@ -46,6 +46,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor> DeathNiagara;
+	
+	EEnemies GetEnemyType_Implementation(){return  EnemyType;};
 
 	bool CheckToSpawnPickup_Implementation() const;
 
