@@ -28,7 +28,6 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnSpawnOnCore OnSpawnOnCore;
 
-
 	//Enemy sends info to Master mind
 	UFUNCTION(BlueprintCallable)
 	void SendInfo(AEnemyBaseClass* Sender, FVector info);
