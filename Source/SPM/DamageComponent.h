@@ -7,8 +7,6 @@
 #include "DamageComponent.generated.h"
 
 
-enum EEnemies : int;
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API UDamageComponent : public UActorComponent
 {
