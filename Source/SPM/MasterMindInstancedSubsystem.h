@@ -7,6 +7,7 @@
 #include "EnemieEnum.h"
 #include "MasterMindInstancedSubsystem.generated.h"
 
+class UBehaviorTree;
 class IEnemyInterface;
 /**
  * 
@@ -45,7 +46,16 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	//Declare Delegate for sending Info to master mind 
+	UPROPERTY(BlueprintReadOnly)
+	int DecisionMeter;
+
+	UFUNCTION(BlueprintCallable)
+	void IncreaseDecisionMeter(int Amount);
+
+	UFUNCTION(BlueprintCallable)
+	void ResetDecisionMeter();
+	
+	//Declare Delegate for sending Info to master mind
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnSoundMade OnSoundMade;
 
@@ -93,36 +103,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="MySubSystem")
 	UMasterMindInstancedSubsystem* GetMasterMindInstancedSubsystem();
-
-	/*
-	//Nummber of enemies killed
-	UPROPERTY(BlueprintReadWrite)
-	int SpidersKilled = 0;
-	UPROPERTY(BlueprintReadWrite)
-	int DronesKilled = 0;
-	UPROPERTY(BlueprintReadWrite)
-	int WallbreakersKilled = 0;
-*/
-	//The amount for each Enemy
-	/*
-	UPROPERTY(BlueprintReadWrite)
-	int SpiderAmount = 0;
-	UPROPERTY(BlueprintReadWrite)
-	int DroneAmount = 0;
-	UPROPERTY(BlueprintReadWrite)
-	int WallbreakerAmount = 0;
-*/
-	/*
-	UPROPERTY(BlueprintReadWrite)
-	FEnemyStats SpiderStats;
-	UPROPERTY(BlueprintReadWrite)
-	FEnemyStats DroneStats;
-	UPROPERTY(BlueprintReadWrite)
-	FEnemyStats WallBreakerStats;
-
-	UFUNCTION(BlueprintCallable)
-	TArray<FEnemyStats> GetArrayOfStats();
-	*/
 
 	UFUNCTION(BlueprintCallable)
 	void SetUp();
@@ -190,9 +170,16 @@ public:
 	FEnemyStats CreateEnemyStats(double Weight);
 
 	/**
-	 * Takes the Enemy Type and changes The Weight Bassed on Killed And Damage
+	 * Takes the Enemy Type and changes The Weight Based on Killed And Damage
 	 * @param Enemy 
 	 */
 	UFUNCTION(BlueprintCallable)
 	double BalanceKilledAndDamage(TEnumAsByte<EEnemies> Enemy);
+	/**
+	 * Calculates the procentage of weight that an enemy type holds 
+	 * @param Enemy 
+	 * @return 
+	 */
+	UFUNCTION(BlueprintCallable)
+	double WeightProcentageOfEnemy(	TEnumAsByte<EEnemies> Enemy);
 };

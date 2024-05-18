@@ -196,5 +196,24 @@ FEnemyStats UMasterMindInstancedSubsystem::CreateEnemyStats(double Weight)
 }
 
 
+double UMasterMindInstancedSubsystem::WeightProcentageOfEnemy(TEnumAsByte<EEnemies> Enemy)
+{
+	if(!AllEnemyStats.IsEmpty())
+	{
+		return (AllEnemyStats[Enemy.GetIntValue()].Weight)/TotalEnemyWeight;	
+	}
+	UE_LOG(LogTemp, Error, TEXT("The list is Empty UMasterMindInstancedSubsystem::WeightProcentageOfEnemy"))
+	return 0.0;
+}
+
+void UMasterMindInstancedSubsystem::IncreaseDecisionMeter(int Amount)
+{
+	DecisionMeter += Amount;
+}
+
+void UMasterMindInstancedSubsystem::ResetDecisionMeter()
+{
+	DecisionMeter = 0;
+}
 
 
