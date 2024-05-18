@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraSystem.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "DroneProjectile.generated.h"
@@ -11,27 +12,32 @@ UCLASS()
 class SPM_API ADroneProjectile : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	ADroneProjectile();
 
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void OnCollision(const FHitResult& Result);
-
-	void SetDamage(float);
-	
-private:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UStaticMeshComponent* ProjectileMesh;
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	UProjectileMovementComponent* ProjectileMovement;
 
+public:	
+	UFUNCTION(BlueprintCallable)
+	void OnCollision(const FHitResult& Result);
+	void SetDamage(float);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UNiagaraSystem* HitParticle;
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<UDamageType> DamageType;
+
+private:
 	float Damage = 0;
 };
