@@ -10,6 +10,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "MasterMindInstancedSubsystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Physics/ImmediatePhysics/ImmediatePhysicsShared/ImmediatePhysicsCore.h"
 
 //varje Enemy när den skadar spelaren bestämer vilken Enum som den är i, Spider väljer ESpider
 //Med Detta 
@@ -111,6 +112,7 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, TSubclassOf<AActor> ActorT
 			FVector const Location = SpawnPoint->GetActorLocation() + (YOffset * Forward);
 			UE_LOG(LogTemp, Warning, TEXT("Location %s"), *SpawnPoint->GetActorLocation().ToString());
 			APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
+			
 			UE_LOG(LogTemp, Warning, TEXT("Forward %s"), *Forward.ToString());
 			UE_LOG(LogTemp, Warning, TEXT("Location %s"), *Location.ToString());
 			//Set a AI controller and behaviour tree to the enemy
@@ -195,7 +197,7 @@ void USpawner::RunDelete()
 UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, UEnemiesEnum* OverrideEnemy )
 {
 	const int32 Index = FMath::RandRange(0, ListRandom->Length() - 1);
-	UEnemiesEnum* Chosen = nullptr;
+	TEnumAsByte<EEnemies> Chosen = ESpider;
 	if(ListRandom->RandomListChance.IsValidIndex(Index))
 	{
 		Chosen = ListRandom->RandomListChance[Index];
@@ -206,7 +208,7 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bo
 	}
 	if(OverrideChance)
 	{
-		Chosen = OverrideEnemy;	
+		//Chosen = OverrideEnemy;	
 	}
 	/*
 	switch(Chosen->GetValue())
@@ -242,13 +244,13 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bo
 
 UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChance, FEnemyWeight OverrideEnemy)
 {
-	int const Weight = MasterMind->TotalEnemyWeight;
+	float const Weight = MasterMind->TotalEnemyWeight;
 	if(OverrideChance)
 	{
 		Enemy = OverrideEnemy;
 		return Enemy.BehaviorTree;
 	}
-	float num = FMath::RandRange(1, Weight);
+	float num = FMath::FRandRange(1.0, Weight);
 	for(FEnemyWeight Type : WeightList)
 	{
 		FEnemyStats& EnemyStats = MasterMind->AllEnemyStats[Type.EnemyEnum.GetValue()];
@@ -318,7 +320,7 @@ void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<UEnemiesEnum*> En
 		{
 			if(ListRandom->RandomListChance.IsValidIndex(i))
 			{
-				ListRandom->RandomListChance[i++] = Type;
+				//ListRandom->RandomListChance[i++] = Type;
 			}
 			
 		}
