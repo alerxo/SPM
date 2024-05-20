@@ -4,6 +4,7 @@
 #include "Spawner.h"
 
 #include "AIController.h"
+#include "EnemyInfo.h"
 #include "EnemyObjectPool.h"
 #include "SpawnPoints.h"
 #include "Spiderbot.h"
@@ -49,7 +50,7 @@ void USpawner::BeginPlay()
 	MasterMind = GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>();
 
 	//Add all enemies to weight list
-	WeightList={SpiderWeight, DroneWeight, WallBreakerWeight};
+	//WeightList={SpiderWeight, DroneWeight, WallBreakerWeight};
 	
 	Time = DefaultTime;
 	CurrentObjPoolPosition = 0;
@@ -58,10 +59,12 @@ void USpawner::BeginPlay()
 	TArray<UEnemiesEnum*>Enemies = {SpiderEnum,DroneEnum, WallBreakerEnum};
 	ChangeSpawnChance(Chance, Enemies);
 	*/
-	
+
+	/*
 	SpiderWeight.EnemyEnum = ESpider;
 	DroneWeight.EnemyEnum = EDrone;
 	WallBreakerWeight.EnemyEnum = EWallbreaker;
+	*/
 }
 
 
@@ -96,7 +99,7 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 	for (ASpawnPoints* SpawnPoint : SpawnLocations)
 	{
 		const float Dist = FVector::Dist(PlayerPos, SpawnPoint->GetActorLocation());
-		
+		UE_LOG(LogTemp, Warning, TEXT("Dist: %f"), Dist)
 		if(Dist <= MaxRange && Dist >= Range)
 		{
 			//Create Enemy And set the Ai behaviour on it
@@ -239,36 +242,36 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bo
 }
 
 
-UBehaviorTree* USpawner::RandomWithWeight(FEnemyWeight& Enemy, bool OverrideChance, FEnemyWeight OverrideEnemy)
+UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChance, FEnemyStats OverrideEnemy)
 {
 	float const Weight = MasterMind->TotalEnemyWeight;
 	if(OverrideChance)
 	{
 		Enemy = OverrideEnemy;
-		return Enemy.BehaviorTree;
+		return Enemy.EnemyTree;
 	}
 	float num = FMath::FRandRange(1.0, Weight);
-	for(FEnemyWeight Type : WeightList)
+	for(FEnemyStats Type : ReworkList)
 	{
-		FEnemyStats& EnemyStats = MasterMind->AllEnemyStats[Type.EnemyEnum.GetValue()];
+		FEnemyStats& EnemyStats = MasterMind->AllEnemyStats[Type.EnemyType.GetValue()];
 		if(EnemyStats.Weight <= 0)
 		{
 			continue;
 		}
 		
-		int index = Type.EnemyEnum.GetValue();
+		int index = Type.EnemyType.GetValue();
 		UE_LOG(LogTemp,Error, TEXT("Did Not Find Choose Correctly, Index: %i, Weight: %d"), index, EnemyStats.Weight)
 		num -= EnemyStats.Weight;
 		if(num <= 0)
 		{
 			Enemy = Type;
-			return Type.BehaviorTree;
+			return Type.EnemyTree;
 		}
 		
 	}
 	UE_LOG(LogTemp,Error, TEXT("Did Not Find Choose Correctly, WeightTotal: %i"), Weight)
-	Enemy = SpiderWeight;
-	return SpiderWeight.BehaviorTree;
+	Enemy =  MasterMind->AllEnemyStats[0];
+	return Enemy.EnemyTree;
 
 
 /*
@@ -322,6 +325,27 @@ void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<UEnemiesEnum*> En
 			
 		}
 		ChanceIndex++;
+	}
+}
+
+void USpawner::SpawnAtSpawnPoint(ASpawnPoints* SpawnPoint, TSubclassOf<AActor> ActorToSpawn, UBehaviorTree* BehaviourTree, AActor* Owner)
+{
+	
+	FRotator const Rotator = FRotator::ZeroRotator;
+
+	//Params for the spawning
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = Owner;
+	SpawnParameters.SpawnCollisionHandlingOverride = false ? ESpawnActorCollisionHandlingMethod::AlwaysSpawn : ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	
+	FVector Forward = SpawnPoint->GetActorForwardVector();
+	Forward.X = +Forward.X;
+	FVector const Location = SpawnPoint->GetActorLocation() + (YOffset * Forward);
+	APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
+	//Set a AI controller and behaviour tree to the enemy
+	if(Enemy && BehaviourTree)
+	{
+		SpawnAI(Enemy, BehaviourTree);
 	}
 }
 

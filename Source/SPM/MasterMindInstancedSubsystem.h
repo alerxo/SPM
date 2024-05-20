@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "EnemieEnum.h"
+#include "EnemyInfo.h"
 #include "MasterMindInstancedSubsystem.generated.h"
 
 class UBehaviorTree;
@@ -20,21 +21,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDisengage, AEnemyBaseClass*, Send
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Sender, FVector, Info);
 
 
-USTRUCT(Blueprintable)
-struct FEnemyStats
-{
-	GENERATED_BODY()
-	UPROPERTY(BlueprintReadWrite)
-	int Killed;
-	UPROPERTY(BlueprintReadWrite)
-	int Amount;
-	UPROPERTY(BlueprintReadWrite)
-	int TotalHits;
-	UPROPERTY(BlueprintReadWrite)
-	double Weight;
-	UPROPERTY(BlueprintReadWrite)
-	float DamageAmount;
-};
 
 
 UCLASS()
@@ -45,7 +31,7 @@ class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
-
+	
 	UPROPERTY(BlueprintReadOnly)
 	int DecisionMeter;
 

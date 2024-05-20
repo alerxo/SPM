@@ -3,7 +3,11 @@
 //Give interface an EnemyType
 //Each Enemy Give it self the Enum it is in
 #include "MasterMindInstancedSubsystem.h"
+
+#include "EnemyInfo.h"
 #include "EnemyInterface.h"
+#include "Spawner.h"
+
 
 //Initialize SubSystem
 void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -15,7 +19,6 @@ void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collect
 	WallBreakerEnum = UEnemiesEnum::Instiantiate(EWallbreaker);
 	*/
 	AllEnemyStats.Init(FEnemyStats(0,0,0,0,0), 3);
-	
 }
 
 void UMasterMindInstancedSubsystem::SetUp()
