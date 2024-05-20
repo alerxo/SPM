@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDead);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API UHealthComponent : public UActorComponent
 {
@@ -20,6 +22,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+
+	UPROPERTY(BlueprintAssignable)
+	FOnDead OnDead;
+	
 	//Setter float that sets health
 	void SetHealth(float Value){ DefaultHealth = Value;}
 
@@ -50,6 +56,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DisableTakeDamage();
+
+	UFUNCTION(BlueprintCallable)
+	float GetDefaultHealth() const;
 	
 private:
 	//Float property for DefaultHealth that is used for removing Healt Points

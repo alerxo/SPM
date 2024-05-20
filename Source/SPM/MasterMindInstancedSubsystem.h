@@ -72,6 +72,16 @@ public:
 	
 	//Amount of tokens
 	float Tokens;
+
+	UPROPERTY(BlueprintReadOnly)
+	int TotalEnemyWeight;
+	UPROPERTY(BlueprintReadOnly)
+	int TotalEnemyAmount;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateWeightAllAtOnce();
+	UFUNCTION(BlueprintCallable)
+	void UpdateWeight(int Amount);
 	
 	UFUNCTION(BlueprintCallable)
 	FVector GetInvestigationLocation() const;
@@ -84,6 +94,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="MySubSystem")
 	UMasterMindInstancedSubsystem* GetMasterMindInstancedSubsystem();
 
+	/*
 	//Nummber of enemies killed
 	UPROPERTY(BlueprintReadWrite)
 	int SpidersKilled = 0;
@@ -91,15 +102,16 @@ public:
 	int DronesKilled = 0;
 	UPROPERTY(BlueprintReadWrite)
 	int WallbreakersKilled = 0;
-
+*/
 	//The amount for each Enemy
+	/*
 	UPROPERTY(BlueprintReadWrite)
 	int SpiderAmount = 0;
 	UPROPERTY(BlueprintReadWrite)
 	int DroneAmount = 0;
 	UPROPERTY(BlueprintReadWrite)
 	int WallbreakerAmount = 0;
-
+*/
 	/*
 	UPROPERTY(BlueprintReadWrite)
 	FEnemyStats SpiderStats;
@@ -133,16 +145,50 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float DivisionKilledAmount(float Killed ,float Amount){return Killed/Amount;}
 
-	
+	/**
+	 * Send The interface Of the Class of Type IEnemyInterface,
+	 * Will Return the EEnemeis type it is
+	 *
+	 * The Enemy Needs To Set The EnemyType
+	 * @param GeneralEnemy 
+	 * @return 
+	 */
 	UFUNCTION(BlueprintCallable)
 	TEnumAsByte<EEnemies> GetEnemyType(TScriptInterface<IEnemyInterface> GeneralEnemy);
 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FEnemyStats> AllEnemyStats;
 
-
+	/**
+	 * Increases The General Hits done to Player by the type of Enemy
+	 * @param Enemy 
+	 */
 	UFUNCTION(BlueprintCallable)
-	void IncreaseWeight(TEnumAsByte<EEnemies> Enemy);
+	void IncreaseHit(TEnumAsByte<EEnemies> Enemy);
+	/**
+	 * Increases The General Weight done to Player by the type of Enemy
+	 * @param Enemy
+	 * @param Amount
+	 */
+	UFUNCTION(BlueprintCallable)
+	void IncreaseWeight(TEnumAsByte<EEnemies> Enemy, int Amount);
+	/**
+	 * Increase The Total Damage Amount for the Enemy Type
+	 * @param Enemy 
+	 * @param Amount 
+	 */
 	UFUNCTION(BlueprintCallable)
 	void IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount);
+	UFUNCTION(BlueprintCallable)
+	void IncreasEnemyAmount(TEnumAsByte<EEnemies> Enemy);
+
+	UFUNCTION(BlueprintCallable)
+	void IncreaseEnemyKilled(TEnumAsByte<EEnemies> Enemy);
+
+	/**
+	 * Takes the Enemy Type and changes The Weight Bassed on Killed And Damage
+	 * @param Enemy 
+	 */
+	UFUNCTION(BlueprintCallable)
+	double BalanceKilledAndDamage(TEnumAsByte<EEnemies> Enemy);
 };
