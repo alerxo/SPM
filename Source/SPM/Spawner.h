@@ -31,7 +31,8 @@ struct FEnemyWeight{
 	
 	UPROPERTY(VisibleAnywhere, Category="Spawning", BlueprintReadWrite)
 	float Range;
-	
+	UPROPERTY(VisibleAnywhere, Category="Spawning", BlueprintReadWrite)
+	float MaxRange; 
 	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	TEnumAsByte<EEnemies> EnemyEnum; 
 };
@@ -79,7 +80,7 @@ public:
 	int SpawnAtLocation(int TotalTokens);
 
 	UFUNCTION(BlueprintCallable)
-	ASpawnPoints* BestSpawnByRange(float Range, TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree, AActor* Owner);
+	ASpawnPoints* BestSpawnByRange(float Range,  float MaxRange ,TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree, AActor* Owner);
 
 	APawn* Spawn(TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree);
 

@@ -12,13 +12,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Physics/ImmediatePhysics/ImmediatePhysicsShared/ImmediatePhysicsCore.h"
 
-//varje Enemy när den skadar spelaren bestämer vilken Enum som den är i, Spider väljer ESpider
-//Med Detta 
-
-//I mastermind hämta en lista som har alla enemy types
-// Genom en Enum som är då sig själv index till listan
-
-//
 
 
 // Sets default values for this component's properties
@@ -83,14 +76,14 @@ void USpawner::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 }
 
 //Method for deciding the best Spawn Position
-ASpawnPoints* USpawner::BestSpawnByRange(float Range, TSubclassOf<AActor> ActorToSpawn, UBehaviorTree* BehaviourTree, AActor* Owner)
+ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassOf<AActor> ActorToSpawn, UBehaviorTree* BehaviourTree, AActor* Owner)
 {
 	//PlayerPos to measure Distance between Spawn point
 	const FVector PlayerPos = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation();
 	//if the best solution not found return the best of all Spawn points
-	ASpawnPoints* CurrentBest = nullptr;
+	ASpawnPoints* CurrentBest = SpawnLocations[0];
 	//last distance
-	float LastDist = 0;
+	float LastDist = FVector::Dist(PlayerPos,SpawnLocations[0]->GetActorLocation());
 	//Create Rotator 
 	FRotator const Rotator = FRotator::ZeroRotator;
 
@@ -103,34 +96,38 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, TSubclassOf<AActor> ActorT
 	for (ASpawnPoints* SpawnPoint : SpawnLocations)
 	{
 		const float Dist = FVector::Dist(PlayerPos, SpawnPoint->GetActorLocation());
-		if(Range < Dist)
+		
+		if(Dist <= MaxRange && Dist >= Range)
 		{
 			//Create Enemy And set the Ai behaviour on it
-
+			UE_LOG(LogTemp, Warning, TEXT("Direct Spawn"))
 			FVector Forward = SpawnPoint->GetActorForwardVector();
 			Forward.X = +Forward.X;
 			FVector const Location = SpawnPoint->GetActorLocation() + (YOffset * Forward);
-			UE_LOG(LogTemp, Warning, TEXT("Location %s"), *SpawnPoint->GetActorLocation().ToString());
 			APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
-			
-			UE_LOG(LogTemp, Warning, TEXT("Forward %s"), *Forward.ToString());
-			UE_LOG(LogTemp, Warning, TEXT("Location %s"), *Location.ToString());
 			//Set a AI controller and behaviour tree to the enemy
 			SpawnAI(Enemy, BehaviourTree);
-			
 			return SpawnPoint;
 		}
+			
 		if(Dist > LastDist)
 		{
 			CurrentBest = SpawnPoint;
 			LastDist = Dist;
 		}
+
 	}
-	//Create Enemy And set the Ai behaviour on it
-	FVector const Location = CurrentBest->GetActorLocation() + ( YOffset * CurrentBest->GetActorForwardVector());
-	APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
-	//Set a AI controller and behaviour tree to the enemy
-	SpawnAI(Enemy, BehaviourTree);
+	
+	if(CurrentBest)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Current Best Spawn"))
+		//Create Enemy And set the Ai behaviour on it
+		FVector const Location = CurrentBest->GetActorLocation() + ( YOffset * CurrentBest->GetActorForwardVector());
+		APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
+		//Set a AI controller and behaviour tree to the enemy
+		SpawnAI(Enemy, BehaviourTree);
+	}
+
 	
 	return CurrentBest;
 }
