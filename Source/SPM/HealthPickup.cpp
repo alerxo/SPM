@@ -27,6 +27,5 @@ void AHealthPickup::Tick(float DeltaTime)
 
 float AHealthPickup::GetHealthToRestore()
 {
-	UE_LOG(LogTemp, Warning, TEXT("%f"), HealthToRestore);
 	return HealthToRestore;
 }
