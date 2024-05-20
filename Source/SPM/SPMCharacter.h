@@ -26,8 +26,8 @@ class ASPMCharacter : public ACharacter
 	class USPMGameInstanceSubsystem* SubSystem;
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
-	USkeletalMeshComponent* Mesh1P;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Mesh)
+	//USkeletalMeshComponent* Mesh1P;
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -82,6 +82,10 @@ class ASPMCharacter : public ACharacter
 	
 public:
 	ASPMCharacter();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Mesh)
+	USkeletalMeshComponent* Mesh1P;
+
 
 protected:
 	virtual void BeginPlay();
