@@ -5,7 +5,9 @@
 #include "MasterMindInstancedSubsystem.h"
 
 #include "EnemyInfo.h"
+#include "EnemieEnum.h"
 #include "EnemyInterface.h"
+
 #include "Spawner.h"
 
 
@@ -18,7 +20,8 @@ void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collect
 	DroneEnum = UEnemiesEnum::Instiantiate(EDrone);
 	WallBreakerEnum = UEnemiesEnum::Instiantiate(EWallbreaker);
 	*/
-	AllEnemyStats.Init(FEnemyStats(0,0,0,0,0), 3);
+	
+	AllEnemyStats.Init(FEnemyStats(0,0,0,0,0), UEnemiesEnum::Size);
 }
 
 void UMasterMindInstancedSubsystem::SetUp()
@@ -54,19 +57,9 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 	if(Tokens > 0)
 	{
 		Tokens--;
-		return  true;
+		return true;
 	}
 	return false;
-}
-
-float UMasterMindInstancedSubsystem::GetTokens()
-{
-	return Tokens;
-}
-
-void UMasterMindInstancedSubsystem::SetTokens(float Amount)
-{
-	Tokens = Amount;
 }
 
 FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const 
@@ -77,8 +70,6 @@ FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const
 void UMasterMindInstancedSubsystem::SetInvestigationLocation(FVector Vector)
 {
 	InvestigationLocation = Vector;
-
-	
 }
 
 /*
@@ -103,8 +94,10 @@ void UMasterMindInstancedSubsystem::IncreaseWeight(TEnumAsByte<EEnemies> Enemy, 
 		TotalEnemyWeight+= Amount;
 		UE_LOG(LogTemp, Warning, TEXT("Enemy After Weight Increase %f"), AllEnemyStats[Enemy].Weight);
 	}
-
 }
+
+
+
 void UMasterMindInstancedSubsystem::IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount)
 {
 	if(!AllEnemyStats.IsEmpty())
@@ -173,7 +166,7 @@ double UMasterMindInstancedSubsystem::BalanceKilledAndDamage(TEnumAsByte<EEnemie
 
 		if(Amount > 0)
 		{
-			KillPerAmount =(double)KilledVal/ (double)Amount;
+			KillPerAmount = (double)KilledVal/ (double)Amount;
 		}
 		
 		UE_LOG(LogTemp, Warning , TEXT("Killed = %i"), KilledVal)
@@ -188,10 +181,16 @@ void UMasterMindInstancedSubsystem::IncreasaEnemyAmount(FEnemyStats& EnemyStats)
 	EnemyStats.Amount++;
 }
 
-FEnemyStats UMasterMindInstancedSubsystem::CreateEnemyStats(double Weight)
+void UMasterMindInstancedSubsystem::CreateEnemyStats(double Weight, TEnumAsByte<EEnemies> Enemy)
 {
-	FEnemyStats EnemyStats = FEnemyStats(0,0,0,Weight,0);
-	return EnemyStats;
+	if(AllEnemyStats.IsValidIndex(Enemy.GetIntValue()))
+	{
+		AllEnemyStats[Enemy.GetIntValue()].Weight = Weight;
+		AllEnemyStats[Enemy.GetIntValue()].EnemyType = Enemy;
+		UpdateWeight(Weight);
+		return;
+	}
+	UE_LOG(LogTemp, Error, TEXT("UMasterMindInstancedSubsystem::CreateEnemyStats Index is not Valid"))
 }
 
 
@@ -200,8 +199,7 @@ double UMasterMindInstancedSubsystem::WeightProcentageOfEnemy(TEnumAsByte<EEnemi
 	if(!AllEnemyStats.IsEmpty())
 	{
 		return (AllEnemyStats[Enemy.GetIntValue()].Weight)/TotalEnemyWeight;	
-	}
-	UE_LOG(LogTemp, Error, TEXT("The list is Empty UMasterMindInstancedSubsystem::WeightProcentageOfEnemy"))
+	}UE_LOG(LogTemp, Error, TEXT("The list is Empty UMasterMindInstancedSubsystem::WeightProcentageOfEnemy"))
 	return 0.0;
 }
 
@@ -213,6 +211,20 @@ void UMasterMindInstancedSubsystem::IncreaseDecisionMeter(int Amount)
 void UMasterMindInstancedSubsystem::ResetDecisionMeter()
 {
 	DecisionMeter = 0;
+}
+
+void UMasterMindInstancedSubsystem::DecreaseTokens(int Amount)
+{
+	if(!(Amount > Tokens))
+	{
+		Tokens -= Amount;
+	}
+	UE_LOG(LogTemp, Error, TEXT("OverSpending on Tokens UMasterMindInstancedSubsystem::DecreaseTokens"))
+}
+
+void UMasterMindInstancedSubsystem::IncreaseTokens(int Amount)
+{
+	Tokens += Amount;
 }
 
 

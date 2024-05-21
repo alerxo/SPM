@@ -5,8 +5,8 @@
 
 #include "EnemieEnum.h"
 #include "HealthComponent.h"
+#include "MasterMindInstancedSubsystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
 // Sets default values
 AWallbreaker::AWallbreaker()
 {
@@ -23,6 +23,7 @@ void AWallbreaker::BeginPlay()
 	Super::BeginPlay();
 
 	MaxWalkSpeed = this->GetComponentByClass<UCharacterMovementComponent>()->MaxWalkSpeed;
+	GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->IncreasEnemyAmount(EWallbreaker);
 }
 
 // Called every frame
