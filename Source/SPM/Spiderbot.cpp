@@ -3,6 +3,7 @@
 
 #include "Spiderbot.h"
 #include "EnemieEnum.h"
+#include "MasterMindInstancedSubsystem.h"
 #include "SpiderbotProjectile.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -22,7 +23,8 @@ ASpiderbot::ASpiderbot()
 void ASpiderbot::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->IncreasEnemyAmount(ESpider);
 }
 
 // Called every frame
