@@ -19,6 +19,8 @@ struct FEnemyStats
 	int TotalHits = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	double Weight = 0.0;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int TokenCost;
 	UPROPERTY(BlueprintReadWrite)
 	float DamageAmount = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
