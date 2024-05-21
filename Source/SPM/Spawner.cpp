@@ -109,7 +109,11 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 			FVector const Location = SpawnPoint->GetActorLocation() + (YOffset * Forward);
 			APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
 			//Set a AI controller and behaviour tree to the enemy
-			SpawnAI(Enemy, BehaviourTree);
+			if(Enemy != nullptr)
+			{
+				SpawnAI(Enemy, BehaviourTree);
+			}
+			
 			return SpawnPoint;
 		}
 			
@@ -128,7 +132,7 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 		FVector const Location = CurrentBest->GetActorLocation() + ( YOffset * CurrentBest->GetActorForwardVector());
 		APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
 		//Set a AI controller and behaviour tree to the enemy
-		if(Enemy != NULL)
+		if(Enemy != nullptr)
 		{
 			SpawnAI(Enemy, BehaviourTree);
 		}
@@ -264,7 +268,7 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChanc
 		}
 		
 		int index = Type.EnemyType.GetValue();
-		UE_LOG(LogTemp,Error, TEXT("Did Not Find Choose Correctly, Index: %i, Weight: %d"), index, EnemyStats.Weight)
+		UE_LOG(LogTemp,Error, TEXT("Index: %i, Weight: %d"), index, EnemyStats.Weight)
 		num -= EnemyStats.Weight;
 		if(num <= 0)
 		{

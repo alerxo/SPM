@@ -74,6 +74,12 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int TotalEnemyAmount;
 
+	UPROPERTY(BlueprintReadOnly)
+	int TotalTokens;
+
+	void DecreaseTokens(int Amount);
+	void IncreaseTokens(int Amount);
+
 	UFUNCTION(BlueprintCallable)
 	void UpdateWeightAllAtOnce();
 	UFUNCTION(BlueprintCallable)
@@ -150,7 +156,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void IncreaseEnemyKilled(TEnumAsByte<EEnemies> Enemy);
 	UFUNCTION(BlueprintCallable)
-	FEnemyStats CreateEnemyStats(double Weight);
+	void CreateEnemyStats(double Weight, TEnumAsByte<EEnemies> Enemy);
 
 	/**
 	 * Takes the Enemy Type and changes The Weight Based on Killed And Damage
