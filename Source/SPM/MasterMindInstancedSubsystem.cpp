@@ -87,10 +87,6 @@ TArray<FEnemyStats> UMasterMindInstancedSubsystem::GetArrayOfStats()
 	return TArray<FEnemyStats>{SpiderStats, DroneStats, WallBreakerStats};
 }
 */
-void UMasterMindInstancedSubsystem::Hit(UEnemiesEnum* Enemy)
-{
-	Enemy->MostTotalHits++; 
-}
 
 //Get the Enemy Type of the Enemy
 TEnumAsByte<EEnemies> UMasterMindInstancedSubsystem::GetEnemyType( TScriptInterface<IEnemyInterface> GeneralEnemy)
