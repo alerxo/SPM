@@ -62,12 +62,14 @@ public:
 	TArray<FEnemyStats> ReworkList;
 
 
+	/*
 	UPROPERTY()
 	UEnemiesEnum*  SpiderEnum;
 	UPROPERTY()
 	UEnemiesEnum*   DroneEnum;
 	UPROPERTY()
 	UEnemiesEnum*  WallBreakerEnum;
+	*/
 	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

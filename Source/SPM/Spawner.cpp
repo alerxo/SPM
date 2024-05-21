@@ -128,7 +128,11 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 		FVector const Location = CurrentBest->GetActorLocation() + ( YOffset * CurrentBest->GetActorForwardVector());
 		APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
 		//Set a AI controller and behaviour tree to the enemy
-		SpawnAI(Enemy, BehaviourTree);
+		if(Enemy != NULL)
+		{
+			SpawnAI(Enemy, BehaviourTree);
+		}
+
 	}
 
 	
@@ -303,9 +307,11 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChanc
 
 void USpawner::SetSpawnChances()
 {
+	/*
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
 	TArray<UEnemiesEnum*>Enemies{SpiderEnum, DroneEnum, WallBreakerEnum};
 	ChangeSpawnChance(Chance, Enemies);
+	*/
 }
 
 

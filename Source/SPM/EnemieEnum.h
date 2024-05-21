@@ -18,6 +18,7 @@ class UEnemiesEnum : public UObject
 	GENERATED_BODY()
 public:
 	//UEnemiesEnum(const UEnemiesEnum& other);
+	/*
 	UEnemiesEnum();
 	UEnemiesEnum(TEnumAsByte<EEnemies> EnemyType);
 
@@ -33,7 +34,7 @@ public:
 	UFUNCTION()
 	TEnumAsByte<EEnemies>  GetValue();
 	
-	/*
+	
 	UPROPERTY()
 	TArray<UEnemiesEnum*> ListOfAllEnemieEnum; 
 	*/
