@@ -79,6 +79,12 @@ class ASPMCharacter : public ACharacter
 	/** Increase i Z axis on dash */
 	UPROPERTY(EditAnywhere, Blueprintable, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	float ZValue = 600.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
+	float Sensitivity_X = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
+	float Sensitivity_Y = 1.0f;
 	
 public:
 	ASPMCharacter();
