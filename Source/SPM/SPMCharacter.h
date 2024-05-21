@@ -80,10 +80,10 @@ class ASPMCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, Blueprintable, Category=Dash, meta=(AllowPrivateAccess = "true"))
 	float ZValue = 600.0f;
 
-	UPROPERTY(EditAnywhere, Blueprintable, meta=(AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
 	float Sensitivity_X = 1.0f;
 
-	UPROPERTY(EditAnywhere, Blueprintable, meta=(AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
 	float Sensitivity_Y = 1.0f;
 	
 public:
