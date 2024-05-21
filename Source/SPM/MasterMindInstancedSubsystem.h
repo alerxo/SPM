@@ -104,10 +104,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<UEnemiesEnum*> GetListOfAllEnemiesTypes(){return ListOfAllEnemieEnum;}
 	*/
-
-	UFUNCTION(BlueprintCallable)
-	void Hit(UEnemiesEnum* Enemy);
-
+	
 	UFUNCTION(BlueprintCallable)
 	float DivisionKilledAmount(float Killed ,float Amount){return Killed/Amount;}
 
