@@ -18,8 +18,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDeactivated, ABaseCore*, Core
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreDestroyed, ABaseCore*, Core);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoreActivated, ABaseCore*, Core);
 
-
-
 UCLASS()
 class SPM_API USPMGameInstanceSubsystem : public UGameInstanceSubsystem
  {

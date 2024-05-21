@@ -21,7 +21,7 @@ private:
 	int8 Size = 10;
 public:
 	UPROPERTY()
-	TArray<UEnemiesEnum*> RandomListChance;
+	TArray<TEnumAsByte<EEnemies>> RandomListChance;
 
 	TEnumAsByte<EEnemies> List[10];
 		
