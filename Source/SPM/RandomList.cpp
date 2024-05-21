@@ -5,7 +5,8 @@
 
 URandomList::URandomList()
 {
-	RandomListChance.Reserve(Size);
+	TEnumAsByte<EEnemies> en = ESpider;
+	RandomListChance.Init(en, 20);
 	
 }
 
