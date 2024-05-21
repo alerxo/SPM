@@ -57,19 +57,9 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 	if(Tokens > 0)
 	{
 		Tokens--;
-		return  true;
+		return true;
 	}
 	return false;
-}
-
-float UMasterMindInstancedSubsystem::GetTokens()
-{
-	return Tokens;
-}
-
-void UMasterMindInstancedSubsystem::SetTokens(float Amount)
-{
-	Tokens = Amount;
 }
 
 FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const 
@@ -80,8 +70,6 @@ FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const
 void UMasterMindInstancedSubsystem::SetInvestigationLocation(FVector Vector)
 {
 	InvestigationLocation = Vector;
-
-	
 }
 
 /*
@@ -227,16 +215,16 @@ void UMasterMindInstancedSubsystem::ResetDecisionMeter()
 
 void UMasterMindInstancedSubsystem::DecreaseTokens(int Amount)
 {
-	if(!(Amount > TotalTokens))
+	if(!(Amount > Tokens))
 	{
-		TotalTokens -= Amount;
+		Tokens -= Amount;
 	}
 	UE_LOG(LogTemp, Error, TEXT("OverSpending on Tokens UMasterMindInstancedSubsystem::DecreaseTokens"))
 }
 
 void UMasterMindInstancedSubsystem::IncreaseTokens(int Amount)
 {
-	TotalTokens += Amount;
+	Tokens += Amount;
 }
 
 

@@ -58,27 +58,24 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool RequestToken(APawn* Pawn);
-
-	//getters and setters
-	UFUNCTION(BlueprintCallable)
-	void SetTokens(float Amount);
-
-	UFUNCTION(BlueprintCallable)
-	float GetTokens();
 	
 	//Amount of tokens
-	float Tokens;
-
+	UPROPERTY(BlueprintReadWrite)
+	int Tokens;
+	UPROPERTY(BlueprintReadWrite)
+	int  DefaultTokens;
+	
+	UFUNCTION(BlueprintCallable)
+	void DecreaseTokens(int Amount);
+	UFUNCTION(BlueprintCallable)
+	void IncreaseTokens(int Amount);
+	
 	UPROPERTY(BlueprintReadOnly)
 	double TotalEnemyWeight;
 	UPROPERTY(BlueprintReadOnly)
 	int TotalEnemyAmount;
 
-	UPROPERTY(BlueprintReadOnly)
-	int TotalTokens;
 
-	void DecreaseTokens(int Amount);
-	void IncreaseTokens(int Amount);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateWeightAllAtOnce();
