@@ -54,7 +54,7 @@ private:
 	void LidarHit(const FHitResult &HitResult);
 
 public:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCapsuleComponent* Root;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* Mesh;
@@ -83,7 +83,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	int KiteRange = 150;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	int ChaseRange = 4000;
+	int ChaseRange = 4500;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float DistanceToTarget = 0.0f;
 	
@@ -93,7 +93,9 @@ public:
 	bool CanStrafe = true;
 	UPROPERTY(BlueprintReadWrite)
 	bool IsStrafing = false;
-
+	UPROPERTY(BlueprintReadOnly)
+	bool IsDead = false;
+	
 	UPROPERTY(EditAnywhere)
 	bool Debug = false;
 

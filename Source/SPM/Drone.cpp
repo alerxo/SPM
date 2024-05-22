@@ -26,7 +26,6 @@ ADrone::ADrone()
 	WeaponBaseRight->SetupAttachment(RootComponent);
 	WeaponLookAtRight = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLookAtRight"));
 	WeaponLookAtRight->SetupAttachment(WeaponBaseRight);
-
 	FlyingMovement = CreateDefaultSubobject<UFlyingMovementComponent>(TEXT("FlyingMovement"));
 	
 	EnemyType = EDrone;
@@ -40,6 +39,7 @@ void ADrone::BeginPlay()
 	Ammo = MaxAmmo;
 	Health = MaxHealth;
 	FlyingMovement->OnLidarHit.AddDynamic(this, &ADrone::LidarHit);
+	GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->IncreasEnemyAmount(EDrone);
 }
 
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -174,8 +174,7 @@ float ADrone::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEve
 
 	if ((Health -= TakenDamage) <= 0)
 	{
-		GetController()->Destroy();
-		Destroy();
+		IsDead = true;
 	}
 
 	return TakenDamage;
