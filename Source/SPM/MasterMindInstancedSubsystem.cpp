@@ -65,11 +65,12 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 	{
 		if(Tokens > 0)
 		{
-			
-			Tokens--;
+			const IEnemyInterface* CastedEnemy = Cast<IEnemyInterface>(Pawn);
+			const int& EnemyTokens = AllEnemyStats[CastedEnemy->EnemyType.GetIntValue()].TokenCost;
+			Tokens -= EnemyTokens;
 			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i"), Tokens)
 			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
-			MapOfTokens.Add(Pawn, 1);
+			MapOfTokens.Add(Pawn, EnemyTokens);
 			return true;
 		}
 		/*
