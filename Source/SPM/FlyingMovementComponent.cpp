@@ -114,9 +114,9 @@ void UFlyingMovementComponent::CheckLidarDirection(FRotator Rotation)
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
 	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
 
-	if(Result.GetActor())
+	if(Result.bBlockingHit)
 	{
-		OnLidarHit.Broadcast(Result.GetActor());
+		OnLidarHit.Broadcast(Result);
 	}
 }
 

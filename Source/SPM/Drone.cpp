@@ -39,7 +39,7 @@ void ADrone::BeginPlay()
 	Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	Ammo = MaxAmmo;
 	Health = MaxHealth;
-	//FlyingMovement->OnLidarHit.AddDynamic(LidarHit);
+	FlyingMovement->OnLidarHit.AddDynamic(this, &ADrone::LidarHit);
 }
 
 void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -186,9 +186,9 @@ bool ADrone::HasTarget() const
 	return Target != nullptr;
 }
 
-void ADrone::LidarHit() const
+void ADrone::LidarHit(const FHitResult HitResult)
 {
-	if(IsStrafing)
+	if(IsStrafing && HitResult.GetActor() && !Cast<ASPMCharacter>(HitResult.GetActor()))
 	{
 		FlyingMovement->StopMove();
 	}

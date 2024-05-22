@@ -50,7 +50,8 @@ public:
 	void OnShoot(bool IsLeftFire);
 
 private:
-	void LidarHit() const;
+	UFUNCTION()
+	void LidarHit(const FHitResult HitResult);
 
 public:
 	UPROPERTY(VisibleAnywhere)
