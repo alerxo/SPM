@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyInterface.h"
+#include "FlyingMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "Drone.generated.h"
 
@@ -17,7 +18,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Destroyed() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -36,7 +36,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Reload();
 	UFUNCTION(BlueprintCallable)
-	void MoveTo(const FVector Position, const int Speed = -1, const int Stop = -1);
+	void CheckLineOfSightAtPlayer();
+
 	UFUNCTION(BlueprintCallable)
 	FVector GetKiteLocation() const;
 	UFUNCTION(BlueprintCallable)
@@ -45,24 +46,9 @@ public:
 	FVector GetStrafeLocation(const int State) const;
 	UFUNCTION(BlueprintCallable)
 	bool HasTarget() const;
-	UFUNCTION(BlueprintCallable)
-	void SetPlayerTrail(FVector Position);
-	UFUNCTION(BlueprintCallable)
-	bool HasPlayerTrail() const;
-	UFUNCTION(BlueprintCallable)
-	void ConsumePlayerTrail();
-	UFUNCTION(BlueprintCallable)
-	void CheckLineOfSightAtPlayer();
-	UFUNCTION(BlueprintCallable)
-	void GetTargetVelocity();
-
+	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnShoot(bool IsLeftFire);
-
-private:
-	void Rotate(float);
-	void CheckLidarDirection(FRotator);
-	void Move(const float);
 
 public:
 	UPROPERTY(VisibleAnywhere)
@@ -77,6 +63,8 @@ public:
 	USceneComponent* WeaponBaseRight;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* WeaponLookAtRight;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UFlyingMovementComponent* FlyingMovement;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ADroneProjectile> Projectile;
@@ -95,11 +83,7 @@ public:
 	int ChaseRange = 4000;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float DistanceToTarget = 0.0f;
-	UPROPERTY(BlueprintReadOnly, Category = "Movement")
-	bool HasDestination = false;
-	UPROPERTY(BlueprintReadOnly, Category = "Movement")
-	FVector Velocity;
-
+	
 	UPROPERTY(BlueprintReadWrite)
 	bool CanKite = true;
 	UPROPERTY(BlueprintReadWrite)
@@ -115,41 +99,14 @@ private:
 	AActor* Player;
 	UPROPERTY()
 	AActor* Target;
-	FVector* PlayerTrail;
+	
 	bool LeftFire = false;
-
-	FRotator MovementDirection;
-	FVector Destination;
-	FVector TargetVelocity;
-	FRotator TargetRotation;
-
-	const int DefaultMovementSpeed = 700;
-	int MovementSpeed = DefaultMovementSpeed;
-	const float TargetEaseDistance = 200.0f;
-	const float TargetEaseMargin = 10.0f;
-	const float TargetEaseBlend = 5.0f;
-	const float Acceleration = 1.0f;
-	const float Deceleration = 2.0f;
-	const int DefaultStopDistance = 100;
-	int StopDistance = DefaultStopDistance;
-	const int ObstacleAvoidanceDistance = 200;
-	const float ObstacleAvoidanceForce = 20.0f;
-	const float RotationSpeed = 4.0f;
+	
 	const float PatrolPitch = 10.0f;
 	const float PatrolYaw = 180.0f;
 	const int PatrolMin = 500;
 	const int PatrolMax = 1000;
-	const TArray<FRotator> LidarDirections =
-	{
-		FRotator(0, 0, 0),
-		FRotator(30, 30, 0),
-		FRotator(30, -30, 0),
-		FRotator(-30, 30, 0),
-		FRotator(-30, -30, 0),
-		FRotator(90, 0, 0),
-		FRotator(-90, 0, 0)
-	};
-
+	
 	float Health = 0.0f;
 	const float MaxHealth = 14.0f;
 	const float Damage = 2.0f;
