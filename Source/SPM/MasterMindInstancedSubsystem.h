@@ -23,6 +23,16 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Send
 
 
 
+class SPM_API FToken
+{
+	FToken();
+	~FToken();
+public:
+	int Value;
+	APawn* Owner; 
+};
+
+
 UCLASS()
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
 {
@@ -36,7 +46,8 @@ private:
 	void SetPlayer();
 
 public:
-
+	UPROPERTY(BlueprintReadWrite)
+	TMap<APawn*, int> MapOfTokens; 
 	//List With all the Types of Enemies and there stats
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FEnemyStats> AllEnemyStats;
@@ -76,6 +87,14 @@ public:
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+
+	/**
+	 * Checks if the Pawn has ha token if it does it removes it and reduces the amount of tokens
+	 * @param Amount 
+	 * @param Pawn 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void CheckAndDeleteToken(TEnumAsByte<EEnemies> EnemyType, APawn* Pawn);
 	
 	/**
 	 * Increases the decision meter a certain amount
@@ -83,6 +102,13 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void IncreaseDecisionMeter(int Amount);
+
+	/**
+	 * The Enemy hands back the number of Tokens
+	 * @param Amount 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void HandBackToken(int Amount, APawn* Pawn );
 
 	/**
 	 * Resets the Decision Meter to 0
@@ -203,7 +229,7 @@ public:
 	 * @param Enemy 
 	 */
 	UFUNCTION(BlueprintCallable)
-	void CreateEnemyStats(double Weight, TEnumAsByte<EEnemies> Enemy);
+	void CreateEnemyStats(FEnemyStats EnemyStats);
 
 	/**
 	 * Takes the Enemy Type and changes The Weight Based on Killed And Damage

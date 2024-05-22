@@ -65,10 +65,14 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 	{
 		if(Tokens > 0)
 		{
+			
 			Tokens--;
+			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i"), Tokens)
 			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
+			MapOfTokens.Add(Pawn, 1);
 			return true;
 		}
+		/*
 		float Dot = FVector::DotProduct(Pawn->GetActorForwardVector() ,Player->GetActorForwardVector());
 		Dot += 0.7;
 		if(Dot < 0 && FVector::Dist(Pawn->GetActorForwardVector() ,Player->GetActorForwardVector()) < 2000)
@@ -76,9 +80,32 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Red,false, 1);
 			return true;
 		}
+		*/
 	}
 	return false;
 }
+
+void UMasterMindInstancedSubsystem::HandBackToken(int Amount, APawn* Pawn)
+{
+	Tokens += Amount;
+	MapOfTokens.Remove(Pawn);
+}
+
+void UMasterMindInstancedSubsystem::CheckAndDeleteToken(TEnumAsByte<EEnemies> EnemyType, APawn* Pawn)
+{
+	if(Pawn != nullptr && MapOfTokens.Find(Pawn))
+	{
+		const int& TokenAmount = AllEnemyStats[EnemyType.GetIntValue()].TokenCost;
+		if(TokenAmount < 0)
+		{
+			UE_LOG(LogTemp, Error, TEXT("The Token Cost is Zero or Belove, UMasterMindInstancedSubsystem::CheckAndDeleteToken"));
+		}
+		Tokens += TokenAmount;
+		MapOfTokens.Remove(Pawn);
+	}
+}
+
+
 
 FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const 
 {
@@ -199,13 +226,15 @@ void UMasterMindInstancedSubsystem::IncreasaEnemyAmount(FEnemyStats& EnemyStats)
 	EnemyStats.Amount++;
 }
 
-void UMasterMindInstancedSubsystem::CreateEnemyStats(double Weight, TEnumAsByte<EEnemies> Enemy)
+void UMasterMindInstancedSubsystem::CreateEnemyStats(FEnemyStats EnemyStats)
 {
-	if(AllEnemyStats.IsValidIndex(Enemy.GetIntValue()))
+	if(AllEnemyStats.IsValidIndex(EnemyStats.EnemyType.GetIntValue()))
 	{
-		AllEnemyStats[Enemy.GetIntValue()].Weight = Weight;
-		AllEnemyStats[Enemy.GetIntValue()].EnemyType = Enemy;
-		UpdateWeight(Weight);
+		int index = EnemyStats.EnemyType.GetIntValue();
+		AllEnemyStats[index].Weight += EnemyStats.Weight;
+		AllEnemyStats[index].EnemyType = EnemyStats.EnemyType;
+		AllEnemyStats[index].TokenCost += EnemyStats.TokenCost;
+		UpdateWeight(AllEnemyStats[index].Weight);
 		return;
 	}
 	UE_LOG(LogTemp, Error, TEXT("UMasterMindInstancedSubsystem::CreateEnemyStats Index is not Valid"))
