@@ -37,10 +37,10 @@ void UTP_WeaponComponent::ShootPressed()
 	{
 		//Fire();
 	}*/
-	if(bFireActive == true)
+	/*if(bFireActive == true)
 	{
 		ShootFireball();
-	}
+	}*/
 	
 }
 
