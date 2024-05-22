@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "FlyingMovementComponent.generated.h"
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLidarHit, AActor*, HitActor);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API UFlyingMovementComponent : public UActorComponent
 {
@@ -39,12 +39,15 @@ public:
 	void ConsumePlayerTrail();
 	UFUNCTION(BlueprintCallable)
 	void GetTargetVelocity();
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnLidarHit OnLidarHit;
 	
 private:
 	void Rotate(float);
 	void CheckLidarDirection(FRotator);
 	void Move(const float);
-	
+
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool HasDestination = false;

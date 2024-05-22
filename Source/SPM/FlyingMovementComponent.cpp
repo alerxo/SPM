@@ -54,6 +54,8 @@ void UFlyingMovementComponent::Move(const float DeltaTime)
 	GetOwner()->GetRootComponent()->AddWorldOffset(Velocity * DeltaTime, true);
 }
 
+
+
 void UFlyingMovementComponent::MoveTo(const FVector Position, const int Speed, const int Stop)
 {
 	Destination = Position;
@@ -111,6 +113,11 @@ void UFlyingMovementComponent::CheckLidarDirection(FRotator Rotation)
 
 	GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, CollisionQueryParams);
 	TargetVelocity += Result.bBlockingHit ? -Direction * ObstacleAvoidanceForce : Direction;
+
+	if(Result.GetActor())
+	{
+		OnLidarHit.Broadcast(Result.GetActor());
+	}
 }
 
 void UFlyingMovementComponent::SetPlayerTrail(const FVector Position)

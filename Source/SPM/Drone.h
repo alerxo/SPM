@@ -25,8 +25,7 @@ public:
 
 public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
-
+	
 	UFUNCTION(BlueprintCallable)
 	void AimAtPosition(const FVector Position) const;
 	UFUNCTION(BlueprintCallable)
@@ -49,6 +48,9 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnShoot(bool IsLeftFire);
+
+private:
+	void LidarHit() const;
 
 public:
 	UPROPERTY(VisibleAnywhere)
