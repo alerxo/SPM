@@ -51,7 +51,7 @@ public:
 
 private:
 	UFUNCTION()
-	void LidarHit(const FHitResult HitResult);
+	void LidarHit(const FHitResult &HitResult);
 
 public:
 	UPROPERTY(VisibleAnywhere)

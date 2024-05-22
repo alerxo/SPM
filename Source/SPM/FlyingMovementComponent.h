@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "FlyingMovementComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLidarHit, const FHitResult, HitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLidarHit, const FHitResult&, HitResult);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPM_API UFlyingMovementComponent : public UActorComponent
 {

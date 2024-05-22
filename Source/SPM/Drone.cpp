@@ -186,7 +186,7 @@ bool ADrone::HasTarget() const
 	return Target != nullptr;
 }
 
-void ADrone::LidarHit(const FHitResult HitResult)
+void ADrone::LidarHit(const FHitResult &HitResult)
 {
 	if(IsStrafing && HitResult.GetActor() && !Cast<ASPMCharacter>(HitResult.GetActor()))
 	{
