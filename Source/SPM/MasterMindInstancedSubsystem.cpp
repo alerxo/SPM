@@ -9,6 +9,9 @@
 #include "EnemyInterface.h"
 
 #include "Spawner.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/GameSession.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //Initialize SubSystem
@@ -20,8 +23,12 @@ void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collect
 	DroneEnum = UEnemiesEnum::Instiantiate(EDrone);
 	WallBreakerEnum = UEnemiesEnum::Instiantiate(EWallbreaker);
 	*/
-	
 	AllEnemyStats.Init(FEnemyStats(0,0,0,0,0), UEnemiesEnum::Size);
+	
+}
+void UMasterMindInstancedSubsystem::SetPlayer()
+{
+	Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 }
 
 void UMasterMindInstancedSubsystem::SetUp()
@@ -53,11 +60,22 @@ UMasterMindInstancedSubsystem* UMasterMindInstancedSubsystem::GetMasterMindInsta
 
 bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 {
-	
-	if(Tokens > 0)
+
+	if(Player != NULL)
 	{
-		Tokens--;
-		return true;
+		if(Tokens > 0)
+		{
+			Tokens--;
+			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
+			return true;
+		}
+		float Dot = FVector::DotProduct(Pawn->GetActorForwardVector() ,Player->GetActorForwardVector());
+		Dot += 0.7;
+		if(Dot < 0 && FVector::Dist(Pawn->GetActorForwardVector() ,Player->GetActorForwardVector()) < 2000)
+		{
+			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Red,false, 1);
+			return true;
+		}
 	}
 	return false;
 }
