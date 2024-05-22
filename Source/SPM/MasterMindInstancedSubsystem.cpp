@@ -3,7 +3,13 @@
 //Give interface an EnemyType
 //Each Enemy Give it self the Enum it is in
 #include "MasterMindInstancedSubsystem.h"
+
+#include "EnemyInfo.h"
+#include "EnemieEnum.h"
 #include "EnemyInterface.h"
+
+#include "Spawner.h"
+
 
 //Initialize SubSystem
 void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -14,9 +20,8 @@ void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collect
 	DroneEnum = UEnemiesEnum::Instiantiate(EDrone);
 	WallBreakerEnum = UEnemiesEnum::Instiantiate(EWallbreaker);
 	*/
-	FEnemyStats stat = FEnemyStats(0,0,0,0,0);
-	AllEnemyStats.Init(stat, 3);
 	
+	AllEnemyStats.Init(FEnemyStats(0,0,0,0,0), UEnemiesEnum::Size);
 }
 
 void UMasterMindInstancedSubsystem::SetUp()
@@ -52,19 +57,9 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 	if(Tokens > 0)
 	{
 		Tokens--;
-		return  true;
+		return true;
 	}
 	return false;
-}
-
-float UMasterMindInstancedSubsystem::GetTokens()
-{
-	return Tokens;
-}
-
-void UMasterMindInstancedSubsystem::SetTokens(float Amount)
-{
-	Tokens = Amount;
 }
 
 FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const 
@@ -75,8 +70,6 @@ FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const
 void UMasterMindInstancedSubsystem::SetInvestigationLocation(FVector Vector)
 {
 	InvestigationLocation = Vector;
-
-	
 }
 
 /*
@@ -85,10 +78,6 @@ TArray<FEnemyStats> UMasterMindInstancedSubsystem::GetArrayOfStats()
 	return TArray<FEnemyStats>{SpiderStats, DroneStats, WallBreakerStats};
 }
 */
-void UMasterMindInstancedSubsystem::Hit(UEnemiesEnum* Enemy)
-{
-	Enemy->MostTotalHits++; 
-}
 
 //Get the Enemy Type of the Enemy
 TEnumAsByte<EEnemies> UMasterMindInstancedSubsystem::GetEnemyType( TScriptInterface<IEnemyInterface> GeneralEnemy)
@@ -96,23 +85,25 @@ TEnumAsByte<EEnemies> UMasterMindInstancedSubsystem::GetEnemyType( TScriptInterf
 	return GeneralEnemy.GetInterface()->EnemyType;
 }
 
-void UMasterMindInstancedSubsystem::IncreaseWeight(TEnumAsByte<EEnemies> Enemy, int Amount)
+void UMasterMindInstancedSubsystem::IncreaseWeight(TEnumAsByte<EEnemies> Enemy, double Amount)
 {
 	if(!AllEnemyStats.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Enemy Before Weight Increase %i"),AllEnemyStats[Enemy].Weight);
-		AllEnemyStats[Enemy].Weight += Amount;
+		UE_LOG(LogTemp, Warning, TEXT("Enemy Before Weight Increase %f"),AllEnemyStats[Enemy].Weight);
+		AllEnemyStats[Enemy.GetIntValue()].Weight += Amount;
 		TotalEnemyWeight+= Amount;
-		UE_LOG(LogTemp, Warning, TEXT("Enemy After Weight Increase %i"), AllEnemyStats[Enemy].Weight);
+		UE_LOG(LogTemp, Warning, TEXT("Enemy After Weight Increase %f"), AllEnemyStats[Enemy].Weight);
 	}
-
 }
+
+
+
 void UMasterMindInstancedSubsystem::IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount)
 {
 	if(!AllEnemyStats.IsEmpty())
 	{
-		AllEnemyStats[Enemy].DamageAmount += Amount;
-		UE_LOG(LogTemp, Warning, TEXT("Enemy Damage Amount %f"),AllEnemyStats[Enemy].DamageAmount);
+		AllEnemyStats[Enemy.GetIntValue()].DamageAmount += Amount;
+		UE_LOG(LogTemp, Warning, TEXT("Enemy Damage Amount %f"),AllEnemyStats[Enemy.GetIntValue()].DamageAmount);
 	}
 }
 
@@ -120,7 +111,7 @@ void UMasterMindInstancedSubsystem::IncreaseHit(TEnumAsByte<EEnemies> Enemy)
 {
 	if(!AllEnemyStats.IsEmpty())
 	{
-		AllEnemyStats[Enemy].TotalHits++;
+		AllEnemyStats[Enemy.GetIntValue()].TotalHits++;
 	}
 }
 
@@ -135,7 +126,7 @@ void UMasterMindInstancedSubsystem::UpdateWeightAllAtOnce()
 	}
 
 }
-void UMasterMindInstancedSubsystem::UpdateWeight(int Amount)
+void UMasterMindInstancedSubsystem::UpdateWeight(double Amount)
 {
 	if(!AllEnemyStats.IsEmpty())
 	{
@@ -148,8 +139,9 @@ void UMasterMindInstancedSubsystem::IncreasEnemyAmount(TEnumAsByte<EEnemies> Ene
 {
 	if(!AllEnemyStats.IsEmpty())
 	{
-		AllEnemyStats[Enemy].Amount++;
+		AllEnemyStats[Enemy.GetIntValue()].Amount++;
 		TotalEnemyAmount++;
+		UE_LOG(LogTemp, Warning, TEXT("Increase Enemy Amount: %i"), AllEnemyStats[0].Amount);
 	}
 }
 
@@ -157,7 +149,7 @@ void UMasterMindInstancedSubsystem::IncreaseEnemyKilled(TEnumAsByte<EEnemies> En
 {
 	if(!AllEnemyStats.IsEmpty())
 	{
-		AllEnemyStats[Enemy].Killed++;
+		AllEnemyStats[Enemy.GetIntValue()].Killed++;
 	}
 }
 
@@ -167,14 +159,14 @@ double UMasterMindInstancedSubsystem::BalanceKilledAndDamage(TEnumAsByte<EEnemie
 	double KillPerAmount = 0; 
 	if(!AllEnemyStats.IsEmpty())
 	{
-		int& Weight = AllEnemyStats[Enemy].Weight;
-		int& KilledVal = AllEnemyStats[Enemy].Killed;
-		int& Amount = AllEnemyStats[Enemy].Amount;
-		float& DamageVal = AllEnemyStats[Enemy].DamageAmount;
+		double& Weight = AllEnemyStats[Enemy.GetIntValue()].Weight;
+		int& KilledVal = AllEnemyStats[Enemy.GetIntValue()].Killed;
+		int& Amount = AllEnemyStats[Enemy.GetIntValue()].Amount;
+		float& DamageVal = AllEnemyStats[Enemy.GetIntValue()].DamageAmount;
 
 		if(Amount > 0)
 		{
-			KillPerAmount =(double)Amount/(double)KilledVal;
+			KillPerAmount = (double)KilledVal/ (double)Amount;
 		}
 		
 		UE_LOG(LogTemp, Warning , TEXT("Killed = %i"), KilledVal)
@@ -184,7 +176,55 @@ double UMasterMindInstancedSubsystem::BalanceKilledAndDamage(TEnumAsByte<EEnemie
 	return KillPerAmount;
 }
 
+void UMasterMindInstancedSubsystem::IncreasaEnemyAmount(FEnemyStats& EnemyStats)
+{
+	EnemyStats.Amount++;
+}
+
+void UMasterMindInstancedSubsystem::CreateEnemyStats(double Weight, TEnumAsByte<EEnemies> Enemy)
+{
+	if(AllEnemyStats.IsValidIndex(Enemy.GetIntValue()))
+	{
+		AllEnemyStats[Enemy.GetIntValue()].Weight = Weight;
+		AllEnemyStats[Enemy.GetIntValue()].EnemyType = Enemy;
+		UpdateWeight(Weight);
+		return;
+	}
+	UE_LOG(LogTemp, Error, TEXT("UMasterMindInstancedSubsystem::CreateEnemyStats Index is not Valid"))
+}
 
 
+double UMasterMindInstancedSubsystem::WeightProcentageOfEnemy(TEnumAsByte<EEnemies> Enemy)
+{
+	if(!AllEnemyStats.IsEmpty())
+	{
+		return (AllEnemyStats[Enemy.GetIntValue()].Weight)/TotalEnemyWeight;	
+	}UE_LOG(LogTemp, Error, TEXT("The list is Empty UMasterMindInstancedSubsystem::WeightProcentageOfEnemy"))
+	return 0.0;
+}
+
+void UMasterMindInstancedSubsystem::IncreaseDecisionMeter(int Amount)
+{
+	DecisionMeter += Amount;
+}
+
+void UMasterMindInstancedSubsystem::ResetDecisionMeter()
+{
+	DecisionMeter = 0;
+}
+
+void UMasterMindInstancedSubsystem::DecreaseTokens(int Amount)
+{
+	if(!(Amount > Tokens))
+	{
+		Tokens -= Amount;
+	}
+	UE_LOG(LogTemp, Error, TEXT("OverSpending on Tokens UMasterMindInstancedSubsystem::DecreaseTokens"))
+}
+
+void UMasterMindInstancedSubsystem::IncreaseTokens(int Amount)
+{
+	Tokens += Amount;
+}
 
 
