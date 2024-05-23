@@ -67,8 +67,9 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 		{
 			const IEnemyInterface* CastedEnemy = Cast<IEnemyInterface>(Pawn);
 			const int& EnemyTokens = AllEnemyStats[CastedEnemy->EnemyType.GetIntValue()].TokenCost;
-			Tokens -= EnemyTokens;
 			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i"), Tokens)
+			Tokens -= EnemyTokens;
+		
 			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
 			MapOfTokens.Add(Pawn, EnemyTokens);
 			return true;
@@ -101,7 +102,9 @@ void UMasterMindInstancedSubsystem::CheckAndDeleteToken(TEnumAsByte<EEnemies> En
 		{
 			UE_LOG(LogTemp, Error, TEXT("The Token Cost is Zero or Belove, UMasterMindInstancedSubsystem::CheckAndDeleteToken"));
 		}
+		UE_LOG(LogTemp, Warning, TEXT("Should Add to Token"))
 		Tokens += TokenAmount;
+		UE_LOG(LogTemp, Warning, TEXT("TOKEN Amount:  %i"), TokenAmount)
 		MapOfTokens.Remove(Pawn);
 	}
 }
@@ -196,6 +199,7 @@ void UMasterMindInstancedSubsystem::IncreaseEnemyKilled(TEnumAsByte<EEnemies> En
 	if(!AllEnemyStats.IsEmpty())
 	{
 		AllEnemyStats[Enemy.GetIntValue()].Killed++;
+		TotalEnemyAmount--;
 	}
 }
 
