@@ -47,7 +47,9 @@ private:
 
 public:
 	UPROPERTY(BlueprintReadWrite)
-	TMap<APawn*, int> MapOfTokens; 
+	TMap<APawn*, int> MapOfTokens;
+
+	//TQueue<APawn*> PriorityEnemies;
 	//List With all the Types of Enemies and there stats
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FEnemyStats> AllEnemyStats;
@@ -75,6 +77,7 @@ public:
 	//Amount of tokens
 	UPROPERTY(BlueprintReadWrite)
 	int Tokens;
+	
 	UPROPERTY(BlueprintReadWrite)
 	int  DefaultTokens;
 
@@ -87,6 +90,11 @@ public:
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+	
+	UFUNCTION(BlueprintCallable)
+	void AddTokensLimit(float MultiplyProcentage);
+	UFUNCTION(BlueprintCallable)
+	void ReduceTokenLimit(float MultiplyProcentage);
 
 	/**
 	 * Checks if the Pawn has ha token if it does it removes it and reduces the amount of tokens

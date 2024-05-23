@@ -63,10 +63,10 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 
 	if(Player != NULL)
 	{
-		if(Tokens > 0)
+		const IEnemyInterface* CastedEnemy = Cast<IEnemyInterface>(Pawn);
+		const int& EnemyTokens = AllEnemyStats[CastedEnemy->EnemyType.GetIntValue()].TokenCost;
+		if(Tokens - EnemyTokens >= 0)
 		{
-			const IEnemyInterface* CastedEnemy = Cast<IEnemyInterface>(Pawn);
-			const int& EnemyTokens = AllEnemyStats[CastedEnemy->EnemyType.GetIntValue()].TokenCost;
 			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i"), Tokens)
 			Tokens -= EnemyTokens;
 		
@@ -77,15 +77,42 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 		/*
 		float Dot = FVector::DotProduct(Pawn->GetActorForwardVector() ,Player->GetActorForwardVector());
 		Dot += 0.7;
-		if(Dot < 0 && FVector::Dist(Pawn->GetActorForwardVector() ,Player->GetActorForwardVector()) < 2000)
+		if(Dot < 0)
 		{
-			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Red,false, 1);
+			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Orange,false, 1);
+			//Steal Token From Enemy
+			PriorityEnemies.
 			return true;
 		}
 		*/
 	}
 	return false;
 }
+
+void UMasterMindInstancedSubsystem::AddTokensLimit(float MultiplyProcentage)
+{
+	if(MultiplyProcentage <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MultiplyProcentage is under or equal to zero, UMasterMindInstancedSubsystem::UpdateTokensLimit"))
+	}
+	const int NewTokenAmount = (float)DefaultTokens * MultiplyProcentage;
+	Tokens += NewTokenAmount - Tokens;
+	UE_LOG(LogTemp, Warning, TEXT("ADD Tokens:   %i :: NEWTOKENAMOUNT:  %i"), Tokens, NewTokenAmount);
+}
+
+void UMasterMindInstancedSubsystem::ReduceTokenLimit(float MultiplyProcentage)
+{
+	if(MultiplyProcentage <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MultiplyProcentage is under or equal to zero, UMasterMindInstancedSubsystem::UpdateTokensLimit"))
+	}
+	MapOfTokens.Reset();
+	const int NewTokenAmount = (float)DefaultTokens * MultiplyProcentage;
+	Tokens = NewTokenAmount;
+	UE_LOG(LogTemp, Warning, TEXT("REDUCE Tokens: %i :: NEWTOKENAMOUNT: %i"), Tokens, NewTokenAmount);
+}
+
+
 
 void UMasterMindInstancedSubsystem::HandBackToken(int Amount, APawn* Pawn)
 {
@@ -97,6 +124,7 @@ void UMasterMindInstancedSubsystem::CheckAndDeleteToken(TEnumAsByte<EEnemies> En
 {
 	if(Pawn != nullptr && MapOfTokens.Find(Pawn))
 	{
+		
 		const int& TokenAmount = AllEnemyStats[EnemyType.GetIntValue()].TokenCost;
 		if(TokenAmount < 0)
 		{
@@ -190,7 +218,7 @@ void UMasterMindInstancedSubsystem::IncreasEnemyAmount(TEnumAsByte<EEnemies> Ene
 	{
 		AllEnemyStats[Enemy.GetIntValue()].Amount++;
 		TotalEnemyAmount++;
-		UE_LOG(LogTemp, Warning, TEXT("Increase Enemy Amount: %i"), AllEnemyStats[0].Amount);
+		UE_LOG(LogTemp, Warning, TEXT("Increase Enemy Amount: %i"), AllEnemyStats[Enemy.GetIntValue()].Amount);
 	}
 }
 
