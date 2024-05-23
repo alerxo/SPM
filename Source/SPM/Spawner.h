@@ -85,6 +85,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int SpawnAtLocation(int TotalTokens);
 
+	/**
+	 * Decides the first best Spawn by the MinRange And MaxRange
+	 * And Then Spawns the enemy and initialize the AI. 
+	 * @param Range 
+	 * @param MaxRange 
+	 * @param ActorToSpawn 
+	 * @param BehaviourTree 
+	 * @param Owner 
+	 * @return 
+	 */
 	UFUNCTION(BlueprintCallable)
 	ASpawnPoints* BestSpawnByRange(float Range,  float MaxRange ,TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree, AActor* Owner);
 
@@ -124,26 +134,35 @@ public:
 
 	//UFUNCTION(CallInEditor, Category="Spawning")
 	void RunDelete();
-
-
 	/*
-	//Weight Random System
-	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	FEnemyWeight SpiderWeight;
-	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	FEnemyWeight DroneWeight;
-	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	FEnemyWeight WallBreakerWeight;
-	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	int TotalWeight = 10;
+		//Weight Random System
+		UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+		FEnemyWeight SpiderWeight;
+		UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+		FEnemyWeight DroneWeight;
+		UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+		FEnemyWeight WallBreakerWeight;
+		UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+		int TotalWeight = 10;
+	
+		UPROPERTY(BlueprintReadWrite)
+		TArray<FEnemyWeight> WeightList;
+		*/
+	
 
-	UPROPERTY(BlueprintReadWrite)
-	TArray<FEnemyWeight> WeightList;
-	*/
+
+	/**
+	 * Give the Enemy that has been randomly chosen by weight and
+	 * reference the necessary Variables
+	 * @param Enemy 
+	 * @param OverrideChance 
+	 * @param OverrideEnemy 
+	 * @return 
+	 */
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* RandomWithWeight(FEnemyStats& Enemy, bool OverrideChance, FEnemyStats OverrideEnemy );
 
-
+	
 	//Used for random with list
 	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	TSubclassOf<APawn> SpiderBot;
