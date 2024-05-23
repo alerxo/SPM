@@ -23,60 +23,120 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Send
 
 
 
+class SPM_API FToken
+{
+	FToken();
+	~FToken();
+public:
+	int Value;
+	APawn* Owner; 
+};
+
+
 UCLASS()
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
+private:
+	UPROPERTY()
+	ACharacter* Player;
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayer();
+
 public:
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Deinitialize() override;
-	
-	UPROPERTY(BlueprintReadOnly)
-	int DecisionMeter;
+	UPROPERTY(BlueprintReadWrite)
+	TMap<APawn*, int> MapOfTokens; 
+	//List With all the Types of Enemies and there stats
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FEnemyStats> AllEnemyStats;
 
-	UFUNCTION(BlueprintCallable)
-	void IncreaseDecisionMeter(int Amount);
-
-	UFUNCTION(BlueprintCallable)
-	void ResetDecisionMeter();
 	
 	//Declare Delegate for sending Info to master mind
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnSoundMade OnSoundMade;
-
+	//Declare Delegate for when an Enemy is Hit
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnEnemyHit OnEnemyHit;
-
+	//Declare of Delegate for when the Enemies should disengage
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnDisengage OnDisengage;
-	
+	//Declare Delegate for when player is spotted
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnPlayerSeen OnPlayerSeen;
-
+	//Declare Delegate for when Enemy wants to send info
 	FOnSentInfo OnSentInfo;
-
-	UFUNCTION(BlueprintCallable)
-	bool RequestToken(APawn* Pawn);
+	
+	//The Decision meter to check when the Maseter mind kan do a Decision
+	UPROPERTY(BlueprintReadOnly)
+	int DecisionMeter;
 	
 	//Amount of tokens
 	UPROPERTY(BlueprintReadWrite)
 	int Tokens;
 	UPROPERTY(BlueprintReadWrite)
 	int  DefaultTokens;
+
+	UPROPERTY(BlueprintReadWrite)
+	int TotalEnemyAmount;
+	UPROPERTY(BlueprintReadOnly)
+	double TotalEnemyWeight;
 	
+	FVector InvestigationLocation;
+
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+
+	/**
+	 * Checks if the Pawn has ha token if it does it removes it and reduces the amount of tokens
+	 * @param Amount 
+	 * @param Pawn 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void CheckAndDeleteToken(TEnumAsByte<EEnemies> EnemyType, APawn* Pawn);
+	
+	/**
+	 * Increases the decision meter a certain amount
+	 * @param Amount 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void IncreaseDecisionMeter(int Amount);
+
+	/**
+	 * The Enemy hands back the number of Tokens
+	 * @param Amount 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void HandBackToken(int Amount, APawn* Pawn );
+
+	/**
+	 * Resets the Decision Meter to 0
+	 */
+	UFUNCTION(BlueprintCallable)
+	void ResetDecisionMeter();
+
+	/**
+	 * Request A token to check if enemy can shoot
+	 * @param Pawn 
+	 * @return 
+	 */
+	UFUNCTION(BlueprintCallable)
+	bool RequestToken(APawn* Pawn);
+
+	/**
+	 * Decreases the Token Amount
+	 * @param Amount 
+	 */
 	UFUNCTION(BlueprintCallable)
 	void DecreaseTokens(int Amount);
+	/**
+	 * Increases The Token Amount
+	 * @param Amount 
+	 */
 	UFUNCTION(BlueprintCallable)
 	void IncreaseTokens(int Amount);
 	
-	UPROPERTY(BlueprintReadOnly)
-	double TotalEnemyWeight;
-	UPROPERTY(BlueprintReadOnly)
-	int TotalEnemyAmount;
-
-
-
 	UFUNCTION(BlueprintCallable)
 	void UpdateWeightAllAtOnce();
 	UFUNCTION(BlueprintCallable)
@@ -88,21 +148,24 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetInvestigationLocation(FVector Vector);
 
-	FVector InvestigationLocation;
-	
+	/**
+	 * Getts the Master Mind Subsystem
+	 * @return 
+	 */
 	UFUNCTION(BlueprintCallable, Category="MySubSystem")
 	UMasterMindInstancedSubsystem* GetMasterMindInstancedSubsystem();
 
 	UFUNCTION(BlueprintCallable)
 	void SetUp();
 
+	/*
 	UPROPERTY()
 	UEnemiesEnum*  SpiderEnum;
 	UPROPERTY()
 	UEnemiesEnum*   DroneEnum;
 	UPROPERTY()
 	UEnemiesEnum*  WallBreakerEnum;
-
+	*/
 	/*
 	UFUNCTION(BlueprintCallable)
 	TArray<UEnemiesEnum*> GetListOfAllEnemiesTypes(){return ListOfAllEnemieEnum;}
@@ -122,8 +185,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TEnumAsByte<EEnemies> GetEnemyType(TScriptInterface<IEnemyInterface> GeneralEnemy);
 
-	UPROPERTY(BlueprintReadWrite)
-	TArray<FEnemyStats> AllEnemyStats;
 
 	/**
 	 * Increases The General Hits done to Player by the type of Enemy
@@ -146,14 +207,29 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void IncreaseDamageAmount(TEnumAsByte<EEnemies> Enemy, float Amount);
 
+	/**
+	 * Increase the Amount count of the EnemyType
+	 * @param Enemy 
+	 */
 	UFUNCTION(BlueprintCallable)
 	void IncreasEnemyAmount(TEnumAsByte<EEnemies> Enemy);
+
 	UFUNCTION(BlueprintCallable)
 	void IncreasaEnemyAmount(FEnemyStats& EnemyStats);
+
+	/**
+	 * Increases the kill count of the Enemy type
+	 * @param Enemy 
+	 */
 	UFUNCTION(BlueprintCallable)
 	void IncreaseEnemyKilled(TEnumAsByte<EEnemies> Enemy);
+	/**
+	 * Creates Enemy Stats in AllEnemyStats List
+	 * @param Weight 
+	 * @param Enemy 
+	 */
 	UFUNCTION(BlueprintCallable)
-	void CreateEnemyStats(double Weight, TEnumAsByte<EEnemies> Enemy);
+	void CreateEnemyStats(FEnemyStats EnemyStats);
 
 	/**
 	 * Takes the Enemy Type and changes The Weight Based on Killed And Damage
