@@ -10,7 +10,7 @@
 // Sets default values
 ASpiderbot::ASpiderbot()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
@@ -41,15 +41,15 @@ void ASpiderbot::Tick(float DeltaTime)
 	NewRotation.Pitch = ControlRotation.Pitch;
 
 	SetActorRotation(NewRotation);
-
 }
 
 //shoots projectile
 void ASpiderbot::Fire(TSubclassOf<ASpiderbotProjectile> ProjectileClass, USoundBase* FiringSound)
 {
-	UGameplayStatics::PlaySoundAtLocation(this, FiringSound, GetActorLocation(), GetActorRotation(), 1, 1, 0, Attenuation);
+	UGameplayStatics::PlaySoundAtLocation(this, FiringSound, GetActorLocation(), GetActorRotation(), 1, 1, 0,
+	                                      Attenuation);
 	ASpiderbotProjectile* Projectile = GetWorld()->SpawnActor<ASpiderbotProjectile>(
-		ProjectileClass,
+		ProjectileClass,	
 		ProjectileSpawnPoint->GetComponentLocation(),
 		ProjectileSpawnPoint->GetComponentRotation());
 	if (this != nullptr)
@@ -62,5 +62,4 @@ void ASpiderbot::Fire(TSubclassOf<ASpiderbotProjectile> ProjectileClass, USoundB
 void ASpiderbot::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
 }
