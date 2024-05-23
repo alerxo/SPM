@@ -246,10 +246,9 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bo
 	UE_LOG(LogTemp, Error, TEXT("No Enemy Found in Spawner::RandomEnemy"))
 	*/
 	return nullptr;
-	
 }
 
-
+ 
 UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChance, FEnemyStats OverrideEnemy)
 {
 	float const Weight = MasterMind->TotalEnemyWeight;
