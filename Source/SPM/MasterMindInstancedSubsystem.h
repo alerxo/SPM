@@ -33,7 +33,7 @@ public:
 };
 
 
-UCLASS()
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
