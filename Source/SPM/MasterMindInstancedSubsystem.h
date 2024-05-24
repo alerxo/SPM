@@ -54,6 +54,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FEnemyStats> AllEnemyStats;
 
+	UPROPERTY(BlueprintReadWrite)
+	int MaxEnemyAmount;
+	
 	
 	//Declare Delegate for sending Info to master mind
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)

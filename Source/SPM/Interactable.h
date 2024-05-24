@@ -66,7 +66,7 @@ public:
 	UBoxComponent* SphereComponent;
 
 	//MeshComponent for the Interactables
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* MeshComponent;
 
 	//Getter for Interactable can be interacted with
