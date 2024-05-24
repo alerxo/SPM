@@ -279,10 +279,12 @@ void UMasterMindInstancedSubsystem::CreateEnemyStats(FEnemyStats EnemyStats)
 	{
 		int index = EnemyStats.EnemyType.GetIntValue();
 		FEnemyStats& Enemy = AllEnemyStats[index];
-		AllEnemyStats[index].Weight = EnemyStats.Weight;
-		AllEnemyStats[index].EnemyType = EnemyStats.EnemyType;
-		AllEnemyStats[index].TokenCost = EnemyStats.TokenCost;
-		UpdateWeight(AllEnemyStats[index].Weight);
+		Enemy.Weight = EnemyStats.Weight;
+		Enemy.EnemyType = EnemyStats.EnemyType;
+		Enemy.TokenCost = EnemyStats.TokenCost;
+		Enemy.DamageAmount = 0;
+		Enemy.Killed = 0;
+		UpdateWeight(Enemy.Weight);
 		return;
 	}
 	UE_LOG(LogTemp, Error, TEXT("UMasterMindInstancedSubsystem::CreateEnemyStats Index is not Valid"))
