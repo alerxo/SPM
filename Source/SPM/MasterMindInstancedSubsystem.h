@@ -224,6 +224,8 @@ public:
 	void IncreasEnemyAmount(TEnumAsByte<EEnemies> Enemy);
 	UFUNCTION(BlueprintCallable)
 	void DecreaseEnemyAmount(TEnumAsByte<EEnemies> Enemy);
+	UFUNCTION(BlueprintCallable)
+	void ResetWeight();
 	/**
 	 * Increases the kill count of the Enemy type
 	 * @param Enemy 
