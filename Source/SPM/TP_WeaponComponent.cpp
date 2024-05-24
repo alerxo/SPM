@@ -209,6 +209,43 @@ void UTP_WeaponComponent::ChangeWeapon()
 	
 }
 
+void UTP_WeaponComponent::ChangeWeaponBasic()
+{
+	if (Character == nullptr || Character->GetController() == nullptr)
+	{
+		return;
+	}
+
+	bBasicActive = true;
+	bFireActive = false;
+	bElectricActive = false;
+}
+
+void UTP_WeaponComponent::ChangeWeaponFire()
+{
+	if (Character == nullptr || Character->GetController() == nullptr)
+	{
+		return;
+	}
+
+	bBasicActive = false;
+	bFireActive = true;
+	bElectricActive = false;
+}
+
+void UTP_WeaponComponent::ChangeWeaponElectric()
+{
+	if (Character == nullptr || Character->GetController() == nullptr)
+	{
+		return;
+	}
+
+	bBasicActive = false;
+	bFireActive = false;
+	bElectricActive = true;
+}
+
+
 /*bool UTP_WeaponComponent::TurnOffElectric()
 {
 	return false;
@@ -392,6 +429,12 @@ void UTP_WeaponComponent::AttachWeapon(ASPMCharacter* TargetCharacter)
 			EnhancedInputComponent->BindAction(ShootBlueFireballAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootFireball);
 
 			EnhancedInputComponent->BindAction(ShootElectricityAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ShootHold);
+
+			EnhancedInputComponent->BindAction(SwapToBasicAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ChangeWeaponBasic);
+
+			EnhancedInputComponent->BindAction(SwapToFireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ChangeWeaponFire);
+
+			EnhancedInputComponent->BindAction(SwapToElectricAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::ChangeWeaponElectric);
 		}
 	}
 }
