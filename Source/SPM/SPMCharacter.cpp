@@ -102,7 +102,7 @@ void ASPMCharacter::Dash()
 	if(Controller == nullptr)return;
 
 	// Get the MoveDirection
-	FVector MoveDirection = this->GetCharacterMovement()->GetLastInputVector();
+	FVector MoveDirection = this->GetCharacterMovement()->GetLastInputVector().GetSafeNormal();
 	
 	// Set the MaxMoveSpeed
 	double MaxMoveSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
