@@ -54,6 +54,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FEnemyStats> AllEnemyStats;
 
+	UPROPERTY(BlueprintReadWrite)
+	int MaxEnemyAmount;
+	
 	
 	//Declare Delegate for sending Info to master mind
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
@@ -95,6 +98,7 @@ public:
 	void AddTokensLimit(float MultiplyProcentage);
 	UFUNCTION(BlueprintCallable)
 	void ReduceTokenLimit(float MultiplyProcentage);
+	
 
 	/**
 	 * Checks if the Pawn has ha token if it does it removes it and reduces the amount of tokens
@@ -221,10 +225,10 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void IncreasEnemyAmount(TEnumAsByte<EEnemies> Enemy);
-
 	UFUNCTION(BlueprintCallable)
-	void IncreasaEnemyAmount(FEnemyStats& EnemyStats);
-
+	void DecreaseEnemyAmount(TEnumAsByte<EEnemies> Enemy);
+	UFUNCTION(BlueprintCallable)
+	void ResetWeight();
 	/**
 	 * Increases the kill count of the Enemy type
 	 * @param Enemy 
