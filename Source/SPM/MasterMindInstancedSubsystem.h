@@ -6,6 +6,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "EnemieEnum.h"
 #include "EnemyInfo.h"
+#include "MusicMaster.h"
 #include "MasterMindInstancedSubsystem.generated.h"
 
 class UBehaviorTree;
@@ -49,6 +50,13 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	TMap<APawn*, int> MapOfTokens;
 
+	UPROPERTY(BlueprintReadWrite)
+	UMusicMaster* MusicMaster;
+
+	UFUNCTION(BlueprintCallable)
+	UMusicMaster* CreateMusicMaster();
+	
+	
 	//TQueue<APawn*> PriorityEnemies;
 	//List With all the Types of Enemies and there stats
 	UPROPERTY(BlueprintReadWrite)
