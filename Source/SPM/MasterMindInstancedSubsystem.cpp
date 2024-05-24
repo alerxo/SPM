@@ -24,7 +24,6 @@ void UMasterMindInstancedSubsystem::Initialize(FSubsystemCollectionBase& Collect
 	WallBreakerEnum = UEnemiesEnum::Instiantiate(EWallbreaker);
 	*/
 	AllEnemyStats.Init(FEnemyStats(0,0,0,0,0), UEnemiesEnum::Size);
-	
 }
 void UMasterMindInstancedSubsystem::SetPlayer()
 {
@@ -322,6 +321,19 @@ void UMasterMindInstancedSubsystem::DecreaseTokens(int Amount)
 void UMasterMindInstancedSubsystem::IncreaseTokens(int Amount)
 {
 	Tokens += Amount;
+}
+
+
+UMusicMaster* UMasterMindInstancedSubsystem::CreateMusicMaster()
+{
+	MusicMaster = NewObject<UMusicMaster>();
+	if(MusicMaster)
+	{
+		return MusicMaster;
+	}
+
+	UE_LOG(LogTemp,Warning,TEXT("Music Master is NULL, UMasterMindInstancedSubsystem::CreateMusicMaster"))
+	return nullptr;
 }
 
 

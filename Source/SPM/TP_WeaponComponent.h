@@ -126,6 +126,17 @@ public:
 	void ChangeWeapon();
 
 	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ChangeWeaponBasic();
+	
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ChangeWeaponFire();
+	
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void ChangeWeaponElectric();
+
+	
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void ShootPressed();
 
 	UFUNCTION(BlueprintCallable, Category="Weapon")
