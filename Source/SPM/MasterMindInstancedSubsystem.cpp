@@ -70,7 +70,7 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i"), Tokens)
 			Tokens -= EnemyTokens;
 		
-			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
+			//DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
 			MapOfTokens.Add(Pawn, EnemyTokens);
 			return true;
 		}
@@ -212,15 +212,32 @@ void UMasterMindInstancedSubsystem::UpdateWeight(double Amount)
 
 }
 
+void UMasterMindInstancedSubsystem::ResetWeight()
+{
+	TotalEnemyWeight = 0;
+}
+
+
 void UMasterMindInstancedSubsystem::IncreasEnemyAmount(TEnumAsByte<EEnemies> Enemy)
 {
 	if(!AllEnemyStats.IsEmpty())
 	{
 		AllEnemyStats[Enemy.GetIntValue()].Amount++;
 		TotalEnemyAmount++;
-		UE_LOG(LogTemp, Warning, TEXT("Increase Enemy Amount: %i"), AllEnemyStats[Enemy.GetIntValue()].Amount);
+		UE_LOG(LogTemp, Warning, TEXT("Increase %s Amount: %i "), *UEnum::GetValueAsName(Enemy).ToString() ,AllEnemyStats[Enemy.GetIntValue()].Amount);
 	}
 }
+
+void UMasterMindInstancedSubsystem::DecreaseEnemyAmount(TEnumAsByte<EEnemies> Enemy)
+{
+	if(!AllEnemyStats.IsEmpty())
+	{
+		AllEnemyStats[Enemy.GetIntValue()].Amount--;
+		TotalEnemyAmount--;
+		UE_LOG(LogTemp, Warning, TEXT("Decrease %s Amount: %i "), *UEnum::GetValueAsName(Enemy).ToString() ,AllEnemyStats[Enemy.GetIntValue()].Amount);
+	}
+}
+
 
 void UMasterMindInstancedSubsystem::IncreaseEnemyKilled(TEnumAsByte<EEnemies> Enemy)
 {
@@ -254,19 +271,17 @@ double UMasterMindInstancedSubsystem::BalanceKilledAndDamage(TEnumAsByte<EEnemie
 	return KillPerAmount;
 }
 
-void UMasterMindInstancedSubsystem::IncreasaEnemyAmount(FEnemyStats& EnemyStats)
-{
-	EnemyStats.Amount++;
-}
+
 
 void UMasterMindInstancedSubsystem::CreateEnemyStats(FEnemyStats EnemyStats)
 {
 	if(AllEnemyStats.IsValidIndex(EnemyStats.EnemyType.GetIntValue()))
 	{
 		int index = EnemyStats.EnemyType.GetIntValue();
-		AllEnemyStats[index].Weight += EnemyStats.Weight;
+		FEnemyStats& Enemy = AllEnemyStats[index];
+		AllEnemyStats[index].Weight = EnemyStats.Weight;
 		AllEnemyStats[index].EnemyType = EnemyStats.EnemyType;
-		AllEnemyStats[index].TokenCost += EnemyStats.TokenCost;
+		AllEnemyStats[index].TokenCost = EnemyStats.TokenCost;
 		UpdateWeight(AllEnemyStats[index].Weight);
 		return;
 	}
