@@ -70,7 +70,7 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i"), Tokens)
 			Tokens -= EnemyTokens;
 		
-			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
+			//DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
 			MapOfTokens.Add(Pawn, EnemyTokens);
 			return true;
 		}
@@ -222,6 +222,17 @@ void UMasterMindInstancedSubsystem::IncreasEnemyAmount(TEnumAsByte<EEnemies> Ene
 	}
 }
 
+void UMasterMindInstancedSubsystem::DecreaseEnemyAmount(TEnumAsByte<EEnemies> Enemy)
+{
+	if(!AllEnemyStats.IsEmpty())
+	{
+		AllEnemyStats[Enemy.GetIntValue()].Amount--;
+		TotalEnemyAmount--;
+		UE_LOG(LogTemp, Warning, TEXT("Increase Enemy Amount: %i"), AllEnemyStats[Enemy.GetIntValue()].Amount);
+	}
+}
+
+
 void UMasterMindInstancedSubsystem::IncreaseEnemyKilled(TEnumAsByte<EEnemies> Enemy)
 {
 	if(!AllEnemyStats.IsEmpty())
@@ -254,19 +265,16 @@ double UMasterMindInstancedSubsystem::BalanceKilledAndDamage(TEnumAsByte<EEnemie
 	return KillPerAmount;
 }
 
-void UMasterMindInstancedSubsystem::IncreasaEnemyAmount(FEnemyStats& EnemyStats)
-{
-	EnemyStats.Amount++;
-}
+
 
 void UMasterMindInstancedSubsystem::CreateEnemyStats(FEnemyStats EnemyStats)
 {
 	if(AllEnemyStats.IsValidIndex(EnemyStats.EnemyType.GetIntValue()))
 	{
 		int index = EnemyStats.EnemyType.GetIntValue();
-		AllEnemyStats[index].Weight += EnemyStats.Weight;
+		AllEnemyStats[index].Weight = EnemyStats.Weight;
 		AllEnemyStats[index].EnemyType = EnemyStats.EnemyType;
-		AllEnemyStats[index].TokenCost += EnemyStats.TokenCost;
+		AllEnemyStats[index].TokenCost = EnemyStats.TokenCost;
 		UpdateWeight(AllEnemyStats[index].Weight);
 		return;
 	}
