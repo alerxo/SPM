@@ -10,9 +10,9 @@
  * 
  */
 
-#define MAXINTENSITY 90
-#define MEDIUMINTENSITY 50
-#define LOWINTENSITY 20
+#define MAXINTENSITY 5
+#define MEDIUMINTENSITY 2
+#define LOWINTENSITY 1
 
 enum IntensityValues
 {
@@ -21,11 +21,13 @@ enum IntensityValues
 	HighIntensity,
 };
 
+DECLARE_DYNAMIC_DELEGATE(FCaller);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMaxIntensity);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMediumIntensity);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLowIntensity);
 UCLASS()
-class SPM_API UMusicMaster : public UObject
+class SPM_API UMusicMaster : public UObject, public FTickableGameObject
 {
 	GENERATED_BODY()
 
@@ -36,6 +38,13 @@ private:
 
 	IntensityValues CurrentIntensity;
 
+	UFUNCTION()
+	void CallMax(){OnMaxIntensity.Broadcast();}
+	UFUNCTION()
+	void CallMed(){OnMediumIntensity.Broadcast();}
+	UFUNCTION()
+	void CallLow(){OnLowIntensity.Broadcast();}
+
 public:
 
 	UPROPERTY(BlueprintAssignable)
@@ -44,9 +53,23 @@ public:
 	FOnMediumIntensity OnMediumIntensity;
 	UPROPERTY(BlueprintAssignable)
 	FOnLowIntensity OnLowIntensity;
-	
-	
 
+
+	UPROPERTY()
+	FCaller Caller;
+	
+	float Timer = 10; 
+
+	void ResetTimer();
+	void StartTimer();
+
+	bool bIsTransitionActive;
+	
+	void Tick(float DeltaTime) override;
+	bool IsTickable() const override;
+	bool IsTickableInEditor() const override;
+	bool IsTickableWhenPaused() const override;
+	TStatId GetStatId() const override;
 	
 	UFUNCTION(BlueprintCallable)
 	int& GetIntensityMeter(){return IntensityMeter;};
