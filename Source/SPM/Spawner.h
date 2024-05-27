@@ -17,6 +17,7 @@ class ASpiderbot;
 class ASpawnPoints;
 class UBehaviorTree;
 
+/*
 USTRUCT(BlueprintType)
 struct FEnemyWeight{
 	GENERATED_BODY()
@@ -36,7 +37,7 @@ struct FEnemyWeight{
 	UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
 	TEnumAsByte<EEnemies> EnemyEnum; 
 };
-
+*/
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -59,17 +60,7 @@ public:
 	UMasterMindInstancedSubsystem* MasterMind;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FEnemyStats> ReworkList;
-
-
-	/*
-	UPROPERTY()
-	UEnemiesEnum*  SpiderEnum;
-	UPROPERTY()
-	UEnemiesEnum*   DroneEnum;
-	UPROPERTY()
-	UEnemiesEnum*  WallBreakerEnum;
-	*/
+	TArray<FEnemyStats> EnemyList;
 	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -80,7 +71,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<ASpawnPoints*> PassiveSpawnPoints; 
 	
-	EnemyObjectPool* Pool;
+	//EnemyObjectPool* Pool;
 	
 	UFUNCTION(BlueprintCallable)
 	int SpawnAtLocation(int TotalTokens);
@@ -112,14 +103,14 @@ public:
 
 	//values of diffrent spawn  chances
 	//UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Spawn Chances")
-	float SpiderSpawnChance;
+	//float SpiderSpawnChance;
 	//UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Spawn Chances")
-	float DroneSpawnChance;
+	//float DroneSpawnChance;
 	//UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Spawn Chances")
-	float WallbreakerSpawnChance;
+	//float WallbreakerSpawnChance;
 
-	UPROPERTY()
-	int CurrentObjPoolPosition;
+	//UPROPERTY()
+	//int CurrentObjPoolPosition;
 	
 	//Time to Spawn enemy
 	UPROPERTY(EditAnywhere)
@@ -130,10 +121,10 @@ public:
 	float YOffset;
 	
 	//UFUNCTION(CallInEditor, Category="Spawning")
-	void RunSpawning();
+	//void RunSpawning();
 
 	//UFUNCTION(CallInEditor, Category="Spawning")
-	void RunDelete();
+	//void RunDelete();
 	/*
 		//Weight Random System
 		UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
@@ -165,31 +156,32 @@ public:
 	
 	//Used for random with list
 	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	TSubclassOf<APawn> SpiderBot;
+	//TSubclassOf<APawn> SpiderBot;
 	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	UBehaviorTree* SpiderBT;
+	//UBehaviorTree* SpiderBT;
 	
 	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	TSubclassOf<APawn> Drone;
+	//TSubclassOf<APawn> Drone;
 	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	UBehaviorTree* DroneBT;
-	
-
-	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	TSubclassOf<APawn> Wallbreaker;
-	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
-	UBehaviorTree* WallbreakerBT;
+	//UBehaviorTree* DroneBT;
 	
 
+	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	//TSubclassOf<APawn> Wallbreaker;
+	//UPROPERTY(EditAnywhere, Category="Spawning", BlueprintReadWrite)
+	//UBehaviorTree* WallbreakerBT;
+	
+
+	/*
 	UFUNCTION(BlueprintCallable)
 	UBehaviorTree* RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, UEnemiesEnum* OverrideEnemy);
+	*/
 
+	//UFUNCTION(CallInEditor, Category="Spawn Chances")
+	//void SetSpawnChances();
 
-	UFUNCTION(CallInEditor, Category="Spawn Chances")
-	void SetSpawnChances();
-
-	UFUNCTION(BlueprintCallable)
-	void ChangeSpawnChance(TArray<float> Chances, TArray<UEnemiesEnum*> Enemies);
+	//UFUNCTION(BlueprintCallable)
+	//void ChangeSpawnChance(TArray<float> Chances, TArray<UEnemiesEnum*> Enemies);
 
 	UFUNCTION(BlueprintCallable)
 	void SpawnAtSpawnPoint(ASpawnPoints* SpawnPoint, TSubclassOf<AActor> ActorToSpawn,  UBehaviorTree* BehaviourTree, AActor* Owner);
@@ -200,8 +192,8 @@ private:
 
 	//Data structure to hold a list of EEnemies
 
-	UPROPERTY()
-	URandomList* ListRandom;
+	//UPROPERTY()
+	//URandomList* ListRandom;
 
 	//spawnes an AI;
 	void SpawnAI(APawn* Enemy, UBehaviorTree* BehaviourTree);
