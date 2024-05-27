@@ -7,118 +7,22 @@
 
 void UMusicMaster::IncreaseIntensityMeter(int Amount)
 {
-	
+	//Create UpperLink ptr of CurrentIntensity Node 
 	const ULink* UpperLink = CurrentIntensityNode->UpperLink;
-	const ULink* DownLink = CurrentIntensityNode->DownLink;
-	UE_LOG(LogTemp, Warning, TEXT("Increase: INTENSITY METER: %i"), Amount)
+	
 	if(Amount >= (UpperLink ? UpperLink->Limit : Amount+1)) 
 	{
+		//Update CurrentIntensityNode and execute the needed music.
 		UpperLink->Link->Caller.Execute();
 		CurrentIntensityNode->bIsOn = false;
 		bIsTransitionActive = true;
-		ResetTimer();
 		CurrentIntensityNode = UpperLink->Link;
-		return;
 	}
 	ResetTimer();
-	/*
-	if(Amount <= (DownLink ? DownLink->Limit : -1))
-	{
-		DownLink->Link->Caller.Execute();
-		CurrentIntensityNode->bIsOn = false;
-		CurrentIntensityNode = DownLink->Link;
-		return;
-	}
-	*/
-
-	
-	//Check What Intensity The Meter is going to be
-	/*
-	const int NewIntensity = IntensityMeter + Amount;
-	if(NewIntensity >= MAXINTENSITY)
-	{
-		return;
-	}
-
-	if (NewIntensity >= MAXINTENSITY && CurrentIntensity != HighIntensity)
-	{
-		CurrentIntensity = HighIntensity;
-		IntensityMeter += Amount;
-		OnMaxIntensity.Broadcast();
-		return;
-	}
-	if(NewIntensity >= MEDIUMINTENSITY)
-	{
-		OnMediumIntensity.Broadcast();
-		CurrentIntensity = MediumIntensity;
-		IntensityMeter += Amount;
-		return;
-	}
-	if(NewIntensity >= LOWINTENSITY)
-	{
-		OnLowIntensity.Broadcast();
-		CurrentIntensity = LowIntensity;
-		IntensityMeter += Amount;
-		return;
-	}
-	IntensityMeter += Amount;
-	*/
 }
 
 void UMusicMaster::LowerIntensityMeter(int Amount)
 {
-	/*
-	const int NewIntensity = IntensityMeter - Amount;
-
-	if(NewIntensity <= 0)
-	{
-		return;
-	}
-	IntensityMeter -= Amount;
-	if(NewIntensity < MAXINTENSITY)
-	{
-		bIsTransitionActive = true;
-		ResetTimer();
-		Caller.Clear();
-		Caller.BindDynamic(this, &UMusicMaster::CallMed);
-		return;
-	}
-	if(NewIntensity < MEDIUMINTENSITY)
-	{
-		bIsTransitionActive = true;
-		ResetTimer();
-		Caller.Clear();
-		Caller.BindDynamic(this, &UMusicMaster::CallLow);
-		return;
-	}
-
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("Decrease: INTENSITY METER: %i"), NewIntensity)
-	if(NewIntensity <= 0)
-	{
-		IntensityMeter = 0;
-	}
-	else
-	{
-		IntensityMeter = NewIntensity;
-	}
-	
-	if(IntensityMeter < HighIntensity && CurrentIntensity == HighIntensity)
-	{
-		OnMediumIntensity.Broadcast();
-		return;
-	}
-	if(IntensityMeter < MEDIUMINTENSITY && CurrentIntensity == MediumIntensity)
-	{
-		OnLowIntensity.Broadcast();
-		return;
-	}
-	/*
-	if(NewIntensity <= LOWINTENSITY && !(CurrentIntensity == LowIntensity))
-	{
-		IntensityMeter -= Amount;
-	}
-	*/
 }
 
 void UMusicMaster::ResetTimer()
@@ -131,31 +35,22 @@ void UMusicMaster::StartTimer()
 	
 	if(Timer <= 0)
 	{
-		Timer = RESETTIMER;
+		ResetTimer();
 		if(CurrentIntensityNode && CurrentIntensityNode->DownLink)
 		{
 			CurrentIntensityNode->DownLink->Link->Caller.Execute();
 			CurrentIntensityNode = CurrentIntensityNode->DownLink->Link;
 			bIsTransitionActive = CurrentIntensityNode->DownLink ? true : false;
 		}
-		//Check What Music Should be transitioned To with the Delegates
 		return;
 	}
-
-	//UE_LOG(LogTemp, Warning, TEXT("%f"), Timer);
 	Timer -= UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
 	
 }
 
 void UMusicMaster::Tick(float DeltaTime)
 {
-
-	/*
-	if(CurrentIntensityNode)
-	{
-		CurrentIntensityNode->Caller.Execute();
-	}
-	*/
+	
 	if(bIsTransitionActive)
 	{
 		StartTimer();

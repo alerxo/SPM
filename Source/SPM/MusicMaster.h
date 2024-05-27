@@ -74,9 +74,6 @@ class SPM_API UMusicMaster : public UObject, public FTickableGameObject
 	GENERATED_BODY()
 
 private:
-	int IntensityMeter = 0;
-
-	int MaximumIntensity = 100;
 
 	IntensityValues CurrentIntensity;
 
@@ -122,11 +119,11 @@ public:
 	bool IsTickableInEditor() const override;
 	bool IsTickableWhenPaused() const override;
 	TStatId GetStatId() const override;
-	
-	UFUNCTION(BlueprintCallable)
-	int& GetIntensityMeter(){return IntensityMeter;};
+
+	//Lowers The Intensity
 	UFUNCTION(BlueprintCallable)
 	void LowerIntensityMeter(int Amount);
+	//Increases The IntensityMeter
 	UFUNCTION(BlueprintCallable)
 	void IncreaseIntensityMeter(int Amount);
 

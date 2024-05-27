@@ -30,10 +30,10 @@ USpawner::USpawner()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	Pool = new EnemyObjectPool();
+	//Pool = new EnemyObjectPool();
 
 
-	ListRandom = NewObject<URandomList>();
+	//ListRandom = NewObject<URandomList>();
 	//Set Spawn Chance on Construktion
 	/*
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
@@ -53,7 +53,7 @@ void USpawner::BeginPlay()
 	//WeightList={SpiderWeight, DroneWeight, WallBreakerWeight};
 	
 	Time = DefaultTime;
-	CurrentObjPoolPosition = 0;
+	//CurrentObjPoolPosition = 0;
 	/*
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
 	TArray<UEnemiesEnum*>Enemies = {SpiderEnum,DroneEnum, WallBreakerEnum};
@@ -165,6 +165,7 @@ int USpawner::SpawnAtLocation(int TotalTokens)
 	return 0;
 }
 
+/*
 void USpawner::RunSpawning()
 {
 	for(int i = 0; i < 10; i++)
@@ -172,7 +173,8 @@ void USpawner::RunSpawning()
 		Pool->SpiderBot.Add(Spawn(SpiderBot, SpiderBT));
 	}
 }
-
+*/
+/*
 APawn* USpawner::Spawn(TSubclassOf<AActor> ActorToSpawn, UBehaviorTree* BehaviourTree)
 {
 	//Create Rotator 
@@ -199,8 +201,8 @@ void USpawner::RunDelete()
 		Spider->Destroy();
 	}
 }
-
-
+*/
+/*
 //Randomly pick and enemy from a list and return a behaviour tree 
 UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bool OverrideChance, UEnemiesEnum* OverrideEnemy )
 {
@@ -244,10 +246,10 @@ UBehaviorTree* USpawner::RandomEnemy(TSubclassOf<APawn>& Enemy, float& Range, bo
 			break;
 	}
 	UE_LOG(LogTemp, Error, TEXT("No Enemy Found in Spawner::RandomEnemy"))
-	*/
+	
 	return nullptr;
 }
-
+*/
  
 UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChance, FEnemyStats OverrideEnemy)
 {
@@ -258,7 +260,7 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChanc
 		return Enemy.EnemyTree;
 	}
 	float num = FMath::FRandRange(1.0, Weight);
-	for(FEnemyStats Type : ReworkList)
+	for(FEnemyStats Type : EnemyList)
 	{
 		FEnemyStats& EnemyStats = MasterMind->AllEnemyStats[Type.EnemyType.GetValue()];
 		if(EnemyStats.Weight <= 0)
@@ -308,14 +310,14 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChanc
 	*/
 }
 
-
+/*
 void USpawner::SetSpawnChances()
 {
 	/*
 	TArray<float> Chance{SpiderSpawnChance, DroneSpawnChance, WallbreakerSpawnChance};
 	TArray<UEnemiesEnum*>Enemies{SpiderEnum, DroneEnum, WallBreakerEnum};
 	ChangeSpawnChance(Chance, Enemies);
-	*/
+	
 }
 
 
@@ -337,6 +339,7 @@ void USpawner::ChangeSpawnChance(TArray<float> Chances, TArray<UEnemiesEnum*> En
 		ChanceIndex++;
 	}
 }
+*/
 
 void USpawner::SpawnAtSpawnPoint(ASpawnPoints* SpawnPoint, TSubclassOf<AActor> ActorToSpawn, UBehaviorTree* BehaviourTree, AActor* Owner)
 {
