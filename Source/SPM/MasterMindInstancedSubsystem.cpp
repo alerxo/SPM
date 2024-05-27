@@ -64,13 +64,23 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 	{
 		const IEnemyInterface* CastedEnemy = Cast<IEnemyInterface>(Pawn);
 		const int& EnemyTokens = AllEnemyStats[CastedEnemy->EnemyType.GetIntValue()].TokenCost;
+	
+		if(MapOfTokens.Contains(Pawn))
+		{
+			//CheckAndDeleteToken(CastedEnemy->EnemyType, Pawn);
+			return false;
+		}
 		if(Tokens - EnemyTokens >= 0)
 		{
+
+			//DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
 			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i"), Tokens)
 			Tokens -= EnemyTokens;
-		
-			//DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
 			MapOfTokens.Add(Pawn, EnemyTokens);
+			if(MusicMaster)
+			{
+				MusicMaster->IncreaseIntensityMeter(MapOfTokens.Num());
+			}
 			return true;
 		}
 		/*
@@ -94,8 +104,9 @@ void UMasterMindInstancedSubsystem::AddTokensLimit(float MultiplyProcentage)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MultiplyProcentage is under or equal to zero, UMasterMindInstancedSubsystem::UpdateTokensLimit"))
 	}
+	MapOfTokens.Reset();
 	const int NewTokenAmount = (float)DefaultTokens * MultiplyProcentage;
-	Tokens += NewTokenAmount - Tokens;
+	Tokens = NewTokenAmount;
 	UE_LOG(LogTemp, Warning, TEXT("ADD Tokens:   %i :: NEWTOKENAMOUNT:  %i"), Tokens, NewTokenAmount);
 }
 
@@ -105,8 +116,8 @@ void UMasterMindInstancedSubsystem::ReduceTokenLimit(float MultiplyProcentage)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MultiplyProcentage is under or equal to zero, UMasterMindInstancedSubsystem::UpdateTokensLimit"))
 	}
-	MapOfTokens.Reset();
-	const int NewTokenAmount = (float)DefaultTokens * MultiplyProcentage;
+	MapOfTokens.Empty(0);
+	const int NewTokenAmount = DefaultTokens;
 	Tokens = NewTokenAmount;
 	UE_LOG(LogTemp, Warning, TEXT("REDUCE Tokens: %i :: NEWTOKENAMOUNT: %i"), Tokens, NewTokenAmount);
 }
@@ -121,7 +132,7 @@ void UMasterMindInstancedSubsystem::HandBackToken(int Amount, APawn* Pawn)
 
 void UMasterMindInstancedSubsystem::CheckAndDeleteToken(TEnumAsByte<EEnemies> EnemyType, APawn* Pawn)
 {
-	if(Pawn != nullptr && MapOfTokens.Find(Pawn))
+	if(Pawn != nullptr)
 	{
 		
 		const int& TokenAmount = AllEnemyStats[EnemyType.GetIntValue()].TokenCost;
@@ -129,10 +140,16 @@ void UMasterMindInstancedSubsystem::CheckAndDeleteToken(TEnumAsByte<EEnemies> En
 		{
 			UE_LOG(LogTemp, Error, TEXT("The Token Cost is Zero or Belove, UMasterMindInstancedSubsystem::CheckAndDeleteToken"));
 		}
-		UE_LOG(LogTemp, Warning, TEXT("Should Add to Token"))
-		Tokens += TokenAmount;
-		UE_LOG(LogTemp, Warning, TEXT("TOKEN Amount:  %i"), TokenAmount)
-		MapOfTokens.Remove(Pawn);
+
+		if(MapOfTokens.Contains(Pawn))
+		{
+			if(MusicMaster)
+			{
+				MusicMaster->LowerIntensityMeter(MapOfTokens.Num());
+			}
+			Tokens += TokenAmount;
+			MapOfTokens.Remove(Pawn);
+		}
 	}
 }
 
@@ -262,6 +279,8 @@ double UMasterMindInstancedSubsystem::BalanceKilledAndDamage(TEnumAsByte<EEnemie
 		{
 			KillPerAmount = (double)KilledVal/ (double)Amount;
 		}
+
+		return ((DamageVal + Amount) - KilledVal)/Weight;
 		
 		UE_LOG(LogTemp, Warning , TEXT("Killed = %i"), KilledVal)
 		UE_LOG(LogTemp, Warning , TEXT("Amount = %i"), Amount)
@@ -270,6 +289,10 @@ double UMasterMindInstancedSubsystem::BalanceKilledAndDamage(TEnumAsByte<EEnemie
 	return KillPerAmount;
 }
 
+
+// - Amount (dåligt om fiender är kvar)
+// - DamageAmount
+// + Killed Value 
 
 
 void UMasterMindInstancedSubsystem::CreateEnemyStats(FEnemyStats EnemyStats)
@@ -326,9 +349,10 @@ void UMasterMindInstancedSubsystem::IncreaseTokens(int Amount)
 
 UMusicMaster* UMasterMindInstancedSubsystem::CreateMusicMaster()
 {
-	MusicMaster = NewObject<UMusicMaster>();
+	MusicMaster = NewObject<UMusicMaster>(this, FName("MusicMaster"));
 	if(MusicMaster)
 	{
+		MusicMaster->SetUp();
 		return MusicMaster;
 	}
 
