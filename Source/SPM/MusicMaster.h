@@ -9,11 +9,14 @@
 /**
  * 
  */
+//Constant Macros
+#define MAXINTENSITY 6
+#define MEDIUMINTENSITY 3
+#define LOWINTENSITY 0
 
-#define MAXINTENSITY 5
-#define MEDIUMINTENSITY 2
-#define LOWINTENSITY 1
+#define RESETTIMER 5
 
+//Enum for the different Intensities
 enum IntensityValues
 {
 	LowIntensity,
@@ -21,8 +24,47 @@ enum IntensityValues
 	HighIntensity,
 };
 
+class UIntensityNode;
+
 DECLARE_DYNAMIC_DELEGATE(FCaller);
 
+
+//Link class that points att a Node /Representing a neighbour node
+UCLASS()
+class ULink : public UObject
+{
+	GENERATED_BODY()
+public:
+
+	//The Intensity Limit
+	int Limit;
+	UPROPERTY()
+	UIntensityNode* Link;
+};
+
+//Node class that can hold links to other nodes.
+//The node is made for calling the Intensity mode with Caller
+UCLASS()
+class UIntensityNode : public  UObject
+{
+	GENERATED_BODY()
+public:
+	//Upper Link that links to a Node with higher Intensity
+	UPROPERTY()
+	ULink* UpperLink;
+	//Down link that links to a node with lower Intensity
+	UPROPERTY()
+	ULink* DownLink;
+	
+	UPROPERTY()
+	FCaller Caller;
+
+	bool bIsOn;
+	
+};
+
+
+//Different Intensity Delegates, Called when the music should change
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMaxIntensity);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMediumIntensity);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLowIntensity);
@@ -39,11 +81,18 @@ private:
 	IntensityValues CurrentIntensity;
 
 	UFUNCTION()
-	void CallMax(){OnMaxIntensity.Broadcast();}
+	void CallMax();
 	UFUNCTION()
-	void CallMed(){OnMediumIntensity.Broadcast();}
+	void CallMed();
 	UFUNCTION()
-	void CallLow(){OnLowIntensity.Broadcast();}
+	void CallLow();
+
+	UPROPERTY()
+	UIntensityNode* Low;
+	UPROPERTY()
+	UIntensityNode* Medium;
+	UPROPERTY()
+	UIntensityNode* High;
 
 public:
 
@@ -54,6 +103,8 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnLowIntensity OnLowIntensity;
 
+	UPROPERTY()
+	UIntensityNode* CurrentIntensityNode; 
 
 	UPROPERTY()
 	FCaller Caller;
@@ -64,7 +115,8 @@ public:
 	void StartTimer();
 
 	bool bIsTransitionActive;
-	
+
+	//Diffrent Tick methods
 	void Tick(float DeltaTime) override;
 	bool IsTickable() const override;
 	bool IsTickableInEditor() const override;
@@ -78,6 +130,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void IncreaseIntensityMeter(int Amount);
 
+
+	void SetUp();
 	
 	
 };

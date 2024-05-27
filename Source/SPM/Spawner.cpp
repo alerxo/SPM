@@ -267,7 +267,8 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChanc
 		}
 		
 		int index = Type.EnemyType.GetValue();
-		UE_LOG(LogTemp,Error, TEXT("Index: %i, Weight: %d"), index, EnemyStats.Weight)
+
+		//UE_LOG(LogTemp,Error, TEXT("Index: %i, Weight: %d"), index, EnemyStats.Weight)
 		num -= EnemyStats.Weight;
 		if(num <= 0)
 		{
@@ -276,7 +277,7 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChanc
 		}
 		
 	}
-	UE_LOG(LogTemp,Error, TEXT("Did Not Find Choose Correctly, WeightTotal: %i"), Weight)
+	//UE_LOG(LogTemp,Error, TEXT("Did Not Find Choose Correctly, WeightTotal: %i"), Weight)
 	Enemy =  MasterMind->AllEnemyStats[0];
 	return Enemy.EnemyTree;
 

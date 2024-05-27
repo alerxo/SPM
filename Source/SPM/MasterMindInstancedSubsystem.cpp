@@ -352,6 +352,7 @@ UMusicMaster* UMasterMindInstancedSubsystem::CreateMusicMaster()
 	MusicMaster = NewObject<UMusicMaster>(this, FName("MusicMaster"));
 	if(MusicMaster)
 	{
+		MusicMaster->SetUp();
 		return MusicMaster;
 	}
 
