@@ -30,16 +30,6 @@ void UMasterMindInstancedSubsystem::SetPlayer()
 	Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 }
 
-void UMasterMindInstancedSubsystem::SetUp()
-{
-	/*
-	SpiderEnum = NewObject<UEnemiesEnum>();
-	SpiderEnum->Enemy = ESpider;
-	SpiderEnum->MostTotalHits = 0;
-	ListOfAllEnemieEnum.AddUnique(SpiderEnum);
-	*/
-}
-
 //Deinitialize SubSystem
 void UMasterMindInstancedSubsystem::Deinitialize()
 {

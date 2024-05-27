@@ -126,8 +126,6 @@ public:
 	//Increases The IntensityMeter
 	UFUNCTION(BlueprintCallable)
 	void IncreaseIntensityMeter(int Amount);
-
-
 	void SetUp();
 	
 	
