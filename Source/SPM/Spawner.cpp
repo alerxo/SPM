@@ -90,17 +90,24 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 	//Create Rotator 
 	FRotator const Rotator = FRotator::ZeroRotator;
 
+	float Deviation = 300;
+	float BestDifference = NAN;
+
 	//Params for the spawning
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.Owner = Owner;
 	SpawnParameters.SpawnCollisionHandlingOverride = false ? ESpawnActorCollisionHandlingMethod::AlwaysSpawn : ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
+	int i = 0;
 	//Decide the best Spawn position
 	for (ASpawnPoints* SpawnPoint : SpawnLocations)
 	{
-		const float Dist = FVector::Dist(PlayerPos, SpawnPoint->GetActorLocation());
+		i++;
+		float Dist = FVector::Dist(PlayerPos, SpawnPoint->GetActorLocation());
 		UE_LOG(LogTemp, Warning, TEXT("Dist: %f"), Dist)
-		if(Dist <= MaxRange && Dist >= Range)
+		bool const MaxRangeCheck = (Dist <= MaxRange) ? true : ((Dist -=Deviation) <= MaxRange);
+		bool const MinRangeCheck = (Dist >= Range) ? true : ((Dist+=Deviation) >= Range );
+		if(MaxRangeCheck && MinRangeCheck)
 		{
 			//Create Enemy And set the Ai behaviour on it
 			UE_LOG(LogTemp, Warning, TEXT("Direct Spawn"))
@@ -116,13 +123,11 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 			
 			return SpawnPoint;
 		}
-			
-		if(Dist > LastDist)
-		{
-			CurrentBest = SpawnPoint;
-			LastDist = Dist;
-		}
 
+		const float& MaxDifference = FMath::Abs(MaxRange - Dist);
+		const float& MinDifference = FMath::Abs(Dist - Range);
+		MaxDifference < BestDifference ? BestDifference = MaxDifference, CurrentBest = SpawnPoint : nullptr;
+		MinDifference < BestDifference ? BestDifference = MinDifference, CurrentBest = SpawnPoint : nullptr;
 	}
 	
 	if(CurrentBest)
@@ -282,32 +287,6 @@ UBehaviorTree* USpawner::RandomWithWeight(FEnemyStats& Enemy, bool OverrideChanc
 	//UE_LOG(LogTemp,Error, TEXT("Did Not Find Choose Correctly, WeightTotal: %i"), Weight)
 	Enemy =  MasterMind->AllEnemyStats[0];
 	return Enemy.EnemyTree;
-
-
-/*
-	int Weight = TotalWeight;
-	if(OverrideChance)
-	{
-		Enemy = OverrideEnemy;
-		return Enemy.BehaviorTree;
-	}
-	int num = FMath::RandRange(0, Weight);
-	for(FEnemyWeight Type : WeightList)
-	{
-		FEnemyStats& EnemyStats = MasterMind->AllEnemyStats[Type.EnemyEnum.GetValue()];
-		int index = Type.EnemyEnum.GetValue();
-		//UEnemiesEnum* temp = ListOfAllEnemieEnum[index];
-		num -= Type.Weight;
-		if(num <= 0)
-		{
-			Enemy = Type;
-			return Type.BehaviorTree;
-		}
-		
-	}
-	Enemy = SpiderWeight;
-	return SpiderWeight.BehaviorTree;
-	*/
 }
 
 /*
