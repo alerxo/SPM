@@ -65,7 +65,7 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 		{
 
 			//DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
-			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i"), Tokens)
+			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i, TAKER: %s"), Tokens, *UEnum::GetValueAsString(CastedEnemy->EnemyType));
 			Tokens -= EnemyTokens;
 			MapOfTokens.Add(Pawn, EnemyTokens);
 			if(MusicMaster)
