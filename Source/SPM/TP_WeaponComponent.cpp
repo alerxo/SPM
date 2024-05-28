@@ -148,7 +148,7 @@ void UTP_WeaponComponent::ShootFireball()
 			}
 			else
 			{
-				World->SpawnActor<AFireballProjectile>(FireballClass, SpawnLocation, SpawnRotation, ActorSpawnParams);	
+				//World->SpawnActor<AFireballProjectile>(FireballClass, SpawnLocation, SpawnRotation, ActorSpawnParams);	
 			}
 			
 		}
