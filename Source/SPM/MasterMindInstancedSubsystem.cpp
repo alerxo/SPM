@@ -232,6 +232,7 @@ void UMasterMindInstancedSubsystem::IncreasEnemyAmount(TEnumAsByte<EEnemies> Ene
 		AllEnemyStats[Enemy.GetIntValue()].Amount++;
 		TotalEnemyAmount++;
 		UE_LOG(LogTemp, Warning, TEXT("Increase %s Amount: %i "), *UEnum::GetValueAsName(Enemy).ToString() ,AllEnemyStats[Enemy.GetIntValue()].Amount);
+		UE_LOG(LogTemp, Warning, TEXT("Total Enemy Amount %i "), TotalEnemyAmount);
 	}
 }
 
@@ -248,11 +249,15 @@ void UMasterMindInstancedSubsystem::DecreaseEnemyAmount(TEnumAsByte<EEnemies> En
 
 void UMasterMindInstancedSubsystem::IncreaseEnemyKilled(TEnumAsByte<EEnemies> Enemy)
 {
+	/*
 	if(!AllEnemyStats.IsEmpty())
 	{
 		AllEnemyStats[Enemy.GetIntValue()].Killed++;
-		TotalEnemyAmount--;
+		if(TotalEnemyAmount-- <= 0)
+		{
+		}
 	}
+	*/
 }
 
 double UMasterMindInstancedSubsystem::BalanceKilledAndDamage(TEnumAsByte<EEnemies> Enemy)

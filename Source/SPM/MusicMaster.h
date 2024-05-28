@@ -10,8 +10,8 @@
  * 
  */
 //Constant Macros
-#define MAXINTENSITY 6
-#define MEDIUMINTENSITY 3
+#define MAXINTENSITY 1
+#define MEDIUMINTENSITY 1
 #define LOWINTENSITY 0
 
 #define RESETTIMER 5
