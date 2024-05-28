@@ -58,6 +58,7 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 		if(MapOfTokens.Contains(Pawn))
 		{
 			//CheckAndDeleteToken(CastedEnemy->EnemyType, Pawn);
+			UE_LOG(LogTemp, Error, TEXT("Already exist in Map"))
 			return false;
 		}
 		if(Tokens - EnemyTokens >= 0)
