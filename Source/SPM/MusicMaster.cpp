@@ -83,17 +83,20 @@ TStatId UMusicMaster::GetStatId() const
 void  UMusicMaster::CallMax()
 {
 	CurrentIntensityNode->bIsOn = true;
+	UE_LOG(LogTemp, Display, TEXT("MAX CALL"));
 	OnMaxIntensity.Broadcast();
 }
 
 void  UMusicMaster::CallMed()
 {
 	CurrentIntensityNode->bIsOn = true;
+	UE_LOG(LogTemp, Display, TEXT("MED CALL"));
 	OnMediumIntensity.Broadcast();
 }
 void  UMusicMaster::CallLow()
 {
 	CurrentIntensityNode->bIsOn = true;
+	UE_LOG(LogTemp, Display, TEXT("LOW CALL"));
 	OnLowIntensity.Broadcast();
 }
 
