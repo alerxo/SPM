@@ -3,6 +3,7 @@
 
 #include "HazardousWater.h"
 #include "DamageComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -28,6 +29,8 @@ AHazardousWater::AHazardousWater()
 	WaterCollision->SetupAttachment(RootComponent);
 
 
+	Audio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audi SFX"));
+
 
  }
 
@@ -43,6 +46,7 @@ void AHazardousWater::BeginPlay()
 	}
 	
 	Timer = 0;
+	Audio->Stop();
 }
 
 // Called every frame
@@ -69,6 +73,7 @@ void AHazardousWater::DamageActor()
 {
 	//Apply the Damage to Actor
 	UGameplayStatics::ApplyDamage(UGameplayStatics::GetPlayerPawn(GetWorld(), 0), DamageComponent->GetDamage(), this->GetInstigatorController(), this,DamageComponent->GetDamageType());
+	Audio->Play();
 	Timer = TimeUntilDamage;
 }
 

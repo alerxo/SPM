@@ -41,6 +41,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UMusicMaster* CreateMusicMaster();
+
+
+	UPROPERTY(BlueprintReadWrite)
+	int MaxTotalCoreEncounter;
+	UPROPERTY(BlueprintReadWrite)
+	int CurrentEnemiesSpawned;
 	
 	
 	//TQueue<APawn*> PriorityEnemies;

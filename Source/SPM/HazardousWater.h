@@ -43,6 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsPlayerOnWater;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAudioComponent* Audio;
+
 	UPROPERTY(BlueprintReadWrite)
 	ACharacter* Player;
 	
