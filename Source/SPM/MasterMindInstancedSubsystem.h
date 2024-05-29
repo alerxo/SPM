@@ -49,7 +49,9 @@ public:
 	int CurrentEnemiesSpawned;
 
 	UPROPERTY(BlueprintReadWrite)
-	AActor* CurrentLevelOwner;
+	TMap<int, APawn*> AllSpawnedEnemies;
+	UPROPERTY(BlueprintReadWrite)
+	int CurrentMapIndex; 
 	
 	//TQueue<APawn*> PriorityEnemies;
 	//List With all the Types of Enemies and there stats
