@@ -47,7 +47,9 @@ public:
 	int MaxTotalCoreEncounter;
 	UPROPERTY(BlueprintReadWrite)
 	int CurrentEnemiesSpawned;
-	
+
+	UPROPERTY(BlueprintReadWrite)
+	AActor* CurrentLevelOwner;
 	
 	//TQueue<APawn*> PriorityEnemies;
 	//List With all the Types of Enemies and there stats
