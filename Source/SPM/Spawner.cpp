@@ -99,6 +99,7 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 	SpawnParameters.Owner = Owner;
 	SpawnParameters.SpawnCollisionHandlingOverride = false ? ESpawnActorCollisionHandlingMethod::AlwaysSpawn : ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
+
 	int i = 0;
 	//Decide the best Spawn position
 	for (ASpawnPoints* SpawnPoint : SpawnLocations)
@@ -116,12 +117,23 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 			Forward.X = +Forward.X;
 			FVector const Location = SpawnPoint->GetActorLocation() + (YOffset * Forward);
 			APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
+			const IEnemyInterface* CastedEnemy = Cast<IEnemyInterface>(Enemy);
+			
+			UE_LOG(LogTemp, Warning, TEXT("---------------- %i -----------------------------"), MasterMind->CurrentMapIndex)
+			MasterMind->AllSpawnedEnemies.Add(MasterMind->CurrentMapIndex++, Enemy);
+
+
+			MasterMind->MoveActor(Enemy);
+
+			//MasterMind->MapOfPoolableEnemies.Add(CastedEnemy->EnemyType, Enemy);
+			//UE_LOG(LogTemp, Warning, TEXT("LISt SIZE ______________________ %i") ,GetWorld()->GetGameInstance()->GetSubsystem<UMasterMindInstancedSubsystem>()->AllSpawnedEnemies.Num())
 			//Set a AI controller and behaviour tree to the enemy
 			if(Enemy != nullptr)
 			{
 				SpawnAI(Enemy, BehaviourTree);
 			}
-			
+
+			UE_LOG(LogTemp, Display, TEXT("LEVEL NAME %s"), *Enemy->GetLevel()->GetName())
 			return SpawnPoint;
 		}
 
@@ -137,6 +149,10 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 		//Create Enemy And set the Ai behaviour on it
 		FVector const Location = CurrentBest->GetActorLocation() + ( YOffset * CurrentBest->GetActorForwardVector());
 		APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
+		UE_LOG(LogTemp, Warning, TEXT("---------------- %i -----------------------------"), MasterMind->CurrentMapIndex)
+		MasterMind->AllSpawnedEnemies.Add(MasterMind->CurrentMapIndex++, Enemy);
+
+		MasterMind->MoveActor(Enemy);
 		//Set a AI controller and behaviour tree to the enemy
 		if(Enemy != nullptr)
 		{

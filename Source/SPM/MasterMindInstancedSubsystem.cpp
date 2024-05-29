@@ -356,4 +356,21 @@ UMusicMaster* UMasterMindInstancedSubsystem::CreateMusicMaster()
 	return nullptr;
 }
 
+bool UMasterMindInstancedSubsystem::MoveActor(AActor* Actor)
+{
+	if(Actor)
+	{
+
+		/*
+		if(CurrentLevel)
+		{
+			UE_LOG(LogTemp, Display, TEXT("THE CURRENT LEVEL %s ======"), *Cast<ULevel>(CurrentLevel)->GetName())
+			Actor->Rename(*Actor->GetName(), CurrentLevel);
+			//CurrentLevel->Actors.Add(Actor);
+		}
+		*/
+		return true;
+	}
+	return false;
+}
 
