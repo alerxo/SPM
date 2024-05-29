@@ -67,6 +67,7 @@ void ABaseCore::DestroyCore()
 		//Broadcast (Activate) Delegate OnCoreDestroyed
 		UE_LOG(LogTemp, Warning, TEXT("DestroyCore GameInstance"));
 		GameInstanceSubsystem->OnCoreDestroyed.Broadcast(this);
+		//this->Destroy();
 	}
 }
 
