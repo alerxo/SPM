@@ -10,6 +10,7 @@
 #include "Spiderbot.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "MasterMindInstancedSubsystem.h"
+#include "Engine/LevelScriptActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Physics/ImmediatePhysics/ImmediatePhysicsShared/ImmediatePhysicsCore.h"
 
