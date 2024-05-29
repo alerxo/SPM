@@ -49,9 +49,17 @@ public:
 	int CurrentEnemiesSpawned;
 
 	UPROPERTY(BlueprintReadWrite)
+	TMap<TEnumAsByte<EEnemies>, APawn*> MapOfPoolableEnemies;
+	UPROPERTY(BlueprintReadWrite)
 	TMap<int, APawn*> AllSpawnedEnemies;
 	UPROPERTY(BlueprintReadWrite)
-	int CurrentMapIndex; 
+	int CurrentMapIndex;
+
+	
+	bool MoveActor(AActor* Actor);
+
+	UPROPERTY(BlueprintReadWrite)
+	UObject* CurrentLevel; 
 	
 	//TQueue<APawn*> PriorityEnemies;
 	//List With all the Types of Enemies and there stats
