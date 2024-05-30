@@ -46,7 +46,15 @@ void ASpiderbotProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 	{
 		if (OtherActor && OtherActor != this && OtherActor != Owner)
 		{
-			UGameplayStatics::ApplyDamage(OtherActor, DamageComponent->GetDamage(), MyOwnerInstigator, Owner, DamageComponent->GetDamageType());
+			//nullptr check to not crash the game
+			if (Owner != nullptr)
+			{
+				UGameplayStatics::ApplyDamage(OtherActor, DamageComponent->GetDamage(), MyOwnerInstigator, Owner, DamageComponent->GetDamageType());
+			}
+			else
+			{
+				UGameplayStatics::ApplyDamage(OtherActor, DamageComponent->GetDamage(), MyOwnerInstigator, this, DamageComponent->GetDamageType());
+			}
 		}
 	}
 	
