@@ -64,7 +64,7 @@ bool UMasterMindInstancedSubsystem::RequestToken(APawn* Pawn)
 		if(Tokens - EnemyTokens >= 0)
 		{
 
-			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
+			//DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(),175, 6, FColor::Green,false, 1);
 			UE_LOG(LogTemp, Warning, TEXT("TOKEN:  %i, TAKER: %s"), Tokens, *UEnum::GetValueAsString(CastedEnemy->EnemyType));
 			Tokens -= EnemyTokens;
 			MapOfTokens.Add(Pawn, EnemyTokens);
