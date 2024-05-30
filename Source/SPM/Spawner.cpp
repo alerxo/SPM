@@ -106,13 +106,13 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 	{
 		i++;
 		float Dist = FVector::Dist(PlayerPos, SpawnPoint->GetActorLocation());
-		UE_LOG(LogTemp, Warning, TEXT("Dist: %f"), Dist)
+		//UE_LOG(LogTemp, Warning, TEXT("Dist: %f"), Dist)
 		bool const MaxRangeCheck = (Dist <= MaxRange) ? true : ((Dist -=Deviation) <= MaxRange);
 		bool const MinRangeCheck = (Dist >= Range) ? true : ((Dist+=Deviation) >= Range );
 		if(MaxRangeCheck && MinRangeCheck)
 		{
 			//Create Enemy And set the Ai behaviour on it
-			UE_LOG(LogTemp, Warning, TEXT("Direct Spawn"))
+			//UE_LOG(LogTemp, Warning, TEXT("Direct Spawn"))
 			FVector Forward = SpawnPoint->GetActorForwardVector();
 			Forward.X = +Forward.X;
 			FVector const Location = SpawnPoint->GetActorLocation() + (YOffset * Forward);
@@ -133,7 +133,7 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 				SpawnAI(Enemy, BehaviourTree);
 			}
 
-			UE_LOG(LogTemp, Display, TEXT("LEVEL NAME %s"), *Enemy->GetLevel()->GetName())
+			//UE_LOG(LogTemp, Display, TEXT("LEVEL NAME %s"), *Enemy->GetLevel()->GetName())
 			return SpawnPoint;
 		}
 
@@ -145,7 +145,7 @@ ASpawnPoints* USpawner::BestSpawnByRange(float Range, float MaxRange, TSubclassO
 	
 	if(CurrentBest)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Current Best Spawn"))
+		//UE_LOG(LogTemp, Warning, TEXT("Current Best Spawn"))
 		//Create Enemy And set the Ai behaviour on it
 		FVector const Location = CurrentBest->GetActorLocation() + ( YOffset * CurrentBest->GetActorForwardVector());
 		APawn* Enemy = GetWorld()->SpawnActor<APawn>(ActorToSpawn, Location, Rotator, SpawnParameters);
