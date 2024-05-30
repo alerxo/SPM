@@ -25,6 +25,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	/*
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnSpawnOnCore OnSpawnOnCore;
 
@@ -38,4 +39,5 @@ public:
 
 	UFUNCTION()
 	void print(int token);
+	*/
 };
