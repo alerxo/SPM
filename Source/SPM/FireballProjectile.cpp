@@ -48,13 +48,15 @@ void AFireballProjectile::BeginPlay()
 
 }
 
+// Explode on impact
 void AFireballProjectile::Explode()
 {
 	TArray<FHitResult> OutHits;
 	TArray<AActor*> DamageTarget;
 
 	FVector HitLocation = GetActorLocation();
-		
+
+	// Create explosion sphere
 	FCollisionShape CollisionSphere = FCollisionShape::MakeSphere(ExplosiveRadius);
 	//DrawDebugSphere(GetWorld(), HitLocation, CollisionSphere.GetSphereRadius(), 25, FColor::Red, true);
 	bool isHit = GetWorld()->SweepMultiByChannel(OutHits, HitLocation, HitLocation,
@@ -62,6 +64,7 @@ void AFireballProjectile::Explode()
 
 	if(isHit)
 	{
+		//For every thing inside the sphere
 		for(FHitResult& Hit : OutHits)
 		{
 			DamageTarget.AddUnique(Hit.GetActor());
@@ -78,6 +81,7 @@ void AFireballProjectile::Explode()
 				DestroyWithFireball();	
 			}
 		}
+		//Deal damage to every unique actor in sphere
 		for(AActor* HitActor : DamageTarget)
 		{
 			UGameplayStatics::ApplyDamage(HitActor, DamageComponent->GetDamage(), this->GetInstigatorController(), UGameplayStatics::GetPlayerPawn(this, 0), DamageComponent->GetDamageType());
