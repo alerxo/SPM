@@ -145,24 +145,6 @@ void UMasterMindInstancedSubsystem::CheckAndDeleteToken(TEnumAsByte<EEnemies> En
 }
 
 
-
-FVector UMasterMindInstancedSubsystem::GetInvestigationLocation() const 
-{
-	return  InvestigationLocation;
-}
-
-void UMasterMindInstancedSubsystem::SetInvestigationLocation(FVector Vector)
-{
-	InvestigationLocation = Vector;
-}
-
-/*
-TArray<FEnemyStats> UMasterMindInstancedSubsystem::GetArrayOfStats()
-{
-	return TArray<FEnemyStats>{SpiderStats, DroneStats, WallBreakerStats};
-}
-*/
-
 //Get the Enemy Type of the Enemy
 TEnumAsByte<EEnemies> UMasterMindInstancedSubsystem::GetEnemyType( TScriptInterface<IEnemyInterface> GeneralEnemy)
 {
@@ -300,6 +282,8 @@ void UMasterMindInstancedSubsystem::CreateEnemyStats(FEnemyStats EnemyStats)
 		Enemy.Weight = EnemyStats.Weight;
 		Enemy.EnemyType = EnemyStats.EnemyType;
 		Enemy.TokenCost = EnemyStats.TokenCost;
+		Enemy.EnemyTree = EnemyStats.EnemyTree;
+		Enemy.Enemy = EnemyStats.Enemy;
 		Enemy.DamageAmount = 0;
 		Enemy.Killed = 0;
 		UpdateWeight(Enemy.Weight);
