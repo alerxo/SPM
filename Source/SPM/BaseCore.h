@@ -49,7 +49,8 @@ public:
 	USphereComponent* GetSphereComponent() const {return SphereComponent;}
 
 	//Function to Damage Core
-	
+
+	UFUNCTION()
 	void DamageCore(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	//HealthComponent
