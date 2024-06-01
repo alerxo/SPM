@@ -18,7 +18,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundMade, FVector, Info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEnemyHit, FVector, Info, AActor*, Actor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, FVector, info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDisengage, AEnemyBaseClass*, Sender);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSentInfo, AEnemyBaseClass*, Sender, FVector, Info);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SPM_API UMasterMindInstancedSubsystem : public UGameInstanceSubsystem
@@ -31,37 +30,24 @@ private:
 
 	UFUNCTION(BlueprintCallable)
 	void SetPlayer();
-
-public:
-	UPROPERTY(BlueprintReadWrite)
+	
+	UPROPERTY()
 	TMap<APawn*, int> MapOfTokens;
-
-	UPROPERTY(BlueprintReadWrite)
+	
+	UPROPERTY()
 	UMusicMaster* MusicMaster;
-
+public:
+	
 	UFUNCTION(BlueprintCallable)
 	UMusicMaster* CreateMusicMaster();
-
-
-	UPROPERTY(BlueprintReadWrite)
-	int MaxTotalCoreEncounter;
-	UPROPERTY(BlueprintReadWrite)
-	int CurrentEnemiesSpawned;
-
-	UPROPERTY(BlueprintReadWrite)
-	TMap<TEnumAsByte<EEnemies>, APawn*> MapOfPoolableEnemies;
+	
 	UPROPERTY(BlueprintReadWrite)
 	TMap<int, APawn*> AllSpawnedEnemies;
 	UPROPERTY(BlueprintReadWrite)
 	int CurrentMapIndex;
-
 	
 	bool MoveActor(AActor* Actor);
 
-	UPROPERTY(BlueprintReadWrite)
-	UObject* CurrentLevel; 
-	
-	//TQueue<APawn*> PriorityEnemies;
 	//List With all the Types of Enemies and there stats
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FEnemyStats> AllEnemyStats;
@@ -82,8 +68,6 @@ public:
 	//Declare Delegate for when player is spotted
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnPlayerSeen OnPlayerSeen;
-	//Declare Delegate for when Enemy wants to send info
-	FOnSentInfo OnSentInfo;
 	
 	//The Decision meter to check when the Maseter mind kan do a Decision
 	UPROPERTY(BlueprintReadOnly)
@@ -101,8 +85,6 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	double TotalEnemyWeight;
 	
-	FVector InvestigationLocation;
-
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
@@ -176,12 +158,6 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void UpdateWeight(double Amount);
-	
-	UFUNCTION(BlueprintCallable)
-	FVector GetInvestigationLocation() const;
-	
-	UFUNCTION(BlueprintCallable)
-	void SetInvestigationLocation(FVector Vector);
 
 	/**
 	 * Getts the Master Mind Subsystem
