@@ -44,6 +44,7 @@ void UTP_WeaponComponent::ShootPressed()
 	
 }
 
+// When shoot button is hold down
 void UTP_WeaponComponent::ShootHold()
 {
 	if(bElectricActive == true)
@@ -56,7 +57,7 @@ void UTP_WeaponComponent::ShootHold()
 
 
 
-
+// Shoot basic 
 void UTP_WeaponComponent::Fire()
 {
 	if (Character == nullptr || Character->GetController() == nullptr || bBasicActive == false)
@@ -104,6 +105,7 @@ void UTP_WeaponComponent::Fire()
 	}
 }
 
+// Shoot fireball
 void UTP_WeaponComponent::ShootFireball()
 {
 	
@@ -172,6 +174,7 @@ void UTP_WeaponComponent::ShootFireball()
 	}
 }
 
+//Change weapon keyboard
 void UTP_WeaponComponent::ChangeWeapon()
 {
 
@@ -209,6 +212,7 @@ void UTP_WeaponComponent::ChangeWeapon()
 	
 }
 
+//Change weapon to basic on controller
 void UTP_WeaponComponent::ChangeWeaponBasic()
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
@@ -221,6 +225,7 @@ void UTP_WeaponComponent::ChangeWeaponBasic()
 	bElectricActive = false;
 }
 
+//Change weapon to fire on controller
 void UTP_WeaponComponent::ChangeWeaponFire()
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
@@ -233,6 +238,7 @@ void UTP_WeaponComponent::ChangeWeaponFire()
 	bElectricActive = false;
 }
 
+//Change weapon to electric on controller
 void UTP_WeaponComponent::ChangeWeaponElectric()
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
@@ -253,7 +259,7 @@ void UTP_WeaponComponent::ChangeWeaponElectric()
 
 
 
-
+// Shoot electricity
 void UTP_WeaponComponent::ShootElectricity()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Shoot Electric"));
@@ -392,6 +398,7 @@ void UTP_WeaponComponent::ShootElectricity()
 	}
 }
 
+// Attaches the weapon to the player 
 void UTP_WeaponComponent::AttachWeapon(ASPMCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
