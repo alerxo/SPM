@@ -129,7 +129,7 @@ void UFlyingMovementComponent::CheckLidarDirection(FRotator Rotation)
 	{
 		// Draws a line following the line trace
 		const FName TraceTag("DroneLidarLineTrace");
-		GetWorld()->DebugDrawTraceTag = TraceTag;
+		//GetWorld()->DebugDrawTraceTag = TraceTag;
 		CollisionQueryParams.TraceTag = TraceTag;
 	}
 

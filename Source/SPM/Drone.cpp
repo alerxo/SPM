@@ -69,7 +69,7 @@ void ADrone::CheckLineOfSightAtPlayer()
 	{
 		// Draws a line following the line trace
 		const FName TraceTag("DroneSightLineTrace");
-		GetWorld()->DebugDrawTraceTag = TraceTag;
+		//GetWorld()->DebugDrawTraceTag = TraceTag;
 		CollisionQueryParams.TraceTag = TraceTag;
 	}
 
